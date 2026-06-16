@@ -1,0 +1,911 @@
+﻿<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Architettura Enterprise & Network — NextCare</title>
+<meta name="description" content="NextCare è la piattaforma multi-sede, multi-tenant per reti sanitarie. Punti prelievo satellite, portali aziendali, dashboard di gruppo, RBAC granulare e integrazione con oltre 40 sistemi.">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --p:#2563eb;--g:linear-gradient(135deg,#2563eb,#3b82f6);
+  --bg:#f4f6fa;--sf:#fff;--t1:#1e293b;--t2:#64748b;--t3:#94a3b8;--br:#e2e8f0;
+  --fh:'Outfit',sans-serif;--fb:'Inter',sans-serif;--nav-h:84px;
+  --green:#059669;--amber:#d97706;--purple:#7c3aed;--red:#dc2626;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--fb);background:var(--bg);color:var(--t1);padding-top:var(--nav-h)}
+
+/* NAV */
+.topnav{position:fixed;top:0;left:0;right:0;z-index:1000;height:var(--nav-h);
+  background:rgba(255,255,255,.96);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--br);box-shadow:0 2px 12px rgba(37,99,235,.07)}
+.nav-inner{width:100%;height:100%;padding:0 60px;display:flex;align-items:center;gap:20px}
+.nav-logo{display:flex;align-items:center;gap:14px;text-decoration:none}
+.nc-icon{width:60px;height:60px;background:var(--g);border-radius:15px;color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--fh);font-weight:900;font-size:1.35rem;
+  box-shadow:0 6px 20px rgba(37,99,235,.45);flex-shrink:0}
+.nc-name{font-family:var(--fh);font-weight:900;font-size:1.35rem;color:var(--t1);letter-spacing:-.4px}
+.nc-sub{font-size:.68rem;color:var(--t2);letter-spacing:1px;text-transform:uppercase;font-weight:600}
+.nav-menu{display:flex;align-items:center;gap:4px;margin-left:auto}
+.nav-link{text-decoration:none;padding:9px 16px;border-radius:9px;font-size:.95rem;font-weight:600;color:var(--t2);transition:all .18s}
+.nav-link:hover,.nav-link.active{background:#eff6ff;color:var(--p)}
+.nav-cta{background:var(--g);color:#fff;padding:10px 22px;border-radius:10px;font-family:var(--fh);
+  font-weight:700;font-size:.92rem;margin-left:14px;cursor:pointer;text-decoration:none;border:none}
+
+/* HERO */
+.hero{background:linear-gradient(150deg,#0f172a 0%,#1e3a8a 55%,#2563eb 100%);
+  padding:72px 60px 60px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+.hero-inner{max-width:1400px;margin:0 auto;position:relative;z-index:1;
+  display:grid;grid-template-columns:1.1fr 0.9fr;gap:60px;align-items:center}
+.pill{display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);
+  border-radius:20px;padding:6px 14px;margin-bottom:18px}
+.pill span{width:7px;height:7px;background:#86efac;border-radius:50%}
+.pill p{font-size:.78rem;font-weight:700;color:rgba(255,255,255,.9);letter-spacing:.4px;text-transform:uppercase}
+.hero h1{font-family:var(--fh);font-weight:900;font-size:clamp(2.2rem,4vw,3.2rem);
+  color:#fff;letter-spacing:-1px;line-height:1.1;margin-bottom:16px}
+.hero h1 em{background:linear-gradient(90deg,#93c5fd,#86efac);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-style:normal}
+.hero-sub{font-size:1rem;color:rgba(255,255,255,.72);line-height:1.75;margin-bottom:28px;max-width:520px}
+.hero-badges{display:flex;flex-wrap:wrap;gap:8px}
+.hbadge{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);
+  border-radius:8px;padding:6px 13px;font-size:.75rem;font-weight:700;color:rgba(255,255,255,.85)}
+
+/* Hero right — stat box */
+.hero-stat-box{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);
+  border-radius:20px;padding:28px}
+.hero-stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.hstat{background:rgba(255,255,255,.08);border-radius:12px;padding:16px;text-align:center}
+.hstat-n{font-family:var(--fh);font-weight:900;font-size:2rem;line-height:1}
+.hstat-l{font-size:.7rem;color:rgba(255,255,255,.55);margin-top:4px;font-weight:600}
+
+/* STICKY SUBMENU */
+.submenu{background:#fff;border-bottom:1px solid var(--br);position:sticky;
+  top:var(--nav-h);z-index:500;overflow-x:auto;box-shadow:0 2px 8px rgba(37,99,235,.05)}
+.submenu-inner{max-width:1400px;margin:0 auto;padding:0 60px;
+  display:flex;gap:0;white-space:nowrap}
+.sm-link{display:inline-flex;align-items:center;gap:7px;padding:14px 18px;
+  font-family:var(--fh);font-size:.8rem;font-weight:700;color:var(--t2);
+  text-decoration:none;border-bottom:3px solid transparent;transition:all .15s}
+.sm-link:hover,.sm-link.active{color:var(--p);border-bottom-color:var(--p)}
+
+/* MAIN WRAP */
+.wrap{max-width:1400px;margin:0 auto;padding:60px 60px 100px}
+
+/* SECTION */
+.sec{margin-bottom:72px;scroll-margin-top:160px}
+.sec-hd{display:flex;align-items:center;gap:16px;margin-bottom:8px}
+.sec-icon{font-size:1.8rem;line-height:1}
+.sec-title{font-family:var(--fh);font-weight:900;font-size:1.5rem;color:var(--t1);letter-spacing:-.4px}
+.sec-line{flex:1;height:1px;background:var(--br)}
+.sec-intro{font-size:.9rem;color:var(--t2);line-height:1.8;max-width:860px;margin-bottom:28px;margin-top:8px}
+
+/* FEATURE CARDS */
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:20px}
+.feat-card{background:var(--sf);border:1px solid var(--br);border-radius:20px;
+  padding:28px 28px 24px;transition:all .22s;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.feat-card:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(37,99,235,.1);border-color:#bfdbfe}
+.feat-card-icon{font-size:2.2rem;margin-bottom:14px;line-height:1}
+.feat-card-title{font-family:var(--fh);font-weight:900;font-size:1.05rem;color:var(--t1);
+  margin-bottom:10px;letter-spacing:-.3px}
+.feat-card-body{font-size:.83rem;color:var(--t2);line-height:1.8}
+.feat-card-body strong{color:var(--t1)}
+.feat-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+.tag{border-radius:6px;padding:4px 10px;font-size:.7rem;font-weight:700}
+.tag-blue{background:#eff6ff;border:1px solid #bfdbfe;color:var(--p)}
+.tag-green{background:#f0fdf4;border:1px solid #bbf7d0;color:var(--green)}
+.tag-purple{background:#f5f3ff;border:1px solid #ddd6fe;color:var(--purple)}
+.tag-amber{background:#fffbeb;border:1px solid #fde68a;color:var(--amber)}
+.tag-red{background:#fef2f2;border:1px solid #fecaca;color:var(--red)}
+
+/* NETWORK DIAGRAM */
+.net-diagram{background:linear-gradient(145deg,#0f172a,#1e293b);
+  border-radius:24px;padding:44px;margin-bottom:28px;overflow:hidden;position:relative}
+.net-diagram::before{content:'';position:absolute;inset:0;
+  background-image:radial-gradient(rgba(255,255,255,.04) 1px,transparent 1px);
+  background-size:28px 28px}
+.net-title{font-family:var(--fh);font-weight:900;font-size:1.1rem;color:#fff;
+  margin-bottom:32px;position:relative;z-index:1}
+.net-levels{display:flex;flex-direction:column;gap:0;position:relative;z-index:1}
+.net-level{display:grid;grid-template-columns:200px 1fr;gap:24px;align-items:start}
+.net-level-label{text-align:right;padding-top:18px}
+.net-level-badge{display:inline-block;background:var(--g);border-radius:8px;
+  padding:6px 14px;font-family:var(--fh);font-weight:800;font-size:.75rem;
+  color:#fff;letter-spacing:.3px;text-transform:uppercase;white-space:nowrap}
+.net-level-badge.green{background:linear-gradient(135deg,#059669,#10b981)}
+.net-level-badge.purple{background:linear-gradient(135deg,#7c3aed,#8b5cf6)}
+.net-level-badge.amber{background:linear-gradient(135deg,#d97706,#f59e0b)}
+.net-nodes{display:flex;flex-wrap:wrap;gap:10px}
+.net-node{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);
+  border-radius:10px;padding:12px 16px;min-width:180px;transition:all .2s}
+.net-node:hover{background:rgba(255,255,255,.12);border-color:rgba(93,163,247,.5)}
+.net-node-title{font-family:var(--fh);font-weight:800;font-size:.85rem;color:#fff;margin-bottom:4px}
+.net-node-desc{font-size:.72rem;color:rgba(255,255,255,.5);line-height:1.5}
+.net-arrow{display:flex;align-items:center;padding:8px 0 8px 200px;gap:8px}
+.net-arrow-line{flex:1;height:1px;background:rgba(255,255,255,.1)}
+.net-arrow-label{font-size:.68rem;color:rgba(255,255,255,.35);font-weight:600;letter-spacing:.5px}
+
+/* LOGO WALL */
+.logo-wall{background:var(--sf);border:1px solid var(--br);border-radius:16px;
+  padding:28px 32px}
+.logo-wall-title{font-family:var(--fh);font-weight:800;font-size:.85rem;color:var(--t2);
+  letter-spacing:.5px;text-transform:uppercase;margin-bottom:20px}
+.logo-row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.logo-chip{display:inline-flex;align-items:center;gap:8px;
+  background:var(--bg);border:1px solid var(--br);border-radius:8px;
+  padding:7px 14px;transition:all .18s}
+.logo-chip:hover{border-color:#bfdbfe;background:#eff6ff}
+.logo-chip-name{font-size:.75rem;font-weight:700;color:var(--t1)}
+
+/* SPEC TABLE */
+.spec-table{width:100%;border-collapse:collapse;background:var(--sf);
+  border-radius:16px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.spec-table thead th{background:var(--t1);color:#fff;font-family:var(--fh);
+  font-weight:700;font-size:.8rem;padding:14px 20px;text-align:left;letter-spacing:.3px}
+.spec-table tbody tr{border-bottom:1px solid var(--br)}
+.spec-table tbody tr:last-child{border:none}
+.spec-table tbody tr:hover{background:#f8fafc}
+.spec-table td{padding:14px 20px;font-size:.83rem;vertical-align:top}
+.spec-table td:first-child{font-family:var(--fh);font-weight:700;color:var(--t1);white-space:nowrap;width:220px}
+.spec-table td:nth-child(2){color:var(--t2);line-height:1.7}
+.check{color:var(--green);font-weight:800}
+
+/* COMPARISON */
+.comp-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.comp-card{background:var(--sf);border:1px solid var(--br);border-radius:16px;
+  padding:24px;text-align:center}
+.comp-card.featured{border:2px solid var(--p);background:linear-gradient(135deg,#eff6ff,#fff)}
+.comp-card-title{font-family:var(--fh);font-weight:900;font-size:1rem;color:var(--t1);margin-bottom:16px}
+.comp-row{display:flex;align-items:center;justify-content:space-between;
+  padding:8px 0;border-bottom:1px solid var(--br);font-size:.8rem}
+.comp-row:last-child{border:none}
+.comp-row-label{color:var(--t2);text-align:left}
+.comp-val{font-weight:700}
+.comp-val.yes{color:var(--green)}
+.comp-val.no{color:var(--red)}
+.comp-val.partial{color:var(--amber)}
+
+/* CTA */
+.cta{background:linear-gradient(150deg,#0f172a,#1e3a8a 55%,#2563eb);
+  border-radius:24px;padding:56px;text-align:center;margin-top:20px}
+.cta h2{font-family:var(--fh);font-weight:900;font-size:2rem;color:#fff;
+  margin-bottom:12px;letter-spacing:-.5px}
+.cta p{color:rgba(255,255,255,.7);margin-bottom:32px;font-size:1rem;max-width:600px;margin-left:auto;margin-right:auto}
+.btn-w{background:#fff;color:var(--p);padding:16px 36px;border-radius:12px;
+  font-family:var(--fh);font-weight:800;font-size:1rem;text-decoration:none;
+  box-shadow:0 8px 24px rgba(0,0,0,.2);display:inline-block;
+  transition:all .2s;border:none;cursor:pointer;margin:0 8px}
+.btn-ghost{background:rgba(255,255,255,.1);color:#fff;padding:16px 36px;border-radius:12px;
+  font-family:var(--fh);font-weight:700;font-size:1rem;text-decoration:none;
+  border:1px solid rgba(255,255,255,.25);display:inline-block;
+  transition:all .2s;margin:0 8px}
+
+/* FOOTER */
+.foot{background:var(--t1);color:var(--t3);padding:32px 60px;text-align:center;font-size:.82rem}
+.foot a{color:var(--t3);text-decoration:none;margin:0 8px}
+
+@media(max-width:960px){
+  .hero-inner{grid-template-columns:1fr}
+  .comp-grid{grid-template-columns:1fr}
+  .feat-grid{grid-template-columns:1fr}
+}
+@media(max-width:768px){
+  .nav-inner{padding:0 20px}
+  .hero{padding:48px 20px 40px}
+  .wrap{padding:32px 20px 80px}
+  .submenu-inner{padding:0 16px}
+  .net-diagram{padding:24px 16px}
+  .net-level{grid-template-columns:1fr;gap:8px}
+  .net-level-label{text-align:left;padding-top:0}
+  .net-arrow{padding-left:0}
+  .cta{padding:36px 20px}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="topnav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nc-icon">NC</div>
+      <div><div class="nc-name">NextCare</div><div class="nc-sub">nextcare.tech</div></div>
+    </a>
+    <div class="nav-menu" id="navmenu">
+      <a class="nav-link" href="index.html">🏠 Home</a>
+      <a class="nav-link" href="moduli.html">&#129713; Funzionalità</a>
+      <a class="nav-link" href="integrazioni.html">🔌 Integrazioni</a>
+      <a class="nav-link active" href="enterprise.html">🏗️ Enterprise</a>
+      <a class="nav-link" href="pricing.html">💰 Pricing</a>
+      <a class="nav-link" href="articoli.html">📰 Articoli</a>
+      <a class="nav-link" href="chisiamo.html">🏢 Chi Siamo</a>
+      <a href="javascript:void(0)" class="nav-cta" onclick="openDemoModal()">🎯 Demo Gratis</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="pill"><span></span><p>Enterprise &amp; Network · Multi-sede · Multi-tenant</p></div>
+      <h1>Una piattaforma.<br><em>Infinite strutture.</em></h1>
+      <p class="hero-sub">
+        Da un singolo poliambulatorio fino a una rete regionale di laboratori, punti prelievo e centri diagnostici.
+        NextCare scala con te: ogni sede autonoma, ogni dato isolato, tutto visibile dal centro.
+      </p>
+      <div class="hero-badges">
+        <span class="hbadge">✓ Multi-tenant isolato</span>
+        <span class="hbadge">✓ Multi-sede centralizzata</span>
+        <span class="hbadge">✓ Punti prelievo satellite</span>
+        <span class="hbadge">✓ Portali aziendali &amp; MMG</span>
+        <span class="hbadge">✓ Dashboard di gruppo</span>
+        <span class="hbadge">✓ SaaS · On-Premise · Hybrid</span>
+      </div>
+    </div>
+    <div>
+      <div class="hero-stat-box">
+        <div style="font-family:Outfit,sans-serif;font-weight:800;font-size:.8rem;
+          color:rgba(255,255,255,.5);letter-spacing:.5px;text-transform:uppercase;margin-bottom:18px">
+          Architettura progettata per crescere
+        </div>
+        <div class="hero-stat-grid">
+          <div class="hstat"><div class="hstat-n" style="color:#86efac">∞</div><div class="hstat-l">Sedi gestibili</div></div>
+          <div class="hstat"><div class="hstat-n" style="color:#93c5fd">∞</div><div class="hstat-l">Tenant isolati</div></div>
+          <div class="hstat"><div class="hstat-n" style="color:#fcd34d">3</div><div class="hstat-l">Livelli di rete</div></div>
+          <div class="hstat"><div class="hstat-n" style="color:#c4b5fd">6+</div><div class="hstat-l">Ruoli RBAC</div></div>
+        </div>
+        <div style="margin-top:16px;background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.25);
+          border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px">
+          <span>☁️</span>
+          <div style="font-size:.78rem;color:#86efac;font-weight:700">
+            SaaS cloud o On-Premise — la scelta è tua e reversibile
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SUBMENU -->
+<nav class="submenu">
+  <div class="submenu-inner">
+    <a class="sm-link" href="#sec-arch">🌐 Architettura</a>
+    <a class="sm-link" href="#sec-multitenant">🏗️ Multi-tenant</a>
+    <a class="sm-link" href="#sec-multisede">🗺️ Multi-sede</a>
+    <a class="sm-link" href="#sec-prelievo">🩸 Punti prelievo</a>
+    <a class="sm-link" href="#sec-portali">🌐 Portali</a>
+    <a class="sm-link" href="#sec-rbac">🔐 RBAC</a>
+    <a class="sm-link" href="#sec-bi">📊 BI di gruppo</a>
+    <a class="sm-link" href="#sec-deploy">☁️ Deploy</a>
+    <a class="sm-link" href="#sec-erp">💼 ERP</a>
+    <a class="sm-link" href="#sec-confronto">⚖️ Confronto</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+<!-- ══ ARCHITETTURA ══ -->
+<div class="sec" id="sec-arch">
+  <div class="sec-hd">
+    <div class="sec-icon">🌐</div>
+    <div class="sec-title">Architettura a 3 livelli</div>
+    <div class="sec-line"></div>
+  </div>
+  <p class="sec-intro">
+    NextCare implementa un modello gerarchico a 3 livelli che replica fedelmente la struttura organizzativa di qualsiasi rete sanitaria — dal singolo ambulatorio al gruppo ospedaliero.
+    Ogni livello ha la propria autonomia operativa ma contribuisce al reporting consolidato del livello superiore.
+  </p>
+
+  <div class="net-diagram">
+    <div class="net-title">🌐 Topologia rete NextCare</div>
+    <div class="net-levels">
+
+      <!-- Livello 0 -->
+      <div class="net-level">
+        <div class="net-level-label"><span class="net-level-badge">Livello 0 — Gruppo</span></div>
+        <div class="net-nodes">
+          <div class="net-node" style="border-color:rgba(93,163,247,.4);min-width:260px">
+            <div class="net-node-title">🏢 Console di Gruppo</div>
+            <div class="net-node-desc">Dashboard consolidata · Configurazione globale · Reportistica inter-sede · Fatturazione centralizzata · Gestione utenti globale</div>
+          </div>
+          <div class="net-node" style="border-color:rgba(93,163,247,.4)">
+            <div class="net-node-title">📊 Business Intelligence</div>
+            <div class="net-node-desc">KPI comparativi · Trend · Alerting · Export board</div>
+          </div>
+          <div class="net-node" style="border-color:rgba(93,163,247,.4)">
+            <div class="net-node-title">💼 ERP &amp; SDI</div>
+            <div class="net-node-desc">Fatture elettroniche · Prima nota · Ciclo attivo</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="net-arrow">
+        <div class="net-arrow-line"></div>
+        <div class="net-arrow-label">REPLICA CONFIGURAZIONI · RACCOLTA KPI</div>
+        <div class="net-arrow-line"></div>
+      </div>
+
+      <!-- Livello 1 -->
+      <div class="net-level">
+        <div class="net-level-label"><span class="net-level-badge green">Livello 1 — Sedi</span></div>
+        <div class="net-nodes">
+          <div class="net-node">
+            <div class="net-node-title">🏥 Sede A — Clinica Principale</div>
+            <div class="net-node-desc">LIS · RIS · CUP · Accettazione · Contabilità locale · Medici propri</div>
+          </div>
+          <div class="net-node">
+            <div class="net-node-title">🏥 Sede B — Poliambulatorio</div>
+            <div class="net-node-desc">Agenda visite · CUP · Fatturazione · Fondi sanitari</div>
+          </div>
+          <div class="net-node">
+            <div class="net-node-title">🔬 Sede C — Laboratorio</div>
+            <div class="net-node-desc">Analizzatori · Refertazione · Microbiologia · HRIS</div>
+          </div>
+          <div class="net-node" style="border-style:dashed">
+            <div class="net-node-title">+ Aggiungi sede</div>
+            <div class="net-node-desc">Attivazione in &lt;24h · configurazione guidata AI</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="net-arrow">
+        <div class="net-arrow-line"></div>
+        <div class="net-arrow-label">CAMPIONI TRACCIATI · REFERTI · DATI CLINICI</div>
+        <div class="net-arrow-line"></div>
+      </div>
+
+      <!-- Livello 2 -->
+      <div class="net-level">
+        <div class="net-level-label"><span class="net-level-badge purple">Livello 2 — Satellite</span></div>
+        <div class="net-nodes">
+          <div class="net-node">
+            <div class="net-node-title">🩸 Punto Prelievo 1</div>
+            <div class="net-node-desc">Tablet · Barcode · Etichette · Accettazione CUP</div>
+          </div>
+          <div class="net-node">
+            <div class="net-node-title">🩸 Punto Prelievo 2</div>
+            <div class="net-node-desc">Farmacia convenzionata · Ambulatorio partner</div>
+          </div>
+          <div class="net-node">
+            <div class="net-node-title">🏭 Sede Aziendale</div>
+            <div class="net-node-desc">Medicina del lavoro · Sorveglianza sanitaria</div>
+          </div>
+          <div class="net-node" style="border-style:dashed">
+            <div class="net-node-title">+ Aggiungi punto</div>
+            <div class="net-node-desc">Solo un tablet con browser · Attivo in minuti</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══ MULTI-TENANT ══ -->
+<div class="sec" id="sec-multitenant">
+  <div class="sec-hd">
+    <div class="sec-icon">🏗️</div>
+    <div class="sec-title">Multi-tenant</div>
+    <div class="sec-line"></div>
+  </div>
+  <p class="sec-intro">
+    In un'architettura multi-tenant ogni cliente (tenant) opera in un <strong>ambiente completamente isolato</strong>: database separato, credenziali indipendenti, configurazioni proprie, spazio di archiviazione dedicato.
+    Un singolo server NextCare può ospitare decine o centinaia di strutture senza che i dati si mescolino mai — conformità GDPR garantita by design.
+  </p>
+  <div class="feat-grid">
+    <div class="feat-card">
+      <div class="feat-card-icon">🗄️</div>
+      <div class="feat-card-title">Database isolato per tenant</div>
+      <div class="feat-card-body">
+        Ogni tenant ha il proprio schema database (o database fisicamente separato in configurazione high-security). Nessuna query cross-tenant è possibile a livello architetturale — non per policy, ma per design.
+        <br><br>In caso di audit GDPR, l'isolamento è dimostrabile con un singolo report tecnico.
+      </div>
+      <div class="feat-tags">
+        <span class="tag tag-purple">Schema isolation</span>
+        <span class="tag tag-green">GDPR by design</span>
+        <span class="tag tag-blue">Audit ready</span>
+      </div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-card-icon">⚙️</div>
+      <div class="feat-card-title">Configurazioni indipendenti</div>
+      <div class="feat-card-body">
+        Ogni tenant configura autonomamente: nomenclatore prestazioni, listini, medici, template referti, notifiche, integrazioni con analizzatori.
+        Il provider NextCare può definire un <strong>template base condiviso</strong> e ogni tenant sovrascrive solo ciò che serve — riducendo il tempo di onboarding a poche ore.
+      </div>
+      <div class="feat-tags">
+        <span class="tag tag-blue">Template ereditato</span>
+        <span class="tag tag-amber">Override locale</span>
+      </div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-card-icon">🔄</div>
+      <div class="feat-card-title">Aggiornamenti centralizzati</div>
+      <div class="feat-card-body">
+        Il provider aggiorna il sistema una sola volta e tutti i tenant ricevono il nuovo codice, il nuovo nomenclatore e i nuovi protocolli simultaneamente — con zero downtime grazie al deploy rolling.
+        <br><br>Il Nomenclatore 2025 viene distribuito a tutti i tenant in automatico alla data di entrata in vigore.
+      </div>
+      <div class="feat-tags">
+        <span class="tag tag-green">Zero downtime</span>
+        <span class="tag tag-blue">Rolling deploy</span>
+        <span class="tag tag-amber">Nomenclatore auto</span>
+      </div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-card-icon">💰</div>
+      <div class="feat-card-title">Modello ideale per reseller</div>
+      <div class="feat-card-body">
+        Studi software, associazioni di categoria e gruppi sanitari possono rivendere NextCare ai propri soci/clienti mantenendo un pannello di gestione centralizzato.
+        <br><br>Il pricing multi-tenant prevede sconti di volume progressivi e una console di amministrazione dedicata al reseller con visibilità su tutti i tenant gestiti.
+      </div>
+      <div class="feat-tags">
+        <span class="tag tag-purple">Reseller panel</span>
+        <span class="tag tag-green">Volume discount</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MULTI-SEDE ══ -->
+<div class="sec" id="sec-multisede">
+  <div class="sec-hd">
+    <div class="sec-icon">🗺️</div>
+    <div class="sec-title">Multi-sede</div>
+    <div class="sec-line"></div>
+  </div>
+  <p class="sec-intro">
+    All'interno dello stesso tenant, NextCare gestisce <strong>sedi multiple</strong> con configurazioni indipendenti ma reporting unificato.
+    Un medico può operare su più sedi con un unico accesso: l'agenda si adatta automaticamente alla sede selezionata.
+  </p>
+  <div class="feat-grid">
+    <div class="feat-card">
+      <div class="feat-card-icon">📅</div>
+      <div class="feat-card-title">Agenda unificata medici itineranti</div>
+      <div class="feat-card-body">
+        I medici che lavorano su più sedi vedono la propria agenda completa in un'unica vista.
+        Il sistema previene automaticamente i doppi booking inter-sede verificando la disponibilità in tempo reale su tutti i calendari.
+        <br><br>La segreteria di ciascuna sede può prenotare solo sugli slot aperti per quella sede — gli altri restano nascosti.
+      </div>
+      <div class="feat-tags">
+        <span class="tag tag-blue">Anti-doppio booking</span>
+        <span class="tag tag-green">Vista unificata</span>
+        <span class="tag tag-amber">Visibilità controllata</span>
+      </div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-card-icon">💶</div>
+      <div class="feat-card-title">Listini e tariffe per sede</div>
+      <div class="feat-card-body">
+        Ogni sede può avere listini differenziati: tariffa privata, tariffa convenzionata SSN, tariffa fondi sanitari, tariffa aziendale.
+        <br><br>Una prestazione può costare €80 nella sede principale e €60 nel punto prelievo periferico. Tutto gestito centralmente senza duplicare le anagrafiche.
+      </div>
+      <div class="feat-tags">
+        <span class="tag tag-blue">Listini multipli</span>
+        <span class="tag tag-green">Tariffe per sede</span>
+      </div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-card-icon">📊</div>
+      <div class="feat-card-title">Reporting consolidato</div>
+      <div class="feat-card-body">
+        La dashboard di gruppo aggrega automaticamente i dati di tutte le sedi: ricavi, prestazioni erogate, ticket medio, tempi di refertazione, occupazione medici.
+        <br><br>I KPI sono confrontabili tra sedi con grafici a barre comparativi. Il responsabile amministrativo vede tutto; il direttore di sede vede solo la propria.
+      </div>
+      <div class="feat-tags">
+        <span class="tag tag-blue">KPI comparativi</span>
+        <span class="tag tag-purple">Drill-down</span>
+        <span class="tag tag-green">Export PDF/Excel</span>
+      </div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-card-icon">🔌</div>
+      <div class="feat-card-title">Analizzatori per sede</div>
+      <div class="feat-card-body">
+        Ogni sede connette i propri analizzatori LIS e sistemi DICOM in modo indipendente.
+        Un campione prelevato in sede B può essere processato dall'analizzatore della sede A (laboratorio principale) con tracciabilità completa del percorso.
+      </div>
+      <div class="feat-tags">
+        <span class="tag tag-blue">LIS inter-sede</span>
+        <span class="tag tag-green">Tracciabilità</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PUNTI PRELIEVO ══ -->
+<div class="sec" id="sec-prelievo">
+  <div class="sec-hd">
+    <div class="sec-icon">🩸</div>
+    <div class="sec-title">Punti Prelievo Satellite</div>
+    <div class="sec-line"></div>
+  </div>
+  <p class="sec-intro">
+    I punti prelievo satellite sono stazioni leggere che si connettono al laboratorio principale via internet.
+    Bastano un tablet (o un PC) e una stampante per etichette barcode: non serve installare nulla, nessun IT on-site, nessuna VPN complessa.
+    Il campione viene registrato localmente e tracciato fino alla refertazione finale.
+  </p>
+  <div class="feat-grid">
+    <div class="feat-card">
+      <div class="feat-card-icon">📱</div>
+      <div class="feat-card-title">Solo un tablet</div>
+      <div class="feat-card-body">
+        Il punto prelievo funziona via browser su qualsiasi tablet, PC o thin client.
+        L'interfaccia è ottimizzata per il touch e per operatori non IT: registrazione paziente, stampa etichetta barcode, conferma del campione in 3 tap.
+        <br><br>Attivazione di un nuovo punto prelievo: <strong>meno di 15 minuti</strong>.
+      </div>
+      <div class="feat-tags">
+        <span class="tag tag-green">Browser-based</span>
+        <span class="tag tag-blue">Touch optimized</span>
+        <span class="tag tag-amber">Attivo in 15 min</span>
+      </div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-card-icon">🏷️</div>
+      <div class="feat-card-title">Barcode &amp; etichette automatiche</div>
+      <div class="feat-card-body">
+        All'accettazione del paziente, NextCare genera automaticamente le etichette barcode per ogni provetta richiesta dall'esame.
+        Il codice a barre identifica univocamente il campione nel sistema: paziente, data, esame, sede di prelievo, operatore.
+        <br><br>Compatibile con stampanti Zebra, Brother, Dymo e qualsiasi stampante ZPL/EPL.
+      </div>
+      <div class="feat-tags">
+        <span class="tag tag-blue">Zebra · Brother · Dymo</span>
+        <span class="tag tag-green">ZPL / EPL</span>
+        <span class="tag tag-purple">ID univoco</span>
+      </div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-card-icon">🚚</div>
+      <div class="feat-card-title">Tracking del campione</div>
+      <div class="feat-card-body">
+        Ogni campione ha un ciclo di vita tracciato: <strong>prelievo → trasporto → ricevimento lab → analisi → refertazione → firma → consegna</strong>.
+        In ogni fase, l'operatore aggiorna lo stato con una scansione del barcode.
+        <br><br>In caso di campione non conforme (emolizzato, insufficiente, sbagliato) il sistema avvisa automaticamente il punto prelievo e il paziente.
+      </div>
+      <div class="feat-tags">
+        <span class="tag tag-blue">7 stati campione</span>
+        <span class="tag tag-green">Alert automatici</span>
+        <span class="tag tag-red">Non conformità</span>
+      </div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-card-icon">📋</div>
+      <div class="feat-card-title">CUP integrato al punto prelievo</div>
+      <div class="feat-card-body">
+        Dal punto prelievo satellite è possibile anche prenotare prestazioni per il laboratorio centrale o per la sede principale.
+        Il paziente non deve chiamare: l'operatore del punto prelievo prenota direttamente sull'agenda della sede scelta.
+      </div>
+      <div class="feat-tags">
+        <span class="tag tag-blue">Prenotazione diretta</span>
+        <span class="tag tag-green">Agenda centrale</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PORTALI ══ -->
+<div class="sec" id="sec-portali">
+  <div class="sec-hd">
+    <div class="sec-icon">🌐</div>
+    <div class="sec-title">Portali Web</div>
+    <div class="sec-line"></div>
+  </div>
+  <p class="sec-intro">
+    NextCare espone portali web dedicati a ogni tipologia di utente esterno: pazienti, medici di base, aziende clienti, fondi sanitari.
+    Tutti i portali sono <strong>white-label</strong>: appaiono con il brand della struttura, non con il brand NextCare.
+  </p>
+  <div class="feat-grid">
+    <div class="feat-card">
+      <div class="feat-card-icon">👤</div>
+      <div class="feat-card-title">Portale Pazienti</div>
+      <div class="feat-card-body">
+        I pazienti accedono con credenziali proprie (o SPID) e possono:
+        <br>• Visualizzare e scaricare referti firmati digitalmente in PDF
+        <br>• Prenotare visite di controllo o follow-up
+        <br>• Aggiornare anagrafiche e consensi GDPR
+        <br>• Ricevere notifiche SMS/email quando il referto è pronto
+        <br>• Visualizzare lo storico degli accessi alla struttura
+        <br><br>Il portale è responsive e funziona perfettamente su smartphone.
+      </div>
+      <div class="feat-tags">
+        <span class="tag tag-purple">SPID compatibile</span>
+        <span class="tag tag-green">White-label</span>
+        <span class="tag tag-blue">Notifiche SMS/email</span>
+        <span class="tag tag-amber">Mobile first</span>
+      </div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-card-icon">🩺</div>
+      <div class="feat-card-title">Portale Medici di Base (MMG)</div>
+      <div class="feat-card-body">
+        I medici di medicina generale accedono direttamente ai referti dei propri pazienti assistiti — senza dover passare per il paziente.
+        <br><br>Funzionalità:
+        <br>• Accesso ai referti per paziente (filtro per CF/tessera sanitaria)
+        <br>• Notifica push quando il referto è disponibile
+        <br>• Invio richieste di prestazione direttamente al CUP
+        <br>• Integrazione HL7 FHIR R4 con cartella clinica del MMG
+        <br>• Accesso per specialisti e medici ospedalieri
+      </div>
+      <div class="feat-tags">
+        <span class="tag tag-blue">HL7 FHIR R4</span>
+        <span class="tag tag-green">Notifica push</span>
+        <span class="tag tag-purple">Accesso diretto</span>
+      </div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-card-icon">🏭</div>
+      <div class="feat-card-title">Portale Aziendale (Medicina del Lavoro)</div>
+      <div class="feat-card-body">
+        Le aziende clienti (medicina del lavoro) accedono a un pannello dedicato:
+        <br>• Prenotazione visite periodiche per i propri dipendenti
+        <br>• Visualizzazione referti (con firma del medico competente)
+        <br>• Gestione cartelle sanitarie di rischio (D.Lgs. 81/08)
+        <br>• Download documentazione e certificati di idoneità
+        <br>• Ogni azienda vede <strong>solo i propri dipendenti</strong> — segregazione totale dei dati
+      </div>
+      <div class="feat-tags">
+        <span class="tag tag-red">D.Lgs. 81/08</span>
+        <span class="tag tag-green">Idoneità digitale</span>
+        <span class="tag tag-purple">Segregazione dati</span>
+      </div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-card-icon">🏥</div>
+      <div class="feat-card-title">Portale Fondi Sanitari &amp; Assicurazioni</div>
+      <div class="feat-card-body">
+        I fondi sanitari (UniSalute, Previmedical, FASI, FASDAC…) si connettono tramite API standard o portale dedicato per:
+        <br>• Verifica eleggibilità paziente in tempo reale
+        <br>• Preautorizzazione automatica (per prestazioni previste dal piano)
+        <br>• Invio automatico documentazione di rimborso
+        <br>• Riconciliazione pagamenti e scadenziari
+        <br>• Nessuna doppia digitazione da parte della segreteria
+      </div>
+      <div class="feat-tags">
+        <span class="tag tag-blue">Eleggibilità real-time</span>
+        <span class="tag tag-green">Preauth auto</span>
+        <span class="tag tag-amber">Riconciliazione</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ RBAC ══ -->
+<div class="sec" id="sec-rbac">
+  <div class="sec-hd">
+    <div class="sec-icon">🔐</div>
+    <div class="sec-title">RBAC — Ruoli e Permessi Granulari</div>
+    <div class="sec-line"></div>
+  </div>
+  <p class="sec-intro">
+    NextCare implementa un sistema di controllo degli accessi basato su ruoli (RBAC) con granularità fino alla singola funzione.
+    Ogni azione è registrata nell'audit log immutabile — chi ha fatto cosa, quando e da dove.
+  </p>
+
+  <table class="spec-table" style="margin-bottom:20px">
+    <thead>
+      <tr><th>Ruolo</th><th>Accesso predefinito</th><th>Tipica figura</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>👑 Amministratore</td><td>Accesso completo a tutte le funzioni, configurazioni, utenti, reportistica finanziaria</td><td>Titolare, direttore sanitario</td></tr>
+      <tr><td>🩺 Medico</td><td>Refertazione, agenda propria, cartelle cliniche dei propri pazienti. Non vede dati finanziari</td><td>Medico specialista, radiologo</td></tr>
+      <tr><td>🔬 Laboratorista</td><td>LIS completo: accettazione campioni, analisi, validazione, refertazione. Non vede agenda visite</td><td>Biologo, tecnico di laboratorio</td></tr>
+      <tr><td>💁 Accettazione</td><td>CUP, prenotazioni, accettazione, cassa. Non vede referti clinici completi</td><td>Segretaria, front-desk</td></tr>
+      <tr><td>💳 Contabilità</td><td>Fatturazione, pagamenti, corrispettivi, prima nota. Non vede dati clinici</td><td>Amministrativa, commercialista</td></tr>
+      <tr><td>📦 Magazzino</td><td>Gestione reagenti, consumabili, ordini fornitori, cold chain. Solo moduli logistici</td><td>Magazziniere, tecnico</td></tr>
+      <tr><td>⚙️ Ruolo custom</td><td>Combinazione libera di permessi — configurabile dal singolo modulo/funzione</td><td>Qualsiasi figura ibrida</td></tr>
+    </tbody>
+  </table>
+
+  <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:14px;padding:22px 26px;display:flex;align-items:flex-start;gap:14px">
+    <span style="font-size:1.5rem;flex-shrink:0">📋</span>
+    <div>
+      <div style="font-family:Outfit,sans-serif;font-weight:800;font-size:.95rem;color:#065f46;margin-bottom:6px">Audit Log immutabile — GDPR art. 30</div>
+      <div style="font-size:.83rem;color:#047857;line-height:1.75">
+        Ogni operazione registra: utente, timestamp, IP, azione eseguita, dato modificato (prima e dopo).
+        Il log è in sola lettura anche per l'amministratore — non può essere alterato né eliminato.
+        Export CSV per ispezioni del Garante Privacy. Retention configurabile (default: 10 anni).
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ BI DI GRUPPO ══ -->
+<div class="sec" id="sec-bi">
+  <div class="sec-hd">
+    <div class="sec-icon">📊</div>
+    <div class="sec-title">Business Intelligence di Gruppo</div>
+    <div class="sec-line"></div>
+  </div>
+  <p class="sec-intro">
+    La BI di NextCare aggrega i dati di tutte le sedi e li presenta in dashboard interattive. È possibile interrogare i dati in linguaggio naturale italiano: "Quante prestazioni di ecografia abbiamo erogato nella sede B nel primo trimestre?" — e NextCare risponde con il grafico.
+  </p>
+  <div class="feat-grid">
+    <div class="feat-card">
+      <div class="feat-card-icon">💬</div>
+      <div class="feat-card-title">Query in linguaggio naturale</div>
+      <div class="feat-card-body">Scrivi la domanda come la faresti a un collega. L'AI interpreta, interroga il database e restituisce la risposta con il grafico più adatto (linee, barre, torta, tabella). Nessuna formula, nessun SQL.</div>
+      <div class="feat-tags"><span class="tag tag-purple">AI NLP italiano</span><span class="tag tag-blue">Auto-chart</span></div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-card-icon">⚡</div>
+      <div class="feat-card-title">Alerting automatico</div>
+      <div class="feat-card-body">Configura soglie su qualsiasi KPI: "avvisami se il tempo medio di refertazione LIS supera 4 ore", "notifica se il cassetto di una sede scende sotto €500". Gli alert arrivano via email, SMS o notifica nel pannello.</div>
+      <div class="feat-tags"><span class="tag tag-red">Soglie custom</span><span class="tag tag-amber">SMS / Email</span></div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-card-icon">📤</div>
+      <div class="feat-card-title">Report automatici per il board</div>
+      <div class="feat-card-body">Schedula report periodici (settimanali, mensili, trimestrali) in PDF o Excel. Il sistema li genera e li invia via email ai destinatari configurati — senza che nessuno debba ricordarsi di esportare nulla.</div>
+      <div class="feat-tags"><span class="tag tag-blue">PDF / Excel</span><span class="tag tag-green">Schedulati</span></div>
+    </div>
+    <div class="feat-card">
+      <div class="feat-card-icon">🔮</div>
+      <div class="feat-card-title">Previsioni AI</div>
+      <div class="feat-card-body">L'AI analizza i trend storici e proietta: occupazione agenda nelle prossime 4 settimane, andamento ricavi, consumo reagenti. Utile per pianificare turni medici, ordini di magazzino e campagne di comunicazione.</div>
+      <div class="feat-tags"><span class="tag tag-purple">Trend forecasting</span><span class="tag tag-amber">Pianificazione</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ DEPLOY ══ -->
+<div class="sec" id="sec-deploy">
+  <div class="sec-hd">
+    <div class="sec-icon">☁️</div>
+    <div class="sec-title">Modalità di Deploy</div>
+    <div class="sec-line"></div>
+  </div>
+  <p class="sec-intro">NextCare si adatta all'infrastruttura della struttura — non il contrario. Tre modalità di deploy, tutte con le stesse funzionalità, reversibili in qualsiasi momento.</p>
+  <table class="spec-table">
+    <thead><tr><th>Caratteristica</th><th>☁️ SaaS Cloud</th><th>🖥️ On-Premise</th><th>🔀 Hybrid</th></tr></thead>
+    <tbody>
+      <tr><td>Installazione hardware</td><td><span class="check">✓ Nessuna</span></td><td>Server della struttura</td><td>Parziale</td></tr>
+      <tr><td>Aggiornamenti</td><td><span class="check">✓ Automatici</span></td><td>Manuali / assistiti</td><td>Automatici per cloud</td></tr>
+      <tr><td>Backup</td><td><span class="check">✓ Incluso</span></td><td>A carico struttura</td><td>Misto</td></tr>
+      <tr><td>Dati clinici in casa</td><td>No (datacenter EU)</td><td><span class="check">✓ Sì</span></td><td><span class="check">✓ Sì</span></td></tr>
+      <tr><td>Accesso portali esterni</td><td><span class="check">✓ Immediato</span></td><td>Richiede NAT/VPN</td><td><span class="check">✓ Cloud layer</span></td></tr>
+      <tr><td>SLA disponibilità</td><td>99.9% garantito</td><td>Dipende da hardware</td><td>99.9% per cloud</td></tr>
+      <tr><td>Costo infrastruttura</td><td><span class="check">✓ Incluso</span></td><td>A carico struttura</td><td>Ridotto</td></tr>
+      <tr><td>Conformità NIS2</td><td><span class="check">✓ Inclusa</span></td><td>A carico struttura</td><td>Parziale</td></tr>
+    </tbody>
+  </table>
+
+  <!-- Logo wall infrastruttura -->
+  <div class="logo-wall" style="margin-top:20px">
+    <div class="logo-wall-title">Infrastruttura certificata</div>
+    <div class="logo-row">
+      <div class="logo-chip"><img src="https://www.google.com/s2/favicons?domain=microsoft.com&sz=64" alt="Microsoft Azure" width="24" height="24" style="object-fit:contain;border-radius:4px" onerror="this.style.display='none'"> <span class="logo-chip-name">Microsoft Azure</span></div>
+      <div class="logo-chip"><img src="https://www.google.com/s2/favicons?domain=aws.amazon.com&sz=64" alt="AWS" width="24" height="24" style="object-fit:contain;border-radius:4px" onerror="this.style.display='none'"> <span class="logo-chip-name">Amazon AWS</span></div>
+      <div class="logo-chip"><img src="https://www.google.com/s2/favicons?domain=microsoft.com&sz=64" alt="SQL Server" width="24" height="24" style="object-fit:contain;border-radius:4px" onerror="this.style.display='none'"> <span class="logo-chip-name">SQL Server</span></div>
+      <div class="logo-chip"><img src="https://www.google.com/s2/favicons?domain=letsencrypt.org&sz=64" alt="Let's Encrypt" width="24" height="24" style="object-fit:contain;border-radius:4px" onerror="this.style.display='none'"> <span class="logo-chip-name">Let's Encrypt SSL</span></div>
+      <div class="logo-chip"><img src="https://www.google.com/s2/favicons?domain=microsoft.com&sz=64" alt="Windows Server" width="24" height="24" style="object-fit:contain;border-radius:4px" onerror="this.style.display='none'"> <span class="logo-chip-name">Windows Server</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ ERP ══ -->
+<div class="sec" id="sec-erp">
+  <div class="sec-hd">
+    <div class="sec-icon">💼</div>
+    <div class="sec-title">ERP &amp; Ciclo Attivo — Partner certificati</div>
+    <div class="sec-line"></div>
+  </div>
+  <p class="sec-intro">NextCare si integra bidirezionalmente con i principali ERP italiani per la gestione del ciclo attivo: fatture elettroniche, prima nota, corrispettivi e trasmissione SDI senza doppia digitazione.</p>
+
+  <div class="logo-wall" style="margin-bottom:20px">
+    <div class="logo-wall-title">ERP compatibili</div>
+    <div class="logo-row">
+      <div class="logo-chip"><img src="https://www.google.com/s2/favicons?domain=arcanet.it&sz=64" alt="Arca" width="26" height="26" style="object-fit:contain;border-radius:4px" onerror="this.style.display='none'"> <span class="logo-chip-name">Arca Evolution</span></div>
+      <div class="logo-chip"><img src="https://www.google.com/s2/favicons?domain=zucchetti.it&sz=64" alt="Zucchetti" width="26" height="26" style="object-fit:contain;border-radius:4px" onerror="this.style.display='none'"> <span class="logo-chip-name">Zucchetti Ad Hoc</span></div>
+      <div class="logo-chip"><img src="https://www.google.com/s2/favicons?domain=teamsystem.com&sz=64" alt="TeamSystem" width="26" height="26" style="object-fit:contain;border-radius:4px" onerror="this.style.display='none'"> <span class="logo-chip-name">TeamSystem Alyante</span></div>
+      <div class="logo-chip"><img src="https://www.google.com/s2/favicons?domain=sap.com&sz=64" alt="SAP" width="26" height="26" style="object-fit:contain;border-radius:4px" onerror="this.style.display='none'"> <span class="logo-chip-name">SAP Business One</span></div>
+      <div class="logo-chip"><img src="https://www.google.com/s2/favicons?domain=microsoft.com&sz=64" alt="Microsoft" width="26" height="26" style="object-fit:contain;border-radius:4px" onerror="this.style.display='none'"> <span class="logo-chip-name">Business Central</span></div>
+      <div class="logo-chip"><img src="https://www.google.com/s2/favicons?domain=passepartout.net&sz=64" alt="Passepartout" width="26" height="26" style="object-fit:contain;border-radius:4px" onerror="this.style.display='none'"> <span class="logo-chip-name">Passepartout Mexal</span></div>
+    </div>
+  </div>
+
+  <div class="logo-wall">
+    <div class="logo-wall-title">Principali integrazioni LIS / Imaging</div>
+    <div class="logo-row">
+      <div class="logo-chip"><img src="https://www.google.com/s2/favicons?domain=roche.com&sz=64" alt="Roche" width="26" height="26" style="object-fit:contain;border-radius:4px" onerror="this.style.display='none'"> <span class="logo-chip-name">Roche COBAS</span></div>
+      <div class="logo-chip"><img src="https://www.google.com/s2/favicons?domain=abbott.com&sz=64" alt="Abbott" width="26" height="26" style="object-fit:contain;border-radius:4px" onerror="this.style.display='none'"> <span class="logo-chip-name">Abbott ALINITY</span></div>
+      <div class="logo-chip"><img src="https://www.google.com/s2/favicons?domain=siemens-healthineers.com&sz=64" alt="Siemens" width="26" height="26" style="object-fit:contain;border-radius:4px" onerror="this.style.display='none'"> <span class="logo-chip-name">Siemens ATELLICA</span></div>
+      <div class="logo-chip"><img src="https://www.google.com/s2/favicons?domain=beckmancoulter.com&sz=64" alt="Beckman Coulter" width="26" height="26" style="object-fit:contain;border-radius:4px" onerror="this.style.display='none'"> <span class="logo-chip-name">Beckman Coulter</span></div>
+      <div class="logo-chip"><img src="https://www.google.com/s2/favicons?domain=sysmex.com&sz=64" alt="Sysmex" width="26" height="26" style="object-fit:contain;border-radius:4px" onerror="this.style.display='none'"> <span class="logo-chip-name">Sysmex XN</span></div>
+      <div class="logo-chip"><img src="https://www.google.com/s2/favicons?domain=biomerieux.com&sz=64" alt="bioMérieux" width="26" height="26" style="object-fit:contain;border-radius:4px" onerror="this.style.display='none'"> <span class="logo-chip-name">bioMérieux VITEK</span></div>
+      <div class="logo-chip"><img src="https://www.google.com/s2/favicons?domain=gehealthcare.com&sz=64" alt="GE Healthcare" width="26" height="26" style="object-fit:contain;border-radius:4px" onerror="this.style.display='none'"> <span class="logo-chip-name">GE Healthcare</span></div>
+      <div class="logo-chip"><img src="https://www.google.com/s2/favicons?domain=philips.com&sz=64" alt="Philips" width="26" height="26" style="object-fit:contain;border-radius:4px" onerror="this.style.display='none'"> <span class="logo-chip-name">Philips EPIQ</span></div>
+      <div class="logo-chip"><img src="https://www.google.com/s2/favicons?domain=esaote.com&sz=64" alt="Esaote" width="26" height="26" style="object-fit:contain;border-radius:4px" onerror="this.style.display='none'"> <span class="logo-chip-name">Esaote MyLab</span></div>
+      <div class="logo-chip"><img src="https://www.google.com/s2/favicons?domain=fujifilm.com&sz=64" alt="Fujifilm" width="26" height="26" style="object-fit:contain;border-radius:4px" onerror="this.style.display='none'"> <span class="logo-chip-name">Fujifilm Synapse</span></div>
+      <div class="logo-chip"><img src="https://www.google.com/s2/favicons?domain=mindray.com&sz=64" alt="Mindray" width="26" height="26" style="object-fit:contain;border-radius:4px" onerror="this.style.display='none'"> <span class="logo-chip-name">Mindray DC-80</span></div>
+      <div class="logo-chip"><img src="https://www.google.com/s2/favicons?domain=agfa.com&sz=64" alt="Agfa" width="26" height="26" style="object-fit:contain;border-radius:4px" onerror="this.style.display='none'"> <span class="logo-chip-name">Agfa PACS</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CONFRONTO ══ -->
+<div class="sec" id="sec-confronto">
+  <div class="sec-hd">
+    <div class="sec-icon">⚖️</div>
+    <div class="sec-title">Confronto con le alternative</div>
+    <div class="sec-line"></div>
+  </div>
+  <p class="sec-intro">Come si posiziona NextCare rispetto alle soluzioni tradizionali per reti sanitarie multi-sede?</p>
+  <div class="comp-grid">
+    <div class="comp-card">
+      <div class="comp-card-title">🧩 Gestionale tradizionale<br><small style="font-weight:400;color:#94a3b8">Modulo per modulo</small></div>
+      <div class="comp-row"><span class="comp-row-label">Multi-tenant nativo</span><span class="comp-val no">✗ No</span></div>
+      <div class="comp-row"><span class="comp-row-label">Multi-sede</span><span class="comp-val partial">〜 Aggiuntivo</span></div>
+      <div class="comp-row"><span class="comp-row-label">Punti prelievo satellite</span><span class="comp-val no">✗ No</span></div>
+      <div class="comp-row"><span class="comp-row-label">Portale pazienti</span><span class="comp-val partial">〜 Extra</span></div>
+      <div class="comp-row"><span class="comp-row-label">BI di gruppo</span><span class="comp-val no">✗ No</span></div>
+      <div class="comp-row"><span class="comp-row-label">ERP integrato</span><span class="comp-val partial">〜 Su misura</span></div>
+      <div class="comp-row"><span class="comp-row-label">AI nativa</span><span class="comp-val no">✗ No</span></div>
+      <div class="comp-row"><span class="comp-row-label">Prezzo base</span><span class="comp-val" style="color:#dc2626">€500+/mese +moduli</span></div>
+    </div>
+    <div class="comp-card featured">
+      <div style="background:var(--g);color:#fff;border-radius:8px;padding:4px 12px;
+        font-size:.72rem;font-weight:800;display:inline-block;margin-bottom:12px">✦ NEXTCARE</div>
+      <div class="comp-card-title">🏗️ NextCare Enterprise</div>
+      <div class="comp-row"><span class="comp-row-label">Multi-tenant nativo</span><span class="comp-val yes">✓ Incluso</span></div>
+      <div class="comp-row"><span class="comp-row-label">Multi-sede</span><span class="comp-val yes">✓ Incluso</span></div>
+      <div class="comp-row"><span class="comp-row-label">Punti prelievo satellite</span><span class="comp-val yes">✓ Incluso</span></div>
+      <div class="comp-row"><span class="comp-row-label">Portale pazienti</span><span class="comp-val yes">✓ Incluso</span></div>
+      <div class="comp-row"><span class="comp-row-label">BI di gruppo</span><span class="comp-val yes">✓ Incluso</span></div>
+      <div class="comp-row"><span class="comp-row-label">ERP integrato</span><span class="comp-val yes">✓ Incluso</span></div>
+      <div class="comp-row"><span class="comp-row-label">AI nativa</span><span class="comp-val yes">✓ Incluso</span></div>
+      <div class="comp-row"><span class="comp-row-label">Prezzo base</span><span class="comp-val yes">Da €499/mese tutto incluso</span></div>
+    </div>
+    <div class="comp-card">
+      <div class="comp-card-title">🏥 HIS Ospedaliero<br><small style="font-weight:400;color:#94a3b8">Enterprise tradizionale</small></div>
+      <div class="comp-row"><span class="comp-row-label">Multi-tenant nativo</span><span class="comp-val yes">✓ Sì</span></div>
+      <div class="comp-row"><span class="comp-row-label">Multi-sede</span><span class="comp-val yes">✓ Sì</span></div>
+      <div class="comp-row"><span class="comp-row-label">Punti prelievo satellite</span><span class="comp-val partial">〜 Configurazione</span></div>
+      <div class="comp-row"><span class="comp-row-label">Portale pazienti</span><span class="comp-val partial">〜 Extra</span></div>
+      <div class="comp-row"><span class="comp-row-label">BI di gruppo</span><span class="comp-val partial">〜 Modulo aggiuntivo</span></div>
+      <div class="comp-row"><span class="comp-row-label">ERP integrato</span><span class="comp-val partial">〜 Middleware</span></div>
+      <div class="comp-row"><span class="comp-row-label">AI nativa</span><span class="comp-val no">✗ No</span></div>
+      <div class="comp-row"><span class="comp-row-label">Prezzo base</span><span class="comp-val" style="color:#dc2626">€5.000+/mese + implementazione</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta">
+  <h2>Pronto a scalare la tua rete sanitaria?</h2>
+  <p>Mostraci la struttura della tua organizzazione durante la demo. In 30 minuti vediamo insieme come NextCare si adatta — sede per sede, punto prelievo per punto prelievo.</p>
+  <button class="btn-w" onclick="openDemoModal()">🎯 Richiedi Demo Gratuita</button>
+  <a href="integrazioni.html" class="btn-ghost">🔌 Vedi tutte le integrazioni</a>
+</div>
+
+</div><!-- /wrap -->
+
+<footer class="foot">
+  <p>© 2026 NextCare · Healthcare Operating System · nextcare.tech
+  &nbsp;|&nbsp;<a href="privacy.html">Privacy Policy</a>&nbsp;·&nbsp;<a href="cookie.html">Cookie Policy</a></p>
+</footer>
+
+<script>
+function openDemoModal(){ window.location.href='index.html#demo'; }
+(function(){
+  var links=document.querySelectorAll('.sm-link[href^="#"]');
+  function upd(){
+    var sy=window.scrollY+180;
+    var act=null;
+    links.forEach(function(l){
+      var id=l.getAttribute('href').slice(1);
+      var el=document.getElementById(id);
+      if(el&&el.offsetTop<=sy) act=l;
+    });
+    links.forEach(function(l){l.classList.remove('active');});
+    if(act) act.classList.add('active');
+  }
+  window.addEventListener('scroll',upd,{passive:true});
+  upd();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Inter:wght@400;500;600&display=swap');
+body{width:1584px;height:396px;overflow:hidden;font-family:Outfit,sans-serif}
+.wrap{
+  width:1584px;height:396px;
+  background:#f4f6fa;
+  display:flex;align-items:center;
+  padding:0 80px;position:relative;overflow:hidden;
+  border-bottom:3px solid #e2e8f0;
+}
+/* Dot grid */
+.wrap::before{
+  content:'';position:absolute;inset:0;
+  background-image:radial-gradient(rgba(37,99,235,.07) 1px,transparent 1px);
+  background-size:24px 24px;pointer-events:none;
+}
+/* Striscia blu accent sx */
+.accent-bar{
+  position:absolute;left:0;top:0;bottom:0;width:6px;
+  background:linear-gradient(180deg,#2563eb,#3b82f6,#8b5cf6);
+}
+/* Glow decorativo */
+.glow-r{
+  position:absolute;right:60px;top:50%;transform:translateY(-50%);
+  width:380px;height:380px;border-radius:50%;
+  background:radial-gradient(circle,rgba(37,99,235,.06),transparent 70%);
+}
+
+/* LEFT — brand */
+.left{display:flex;flex-direction:column;gap:14px;flex:0 0 380px;position:relative;z-index:2}
+.logo-row{display:flex;align-items:center;gap:16px}
+.logo-box{
+  width:76px;height:76px;
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+  border-radius:16px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 8px 24px rgba(37,99,235,.25);flex-shrink:0;
+}
+.logo-nc{font-family:Outfit,sans-serif;font-weight:900;font-size:1.9rem;
+  color:#fff;letter-spacing:-1.5px}
+.brand-name{font-family:Outfit,sans-serif;font-weight:900;font-size:2.1rem;
+  color:#1e293b;letter-spacing:-.8px;line-height:1}
+.brand-sub{font-size:.75rem;color:#64748b;
+  letter-spacing:1.5px;text-transform:uppercase;font-weight:600;margin-top:3px}
+.tagline{font-family:Inter,sans-serif;font-size:.95rem;
+  color:#475569;line-height:1.6;max-width:340px;
+  border-left:3px solid #bfdbfe;padding-left:12px}
+.tags{display:flex;gap:8px;flex-wrap:wrap}
+.tag{background:#eff6ff;border:1px solid #bfdbfe;
+  border-radius:6px;padding:4px 10px;font-size:.68rem;font-weight:700;
+  color:#2563eb;letter-spacing:.3px}
+
+/* DIVIDER */
+.divider{width:1px;height:220px;background:#e2e8f0;
+  margin:0 56px;flex-shrink:0;position:relative;z-index:2}
+
+/* CENTER CARDS */
+.cards{display:flex;flex-direction:column;gap:10px;
+  flex:0 0 290px;position:relative;z-index:2}
+.card{
+  background:#fff;border:1px solid #e2e8f0;
+  border-radius:12px;padding:12px 16px;
+  box-shadow:0 1px 4px rgba(0,0,0,.04);
+}
+.card-label{font-size:.62rem;font-weight:700;color:#94a3b8;
+  letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
+.card-val{font-family:Outfit,sans-serif;font-weight:800;font-size:.9rem;color:#1e293b}
+.card-icon{font-size:1rem;margin-right:6px}
+.card.green{border-color:#bbf7d0;background:#f0fdf4}
+.card.green .card-val{color:#059669}
+.card.blue{border-color:#bfdbfe;background:#eff6ff}
+.card.blue .card-val{color:#2563eb}
+
+/* RIGHT */
+.right{flex:1;display:flex;flex-direction:column;
+  justify-content:center;align-items:flex-end;
+  position:relative;z-index:2;padding-left:40px}
+.right-quote{
+  font-family:Outfit,sans-serif;font-weight:900;
+  font-size:1.5rem;color:#1e293b;line-height:1.3;
+  text-align:right;letter-spacing:-.3px;max-width:400px;
+}
+.right-quote em{
+  color:#2563eb;font-style:normal;
+}
+.right-url{
+  font-size:.78rem;color:#94a3b8;letter-spacing:.5px;
+  margin-top:10px;text-align:right;font-weight:600;
+}
+.right-cta{
+  margin-top:16px;
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+  color:#fff;border-radius:8px;padding:9px 20px;
+  font-family:Outfit,sans-serif;font-weight:800;font-size:.82rem;
+  letter-spacing:.2px;border:none;
+  box-shadow:0 4px 14px rgba(37,99,235,.3);
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="accent-bar"></div>
+  <div class="glow-r"></div>
+
+  <!-- LEFT -->
+  <div class="left">
+    <div class="logo-row">
+      <div class="logo-box"><span class="logo-nc">NC</span></div>
+      <div>
+        <div class="brand-name">NextCare</div>
+        <div class="brand-sub">Healthcare Operating System</div>
+      </div>
+    </div>
+    <div class="tagline">
+      Dalla gestione clinica al bilancio.<br>In un unico canone mensile.
+    </div>
+    <div class="tags">
+      <span class="tag">LIS · HL7/ASTM</span>
+      <span class="tag">RIS · DICOM</span>
+      <span class="tag">CUP · AI</span>
+      <span class="tag">FSE 2.0</span>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- CENTER CARDS -->
+  <div class="cards">
+    <div class="card green">
+      <div class="card-label">Funzionalità</div>
+      <div class="card-val"><span class="card-icon">✅</span>Tutte incluse. Sempre.</div>
+    </div>
+    <div class="card blue">
+      <div class="card-label">Intelligenza Artificiale</div>
+      <div class="card-val"><span class="card-icon">🤖</span>AI nativa in ogni sezione</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Pricing</div>
+      <div class="card-val"><span class="card-icon">💡</span>Da €149/mese · Nessuna sorpresa</div>
+    </div>
+  </div>
+
+  <!-- RIGHT -->
+  <div class="right">
+    <div class="right-quote">
+      Non paghi moduli.<br>
+      <em>Paghi quello che usi.</em>
+    </div>
+    <div class="right-url">nextcare.tech</div>
+    <div class="right-cta">Richiedi Demo Gratuita →</div>
+  </div>
+
+</div>
+</body>
+</html>

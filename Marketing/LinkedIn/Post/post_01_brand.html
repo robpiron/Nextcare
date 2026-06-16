@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NextCare LinkedIn — Il gestionale che non ha moduli</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#2563eb;--primary-light:#eff6ff;
+  --grad:linear-gradient(135deg,#2563eb,#3b82f6);
+  --success:#10b981;--success-light:#ecfdf5;
+  --warning:#f59e0b;--warning-light:#fffbeb;
+  --danger:#ef4444;--danger-light:#fef2f2;
+  --purple:#8b5cf6;--purple-light:#f5f3ff;
+  --teal:#14b8a6;--teal-light:#f0fdfa;
+  --cyan:#06b6d4;--cyan-light:#ecfeff;
+  --orange:#f97316;--orange-light:#fff7ed;
+  --bg:#f4f6fa;--surface:#fff;
+  --t1:#1e293b;--t2:#64748b;--t3:#94a3b8;
+  --border:#e2e8f0;
+  --fh:'Outfit','Inter',sans-serif;
+  --fb:'Inter',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--fb);background:var(--bg);color:var(--t1)}
+h1,h2,h3,h4{font-family:var(--fh);font-weight:700}
+a{text-decoration:none;color:inherit}
+.nc-icon{width:38px;height:38px;background:var(--grad);border-radius:10px;color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--fh);font-weight:800;font-size:1.1rem;
+  box-shadow:0 4px 12px rgba(37,99,235,.28);flex-shrink:0}
+.nc-icon-sm{width:28px;height:28px;border-radius:7px;font-size:.78rem}
+.nc-logo{display:flex;align-items:center;gap:10px}
+.nc-name{font-family:var(--fh);font-weight:800;font-size:1.05rem;letter-spacing:-.3px;color:var(--t1)}
+.nc-sub{font-size:.65rem;color:var(--t2);letter-spacing:.8px;text-transform:uppercase}
+@media print{
+  .no-print{display:none!important}
+  body{background:#fff}
+  .hero-section{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+
+<style>
+body{background:var(--bg);min-height:100vh;display:flex;flex-direction:column;align-items:center;
+  justify-content:flex-start;padding:32px 16px 48px}
+.post-card{width:100%;max-width:600px;background:var(--surface);border-radius:18px;
+  box-shadow:0 8px 32px rgba(37,99,235,.10);overflow:hidden;border:1px solid var(--border)}
+.post-header{padding:16px 20px;display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--border)}
+.post-header-left{display:flex;align-items:center;gap:10px}
+.post-nc-icon{width:36px;height:36px;background:var(--grad);border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--fh);font-weight:800;font-size:1rem;color:#fff;
+  box-shadow:0 3px 10px rgba(37,99,235,.25)}
+.post-name{font-family:var(--fh);font-weight:800;font-size:.95rem;color:var(--t1)}
+.post-domain{font-size:.7rem;color:var(--t2)}
+.li-badge{display:flex;align-items:center;gap:5px;background:#0a66c2;border-radius:20px;
+  padding:5px 12px;font-size:.72rem;font-weight:700;color:#fff}
+.post-visual{position:relative;overflow:hidden}
+.post-text-area{padding:20px 22px 16px}
+.post-text{font-size:.88rem;color:var(--t1);line-height:1.75;white-space:pre-wrap;word-wrap:break-word}
+.post-hashtags{padding:0 22px 16px;font-size:.72rem;color:var(--primary);font-weight:600;line-height:1.7}
+.post-footer{padding:12px 22px 16px;border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between}
+.post-footer-url{font-family:var(--fh);font-weight:700;font-size:.78rem;color:var(--primary)}
+.copy-btn{background:var(--grad);color:#fff;border:none;border-radius:8px;
+  padding:7px 16px;font-family:var(--fh);font-weight:700;font-size:.75rem;
+  cursor:pointer;display:flex;align-items:center;gap:5px;transition:opacity .2s}
+.copy-btn:hover{opacity:.88}
+.copy-btn.copied{background:linear-gradient(135deg,#10b981,#059669)}
+/* visual helpers */
+.vis-dark{background:linear-gradient(150deg,#0f172a,#1e3a8a 60%,#2563eb);
+  padding:32px 24px;text-align:center}
+.vis-light{background:var(--bg);padding:28px 22px}
+.vis-teal{background:linear-gradient(135deg,#f0fdfa,#ecfeff);padding:28px 22px}
+.vis-green{background:var(--success-light);padding:28px 22px}
+.vis-warn{background:var(--warning-light);padding:28px 22px}
+.vis-split{display:grid;grid-template-columns:1fr 1fr;min-height:160px}
+.vis-red-half{background:var(--danger-light);padding:24px 16px}
+.vis-green-half{background:var(--success-light);padding:24px 16px}
+.vis-heading{font-family:var(--fh);font-weight:900;color:#fff;font-size:1.2rem;
+  letter-spacing:-.3px;margin-bottom:8px}
+.vis-heading-dark{font-family:var(--fh);font-weight:900;color:var(--t1);font-size:1.15rem;
+  letter-spacing:-.3px;margin-bottom:6px}
+.vis-sub{font-size:.78rem;color:rgba(255,255,255,.75);line-height:1.5}
+.vis-sub-dark{font-size:.78rem;color:var(--t2);line-height:1.5}
+.glass-pill{display:inline-flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.2);
+  border-radius:20px;padding:5px 14px;font-size:.72rem;font-weight:600;
+  color:rgba(255,255,255,.9);margin:4px 3px}
+.tier-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:12px}
+.tier-box{background:var(--surface);border-radius:10px;border:1px solid var(--border);
+  padding:12px;text-align:center}
+.tier-box.pro{border-color:var(--primary);border-width:2px;background:var(--primary-light)}
+.tier-badge{font-size:.6rem;background:var(--primary);color:#fff;border-radius:8px;
+  padding:2px 7px;font-weight:700;margin-bottom:4px;display:inline-block}
+.tier-name{font-family:var(--fh);font-weight:800;font-size:.82rem;color:var(--t1);margin-bottom:2px}
+.tier-price{font-family:var(--fh);font-weight:900;font-size:1.1rem;color:var(--primary);margin-bottom:3px}
+.tier-limits{font-size:.6rem;color:var(--t2);line-height:1.5}
+.conn-row{display:flex;flex-direction:column;gap:7px;margin-top:10px}
+.conn-item{background:var(--surface);border-radius:8px;border:1px solid var(--border);
+  padding:8px 12px;display:flex;align-items:center;justify-content:space-between}
+.conn-name{font-size:.75rem;font-weight:600;color:var(--t1)}
+.conn-price{font-size:.75rem;font-weight:800;color:var(--primary)}
+.kpi-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.kpi-box{background:var(--surface);border-radius:8px;border:1px solid var(--border);
+  padding:10px 12px}
+.kpi-val{font-family:var(--fh);font-weight:900;font-size:1.25rem;color:var(--primary)}
+.kpi-lbl{font-size:.68rem;color:var(--t2);margin-top:2px}
+.cold-row{display:flex;flex-direction:column;gap:7px;margin-top:10px}
+.cold-item{background:var(--surface);border-radius:8px;border:1px solid var(--border);
+  padding:8px 12px;display:flex;align-items:center;gap:8px}
+.cold-icon{font-size:1.1rem}
+.cold-text{font-size:.75rem;color:var(--t1);font-weight:600}
+.bi-query{background:linear-gradient(135deg,var(--primary-light),var(--purple-light));
+  border:1px solid #bfdbfe;border-radius:8px;padding:9px 12px;margin:5px 0;
+  font-size:.75rem;color:var(--primary);font-weight:600}
+.vs-label{font-family:var(--fh);font-weight:800;font-size:.85rem;margin-bottom:8px}
+.vs-bad{color:var(--danger)}
+.vs-good{color:var(--success)}
+.vs-row{font-size:.72rem;color:var(--t2);margin:4px 0;display:flex;align-items:center;gap:6px}
+.vs-row::before{content:'×';color:var(--danger);font-weight:800;flex-shrink:0}
+.vs-row-g::before{content:'✓';color:var(--success);font-weight:800;flex-shrink:0}
+.vs-row-g{font-size:.72px;color:var(--t1);margin:4px 0;display:flex;align-items:center;gap:6px;font-size:.72rem}
+.pulse{width:8px;height:8px;background:#10b981;border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(1.3)}}
+@media print{.copy-btn{display:none}}
+</style>
+
+</head>
+<body>
+<div class="post-card">
+  <div class="post-header">
+    <div class="post-header-left">
+      <div class="post-nc-icon">NC</div>
+      <div>
+        <div class="post-name">NextCare</div>
+        <div class="post-domain">nextcare.tech · Healthcare OS</div>
+      </div>
+    </div>
+    <div class="li-badge">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+      LinkedIn Post
+    </div>
+  </div>
+  <div class="post-visual">
+    <div class="vis-dark">
+      <div style="display:flex;justify-content:center;margin-bottom:16px">
+        <div style="width:64px;height:64px;background:rgba(255,255,255,.18);border-radius:18px;border:1px solid rgba(255,255,255,.25);display:flex;align-items:center;justify-content:center;font-family:Outfit,sans-serif;font-weight:800;font-size:1.6rem;color:#fff">NC</div>
+      </div>
+      <div class="vis-heading">Il gestionale che non ha moduli.</div>
+      <div class="vis-sub">27 funzioni native. AI integrata. Pricing trasparente.</div>
+      <div style="margin-top:14px;display:flex;flex-wrap:wrap;justify-content:center">
+        <span class="glass-pill">✦ Zero extra</span>
+        <span class="glass-pill">✦ AI Nativa</span>
+        <span class="glass-pill">✦ LIS · RIS · CUP</span>
+        <span class="glass-pill">✦ SaaS da €149/mese</span>
+      </div>
+    </div>
+  </div>
+  <div class="post-text-area">
+    <div class="post-text">Il gestionale sanitario non dovrebbe essere il tuo problema.
+
+Eppure ogni giorno migliaia di strutture perdono ore a configurare software, aggiornare nomenclatori, formare personale su sistemi complicati.
+
+NextCare ribalta questa logica.
+
+✨ L'AI legge la tua richiesta in linguaggio naturale e prenota automaticamente.
+🔬 Riconosce esami, branche, materiali e dosi — senza che tu tocchi nulla.
+⚙️ Si configura da sola. Zero ufficio IT. Zero consulenti.
+
+27 moduli sempre inclusi: LIS, RIS, CUP, Contabilità, BI, Magazzino, FSE, Riabilitazione, Portali.
+Canone mensile basato su medici attivi, utenti e referti emessi.
+Nessuna sorpresa a fine mese.
+
+👉 nextcare.tech — Richiedi una demo gratuita</div>
+  </div>
+  <div class="post-hashtags">#Healthcare #HealthIT #Sanità #GestionaleClinico #AI #LIS #RIS #Poliambulatorio #NextCare</div>
+  <div class="post-footer">
+    <span class="post-footer-url">nextcare.tech</span>
+    <button class="copy-btn" id="btn-p1" onclick="
+  navigator.clipboard.writeText(`Il gestionale sanitario non dovrebbe essere il tuo problema.
+
+Eppure ogni giorno migliaia di strutture perdono ore a configurare software, aggiornare nomenclatori, formare personale su sistemi complicati.
+
+NextCare ribalta questa logica.
+
+✨ L'AI legge la tua richiesta in linguaggio naturale e prenota automaticamente.
+🔬 Riconosce esami, branche, materiali e dosi — senza che tu tocchi nulla.
+⚙️ Si configura da sola. Zero ufficio IT. Zero consulenti.
+
+27 moduli sempre inclusi: LIS, RIS, CUP, Contabilità, BI, Magazzino, FSE, Riabilitazione, Portali.
+Canone mensile basato su medici attivi, utenti e referti emessi.
+Nessuna sorpresa a fine mese.
+
+👉 nextcare.tech — Richiedi una demo gratuita\\n\\n#Healthcare #HealthIT #Sanità #GestionaleClinico #AI #LIS #RIS #Poliambulatorio #NextCare`).then(()=>{
+    const b=document.getElementById('btn-p1');
+    b.textContent='✓ Copiato!';b.classList.add('copied');
+    setTimeout(()=>{b.textContent='📋 Copia testo';b.classList.remove('copied')},2000)
+  })">📋 Copia testo</button>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NextCare - Portale Azienda</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- CSS Style -->
+    <link rel="stylesheet" href="style.css?v=2.9">
+    <style>
+        body {
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            font-family: var(--font-body);
+        }
+
+        /* Login view styling */
+        #login-view {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            background: radial-gradient(circle at 10% 20%, rgba(16, 185, 129, 0.08) 0%, transparent 40%),
+                        radial-gradient(circle at 90% 80%, var(--primary-light) 0%, transparent 40%);
+        }
+
+        .login-card {
+            background: var(--bg-surface-trans);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border-color);
+            padding: 40px;
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 440px;
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .brand-logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .login-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 32px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 14px;
+            color: var(--text-secondary);
+            width: 18px;
+            height: 18px;
+        }
+
+        .input-wrapper input {
+            padding-left: 42px; /* make space for icon */
+        }
+
+        .error-message {
+            color: var(--danger);
+            font-size: 0.85rem;
+            margin-top: 12px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            background: var(--danger-light);
+            padding: 8px;
+            border-radius: var(--radius-sm);
+        }
+
+        /* Dashboard view styling */
+        #dashboard-view {
+            display: none;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background: var(--bg-surface-trans);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--primary-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: white;
+        }
+
+        .user-details h2 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .user-details span {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        main {
+            flex: 1;
+            padding: 40px;
+            max-width: 1280px;
+            width: 100%;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+
+        @media (min-width: 1024px) {
+            main {
+                grid-template-columns: 1.2fr 0.8fr;
+            }
+        }
+
+        .empty-state {
+            padding: 24px;
+            text-align: center;
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Actions button for downloads */
+        .btn-action {
+            background: var(--primary-light);
+            color: var(--primary);
+            border: 1px solid transparent;
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .btn-action:hover {
+            background: var(--primary);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- LOGIN VIEW -->
+    <div id="login-view">
+        <div class="login-card">
+            <div class="brand-logo">
+                <i data-lucide="building-2"></i>
+                <span>NextCare</span>
+            </div>
+            <p class="login-subtitle">Accesso Portale Azienda Convenzionata</p>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="username">Partita IVA (Username)</label>
+                    <div class="input-wrapper">
+                        <i data-lucide="building"></i>
+                        <input type="text" id="username" class="form-control" placeholder="Inserisci la P.IVA aziendale" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-wrapper">
+                        <i data-lucide="lock"></i>
+                        <input type="password" id="password" class="form-control" placeholder="Inserisci la password" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">
+                    <span>Accedi</span>
+                    <i data-lucide="arrow-right"></i>
+                </button>
+                <div id="login-error" class="error-message">
+                    <i data-lucide="alert-circle"></i>
+                    <span id="error-text">Credenziali non valide</span>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- DASHBOARD VIEW -->
+    <div id="dashboard-view">
+        <header>
+            <div class="brand-logo" style="margin-bottom: 0;">
+                <i data-lucide="building-2"></i>
+                <span>NextCare Business</span>
+            </div>
+            <div class="user-info">
+                <div class="avatar" id="user-avatar">C</div>
+                <div class="user-details">
+                    <h2 id="company-name-lbl">Nome Azienda</h2>
+                    <span id="company-piva-lbl">P.IVA: XXXXXXXXXX</span>
+                </div>
+                <button class="btn btn-secondary btn-sm" onclick="logout()">
+                    <i data-lucide="log-out"></i>
+                    <span>Esci</span>
+                </button>
+            </div>
+        </header>
+
+        <main>
+            <!-- LEFT COLUMN: EMPLOYEES SUITABILITY -->
+            <div class="card">
+                <div class="card-header">
+                    <h3><i data-lucide="users" style="color:var(--primary);"></i> Idoneità Sanitaria Dipendenti</h3>
+                </div>
+                <div class="table-container">
+                    <table id="employees-table">
+                        <thead>
+                            <tr>
+                                <th>Dipendente</th>
+                                <th>Giudizio Idoneità</th>
+                                <th>Scadenza Certificato</th>
+                                <th style="text-align: right;">Azioni</th>
+                            </tr>
+                        </thead>
+                        <tbody id="employees-body">
+                            <tr>
+                                <td colspan="4" class="empty-state">Caricamento in corso...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN: CORPORATE INVOICES -->
+            <div class="card" style="align-self: flex-start;">
+                <div class="card-header">
+                    <h3><i data-lucide="file-spreadsheet" style="color:var(--accent);"></i> Fatturazione Convenzione</h3>
+                </div>
+                <div class="table-container">
+                    <table id="invoices-table">
+                        <thead>
+                            <tr>
+                                <th>Numero</th>
+                                <th>Data</th>
+                                <th>Importo</th>
+                                <th style="text-align: right;">Fattura</th>
+                            </tr>
+                        </thead>
+                        <tbody id="invoices-body">
+                            <tr>
+                                <td colspan="4" class="empty-state">Caricamento in corso...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+
+        <footer style="margin-top: 40px; padding: 20px 0; border-top: 1px solid var(--border-color); text-align: center; font-size: 0.75rem; color: var(--text-muted); flex-shrink: 0; width: 100%;">
+            <p>© 2026 NextCare Platform - Portale Aziende. Tutti i diritti riservati.</p>
+            <div style="margin-top: 8px; display: flex; justify-content: center; gap: 12px;">
+                <a href="#" onclick="event.preventDefault(); window.openModal('modal-privacy-policy');" style="color: var(--text-secondary); text-decoration: none;">Informativa Privacy</a>
+                <span>•</span>
+                <a href="#" onclick="event.preventDefault(); window.showCookieBannerDirectly();" style="color: var(--text-secondary); text-decoration: none;">Gestione Cookie</a>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        function getBaseUrl() {
+            // Usa sempre l'origin corrente: funziona sia in locale che da IP remoto
+            return window.location.origin;
+        }
+
+        // Init icons
+        lucide.createIcons();
+
+        // Load theme from localStorage to match NextCare
+        const savedTheme = localStorage.getItem('nextcare_theme') || 'light';
+        if (savedTheme === 'dark') {
+            document.body.classList.add('dark-theme');
+        } else {
+            document.body.classList.remove('dark-theme');
+        }
+
+        // Autoprefill PIVA from URL query parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const pivaParam = urlParams.get('piva');
+        if (pivaParam) {
+            document.getElementById('username').value = pivaParam.toUpperCase();
+        }
+
+        let loggedCompany = null;
+
+        // Form login handler
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('login-error');
+            const errorText = document.getElementById('error-text');
+
+            errorDiv.style.display = 'none';
+
+            fetch(getBaseUrl() + '/api/portals-login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username: username,
+                    password: password,
+                    portal_type: 'company'
+                })
+            })
+            .then(res => res.json())
+            .then(res => {
+                if (res.success && res.data) {
+                    loggedCompany = res.data.user;
+                    sessionStorage.setItem('company_session', JSON.stringify({
+                        token: res.data.session_token,
+                        user: res.data.user,
+                        username: username
+                    }));
+                    showDashboard();
+                } else {
+                    errorText.innerText = res.error || "Credenziali non valide";
+                    errorDiv.style.display = 'flex';
+                }
+            })
+            .catch(err => {
+                errorText.innerText = "Errore di connessione al server";
+                errorDiv.style.display = 'flex';
+            });
+        });
+
+        // Check active session on load
+        const session = sessionStorage.getItem('company_session');
+        if (session) {
+            try {
+                const parsed = JSON.parse(session);
+                loggedCompany = parsed.user;
+                showDashboard();
+            } catch(e) {
+                sessionStorage.removeItem('company_session');
+            }
+        }
+
+        function showDashboard() {
+            document.getElementById('login-view').style.display = 'none';
+            document.getElementById('dashboard-view').style.display = 'flex';
+
+            // Set profile text
+            document.getElementById('company-name-lbl').innerText = loggedCompany.name;
+            document.getElementById('company-piva-lbl').innerText = "P.IVA: " + (JSON.parse(sessionStorage.getItem('company_session')).username || '');
+            document.getElementById('user-avatar').innerText = loggedCompany.name.charAt(0).toUpperCase();
+
+            loadDashboardData();
+        }
+
+        function logout() {
+            sessionStorage.removeItem('company_session');
+            window.location.reload();
+        }
+
+        function loadDashboardData() {
+            const companyId = loggedCompany.id;
+
+            fetch(getBaseUrl() + '/api/portal-company-data', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ company_id: companyId })
+            })
+            .then(res => res.json())
+            .then(res => {
+                if (res.success && res.data) {
+                    const patients = res.data.patients || [];
+                    const invoices = res.data.invoices || [];
+
+                    // 1. Render Employees
+                    const tbodyEmp = document.getElementById('employees-body');
+                    tbodyEmp.innerHTML = '';
+                    const employees = patients.filter(p => p.company_id === companyId);
+
+                    employees.forEach(emp => {
+                        tbodyEmp.innerHTML += `
+                            <tr>
+                                <td><strong>${emp.last_name} ${emp.first_name}</strong><br><small class="text-muted">CF: ${emp.tax_code || '-'}</small></td>
+                                <td><span class="badge badge-success">Idoneo con Prescrizioni</span></td>
+                                <td>2027-06-14</td>
+                                <td style="text-align: right;">
+                                    <button class="btn-action" onclick="downloadCert('${emp.last_name} ${emp.first_name}')">
+                                        <i data-lucide="download" style="width:14px;height:14px;"></i> Scarica
+                                    </button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+
+                    if (employees.length === 0) {
+                        tbodyEmp.innerHTML = '<tr><td colspan="4" class="empty-state">Nessun dipendente censito per questa azienda.</td></tr>';
+                    }
+
+                    // 2. Render Invoices
+                    const tbodyInv = document.getElementById('invoices-body');
+                    tbodyInv.innerHTML = '';
+                    const companyInvoices = invoices.filter(i => i.company_id === companyId);
+
+                    companyInvoices.forEach(inv => {
+                        const dateStr = inv.issue_date ? new Date(inv.issue_date).toLocaleDateString('it-IT') : '-';
+                        const amountStr = inv.amount_due !== undefined ? `€ ${inv.amount_due.toFixed(2)}` : '-';
+                        tbodyInv.innerHTML += `
+                            <tr>
+                                <td><strong>N. ${inv.invoice_number}</strong></td>
+                                <td>${dateStr}</td>
+                                <td style="font-weight: 600;">${amountStr}</td>
+                                <td style="text-align: right;">
+                                    <button class="btn-action" onclick="downloadInvoice(${inv.id})">
+                                        <i data-lucide="file-text" style="width:14px;height:14px;"></i> PDF
+                                    </button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+
+                    if (companyInvoices.length === 0) {
+                        tbodyInv.innerHTML = '<tr><td colspan="4" class="empty-state">Nessuna fattura aziendale disponibile.</td></tr>';
+                    }
+
+                    lucide.createIcons();
+                } else {
+                    document.getElementById('employees-body').innerHTML = '<tr><td colspan="4" class="empty-state" style="color:var(--danger)">Errore durante il caricamento dati.</td></tr>';
+                    document.getElementById('invoices-body').innerHTML = '<tr><td colspan="4" class="empty-state" style="color:var(--danger)">Errore durante il caricamento dati.</td></tr>';
+                }
+            })
+            .catch(err => {
+                document.getElementById('employees-body').innerHTML = '<tr><td colspan="4" class="empty-state" style="color:var(--danger)">Errore di rete.</td></tr>';
+                document.getElementById('invoices-body').innerHTML = '<tr><td colspan="4" class="empty-state" style="color:var(--danger)">Errore di rete.</td></tr>';
+            });
+        }
+
+        function downloadCert(name) {
+            alert(`Download in corso del certificato di idoneità sanitaria per: ${name}`);
+        }
+
+        function downloadInvoice(id) {
+            alert(`Download in corso della fattura aziendale convenzionata ID: ${id}`);
+        }
+    </script>
+
+    <!-- Modal: Privacy Policy & Cookie Policy -->
+    <div class="modal-overlay" id="modal-privacy-policy">
+        <div class="modal-box modal-lg" style="max-width: 800px; display: flex; flex-direction: column; max-height: 85vh;">
+            <div class="modal-header" style="flex-shrink: 0;">
+                <h2>Informativa Privacy &amp; Cookie Policy</h2>
+                <button type="button" class="modal-close" onclick="closeModal('modal-privacy-policy')">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 20px; overflow-y: auto; font-size: 0.85rem; line-height: 1.6; color: var(--text-primary); flex: 1;">
+                <p style="margin-bottom: 15px;">Benvenuto su <strong>nextcare.health</strong>. La tutela della tua privacy è di fondamentale importanza per noi. Questa informativa descrive le modalità di trattamento dei dati personali forniti o raccolti tramite la nostra piattaforma, in conformità al Regolamento Generale sulla Protezione dei Dati dell'Unione Europea (GDPR - Regolamento UE 2016/679).</p>
+                
+                <h3 style="margin-top: 20px; margin-bottom: 8px; color: var(--primary);">1. Titolare del Trattamento e DPO</h3>
+                <p style="margin-bottom: 15px;">Il Titolare del Trattamento è la piattaforma NextCare, raggiungibile all'indirizzo web <strong>https://nextcare.health</strong>. Per qualsiasi richiesta, chiarimento o esercizio dei diritti previsti dal GDPR, è possibile contattare il nostro DPO (Data Protection Officer) all'indirizzo email dedicato: <a href="mailto:dpo@nextcare.health" style="color: var(--primary); text-decoration: underline; font-weight: 600;">dpo@nextcare.health</a>.</p>
+                
+                <h3 style="margin-top: 20px; margin-bottom: 8px; color: var(--primary);">2. Tipologie di Dati Trattati</h3>
+                <p style="margin-bottom: 5px;">Raccogliamo e trattiamo esclusivamente le informazioni necessarie per erogare in sicurezza i servizi previsti dalla piattaforma:</p>
+                <ul style="margin-bottom: 15px; padding-left: 20px;">
+                    <li><strong>Dati Anagrafici e di Contatto:</strong> Nome, cognome, codice fiscale, email, telefono (di pazienti, medici e operatori sanitari).</li>
+                    <li><strong>Dati Sanitari Protetti (Sensibili):</strong> Cartelle cliniche fisioterapiche, diari clinici VAS, referti di laboratorio analisi cliniche (LIS) e referti/studi di diagnostica radiologica (RIS). Questi dati vengono trattati con il massimo livello di crittografia e isolamento informatico.</li>
+                    <li><strong>Dati di Navigazione e Log:</strong> Indirizzi IP, log di controllo attività (Audit Logs) per tracciare gli accessi alle informazioni sensibili e prevenire violazioni di sicurezza.</li>
+                </ul>
+                
+                <h3 style="margin-top: 20px; margin-bottom: 8px; color: var(--primary);">3. Finalità e Base Giuridica del Trattamento</h3>
+                <p style="margin-bottom: 5px;">I tuoi dati personali sono trattati per le seguenti finalità:</p>
+                <ul style="margin-bottom: 15px; padding-left: 20px;">
+                    <li>Erogazione di prestazioni sanitarie di diagnostica e riabilitazione (Base giuridica: Art. 9.2.h GDPR - diagnosi e assistenza sanitaria).</li>
+                    <li>Fatturazione delle prestazioni mediche e contabilità aziendale.</li>
+                    <li>Adempimento di obblighi di legge (es. comunicazioni al Sistema Tessera Sanitaria / Fascicolo Sanitario Elettronico FSE).</li>
+                    <li>Sicurezza del sistema (Base giuridica: legittimo interesse del Titolare a proteggere la riservatezza delle informazioni).</li>
+                </ul>
+                
+                <h3 style="margin-top: 20px; margin-bottom: 8px; color: var(--primary);">4. Diritti dell'Interessato (Art. 15-22 GDPR)</h3>
+                <p style="margin-bottom: 5px;">In conformità al GDPR, l'utente può esercitare in qualsiasi momento i seguenti diritti inviando una comunicazione a <a href="mailto:dpo@nextcare.health" style="color: var(--primary); text-decoration: underline;">dpo@nextcare.health</a>:</p>
+                <ul style="margin-bottom: 15px; padding-left: 20px;">
+                    <li><strong>Diritto di Accesso (Art. 15):</strong> Ottenere la conferma se sia o meno in corso un trattamento di propri dati e riceverne copia.</li>
+                    <li><strong>Diritto di Rettifica (Art. 16):</strong> Richiedere la correzione di dati inesatti o l'integrazione di quelli incompleti.</li>
+                    <li><strong>Diritto alla Cancellazione / Oblio (Art. 17):</strong> Richiedere la rimozione dei propri dati, compatibilmente con gli obblighi legali di conservazione della documentazione medica.</li>
+                    <li><strong>Diritto di Limitazione (Art. 18):</strong> Richiedere il blocco temporaneo del trattamento in specifiche ipotesi.</li>
+                    <li><strong>Diritto alla Portabilità (Art. 20):</strong> Ricevere i propri dati in formato strutturato di uso comune.</li>
+                    <li><strong>Diritto di Opposizione (Art. 21):</strong> Opporsi in qualsiasi momento al trattamento per motivi particolari.</li>
+                </ul>
+                
+                <h3 style="margin-top: 20px; margin-bottom: 8px; color: var(--primary);">5. Informativa sull'Uso dei Cookie</h3>
+                <p style="margin-bottom: 5px;">Il sito nextcare.health fa uso di cookie per rendere i propri servizi semplici ed efficienti per l'utenza:</p>
+                <ul style="margin-bottom: 15px; padding-left: 20px;">
+                    <li><strong>Cookie Tecnici ed Essenziali (Sempre Attivi):</strong> Accesso protetto e funzionamento base della sessione.</li>
+                    <li><strong>Cookie Analitici (Opzionali):</strong> Performance di caricamento della dashboard in forma anonima.</li>
+                    <li><strong>Cookie di Profilazione/Marketing (Opzionali):</strong> Nessun tracciamento di profilazione commerciale è attivo.</li>
+                </ul>
+                <p style="margin-bottom: 10px; font-weight: 600;">Puoi configurare le tue preferenze sui cookie in qualsiasi momento cliccando sul pulsante qui sotto:</p>
+                <div style="text-align: center; margin-top: 15px;">
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="window.showCookieBannerDirectly()" style="padding: 10px 16px;"><i data-lucide="cookie" style="width:14px; height:14px; margin-right:6px; vertical-align:middle;"></i> Gestisci Consensi Cookie</button>
+                </div>
+            </div>
+            <div class="modal-footer" style="flex-shrink: 0; border-top: 1px solid var(--border-color); padding: 15px 20px; display: flex; justify-content: flex-end;">
+                <button type="button" class="btn btn-primary" onclick="closeModal('modal-privacy-policy')">Chiudi Informativa</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- GDPR Cookie Consent Banner -->
+    <div class="cookie-consent-banner" id="cookie-consent-banner">
+        <div class="cookie-consent-title">
+            <i data-lucide="shield-check" style="color: var(--success); width:20px; height:20px;"></i>
+            <span>Consenso Cookie &amp; Privacy</span>
+        </div>
+        <div class="cookie-consent-desc">
+            NextCare utilizza cookie tecnici per garantire il corretto funzionamento della piattaforma. Con il tuo consenso, potremo utilizzare anche cookie analitici e di profilazione per migliorare la tua esperienza d'uso. Puoi accettare tutto, acconsentire ai soli tecnici o personalizzare le tue scelte. Leggi la nostra <a href="#" onclick="event.preventDefault(); window.openModal('modal-privacy-policy');">Informativa Privacy &amp; Cookie Policy</a>.
+        </div>
+        
+        <!-- Customization Toggle Panel -->
+        <div class="cookie-custom-panel" id="cookie-custom-panel" style="display: none;">
+            <div class="cookie-option-row">
+                <div class="cookie-option-label">
+                    <span class="cookie-option-title">Cookie Tecnici (Essenziali)</span>
+                    <span class="cookie-option-desc">Necessari per il corretto funzionamento del portale.</span>
+                </div>
+                <label class="cookie-switch">
+                    <input type="checkbox" checked disabled>
+                    <span class="cookie-slider"></span>
+                </label>
+            </div>
+            <div class="cookie-option-row">
+                <div class="cookie-option-label">
+                    <span class="cookie-option-title">Cookie Analitici (Opzionali)</span>
+                    <span class="cookie-option-desc">Statistiche di caricamento in forma anonima.</span>
+                </div>
+                <label class="cookie-switch">
+                    <input type="checkbox" id="cookie-opt-analytical">
+                    <span class="cookie-slider"></span>
+                </label>
+            </div>
+            <div class="cookie-option-row">
+                <div class="cookie-option-label">
+                    <span class="cookie-option-title">Cookie di Profilazione (Opzionali)</span>
+                    <span class="cookie-option-desc">Preferenze utente e memorizzazione lingua.</span>
+                </div>
+                <label class="cookie-switch">
+                    <input type="checkbox" id="cookie-opt-marketing">
+                    <span class="cookie-slider"></span>
+                </label>
+            </div>
+            <div style="text-align: right; margin-top: 15px; margin-bottom: 10px;">
+                <button type="button" class="btn btn-secondary btn-sm" onclick="window.saveCookiePreferences()">Salva Preferenze</button>
+            </div>
+        </div>
+        
+        <div class="cookie-consent-actions">
+            <button type="button" class="btn btn-secondary btn-sm" onclick="window.toggleCookieCustomization()">Personalizza</button>
+            <button type="button" class="btn btn-secondary btn-sm" onclick="window.rejectOptionalCookies()">Solo Tecnici</button>
+            <button type="button" class="btn btn-primary btn-sm" onclick="window.acceptAllCookies()">Accetta Tutti</button>
+        </div>
+    </div>
+
+    <!-- GDPR script block -->
+    <script>
+    (function() {
+        const consent = localStorage.getItem('nextcare_cookie_consent');
+        const banner = document.getElementById('cookie-consent-banner');
+        if (!consent && banner) {
+            setTimeout(() => {
+                banner.classList.add('show');
+            }, 1000);
+        }
+        
+        window.openModal = window.openModal || function(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.add('active');
+                modal.style.display = 'flex';
+            }
+        };
+        
+        window.closeModal = window.closeModal || function(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('active');
+                modal.style.display = 'none';
+            }
+        };
+
+        window.acceptAllCookies = function() {
+            const consentData = { technical: true, analytical: true, marketing: true, timestamp: new Date().toISOString() };
+            localStorage.setItem('nextcare_cookie_consent', JSON.stringify(consentData));
+            if (banner) banner.classList.remove('show');
+        };
+        
+        window.rejectOptionalCookies = function() {
+            const consentData = { technical: true, analytical: false, marketing: false, timestamp: new Date().toISOString() };
+            localStorage.setItem('nextcare_cookie_consent', JSON.stringify(consentData));
+            if (banner) banner.classList.remove('show');
+        };
+        
+        window.toggleCookieCustomization = function() {
+            const customPanel = document.getElementById('cookie-custom-panel');
+            if (customPanel) {
+                if (customPanel.style.display === 'none' || !customPanel.style.display) {
+                    customPanel.style.display = 'block';
+                } else {
+                    customPanel.style.display = 'none';
+                }
+            }
+        };
+        
+        window.saveCookiePreferences = function() {
+            const analytical = document.getElementById('cookie-opt-analytical').checked;
+            const marketing = document.getElementById('cookie-opt-marketing').checked;
+            const consentData = { technical: true, analytical, marketing, timestamp: new Date().toISOString() };
+            localStorage.setItem('nextcare_cookie_consent', JSON.stringify(consentData));
+            if (banner) banner.classList.remove('show');
+        };
+        
+        window.showCookieBannerDirectly = function() {
+            if (banner) {
+                banner.classList.add('show');
+                const customPanel = document.getElementById('cookie-custom-panel');
+                if (customPanel) customPanel.style.display = 'block';
+            }
+            closeModal('modal-privacy-policy');
+        };
+    })();
+    </script>
+</body>
+</html>

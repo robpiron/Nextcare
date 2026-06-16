@@ -1,0 +1,2635 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NextCare — Tutte le Funzionalità della Piattaforma</title>
+<meta name="description" content="Panoramica completa di tutti i funzionalità complete di NextCare Digital Healthcare Platform. Aggiornato dal codice sorgente reale.">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ── DESIGN SYSTEM — IDENTICO A style.css DI NEXTCARE ── */
+:root {
+  --primary:#2563eb; --primary-light:#eff6ff;
+  --primary-gradient:linear-gradient(135deg,#2563eb,#3b82f6);
+  --success:#10b981; --success-light:#ecfdf5;
+  --warning:#f59e0b; --warning-light:#fffbeb;
+  --danger:#ef4444;  --danger-light:#fef2f2;
+  --purple:#8b5cf6;  --purple-light:#f5f3ff;
+  --orange:#f97316; --orange-light:#fff7ed;
+  --teal:#14b8a6;   --teal-light:#f0fdfa;
+  --cyan:#06b6d4;   --cyan-light:#ecfeff;
+  --bg-base:#f4f6fa; --bg-surface:#ffffff;
+  --text-primary:#1e293b; --text-secondary:#64748b; --text-muted:#94a3b8;
+  --border:#e2e8f0;
+  --radius-sm:8px; --radius-md:12px; --radius-lg:18px;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.06);
+  --shadow-md:0 4px 16px rgba(0,0,0,.07);
+  --shadow-lg:0 10px 32px rgba(37,99,235,.10);
+  --font-heading:'Outfit','Inter',sans-serif;
+  --font-body:'Inter',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-body);background:var(--bg-base);color:var(--text-primary);line-height:1.6}
+a{text-decoration:none;color:inherit}
+h1,h2,h3,h4{font-family:var(--font-heading);font-weight:700;color:var(--text-primary)}
+
+/* ── HEADER ── */
+.site-header{
+  background:var(--bg-surface);border-bottom:1px solid var(--border);
+  padding:0 40px;position:sticky;top:0;z-index:200;
+  box-shadow:var(--shadow-sm);
+}
+.header-inner{
+  max-width:1400px;margin:0 auto;height:72px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+/* LOGO NC — identico a .logo-icon in style.css */
+.nc-logo{display:flex;align-items:center;gap:12px}
+.nc-logo-icon{
+  width:40px;height:40px;
+  background:var(--primary-gradient);
+  border-radius:12px;  /* var(--radius-md) */
+  color:#fff;display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-heading);font-weight:800;font-size:1.25rem;
+  box-shadow:0 4px 12px rgba(37,99,235,.30);
+  letter-spacing:-0.5px;flex-shrink:0;
+}
+.nc-logo-text{display:flex;flex-direction:column;line-height:1.15}
+.nc-logo-title{font-family:var(--font-heading);font-size:1.2rem;font-weight:700;letter-spacing:-0.5px;color:var(--text-primary)}
+.nc-logo-sub{font-size:.7rem;color:var(--text-secondary);text-transform:uppercase;letter-spacing:1px;font-weight:500}
+.header-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:linear-gradient(135deg,#eff6ff,#f5f3ff);
+  border:1px solid #bfdbfe;border-radius:20px;
+  padding:5px 14px;font-size:.78rem;font-weight:700;color:var(--primary);
+}
+.pulse{width:8px;height:8px;background:#10b981;border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(1.3)}}
+
+/* ── HERO ── */
+.hero{
+  background:linear-gradient(150deg,#0f172a 0%,#1e3a8a 55%,#2563eb 100%);
+  min-height:auto;padding:52px 60px 44px;
+  position:relative;overflow:hidden;display:flex;align-items:center;
+}
+.hero-inner{max-width:1500px;margin:0 auto;width:100%;display:grid;
+  grid-template-columns:1.1fr 0.9fr;gap:48px;align-items:center}
+.hero-left{display:flex;flex-direction:column;align-items:flex-start}
+.hero-right{display:flex;flex-direction:column}
+.hero-ctas{display:flex;gap:14px;flex-wrap:wrap}
+.btn-hero-primary{background:#fff;color:var(--p,#2563eb);padding:14px 28px;
+  border-radius:10px;font-family:Outfit,sans-serif;font-weight:800;font-size:.95rem;
+  text-decoration:none;transition:all .2s;box-shadow:0 8px 24px rgba(0,0,0,.18)}
+.btn-hero-primary:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(0,0,0,.24)}
+.btn-hero-sec{background:rgba(255,255,255,.12);color:#fff;padding:14px 28px;
+  border-radius:10px;font-family:Outfit,sans-serif;font-weight:700;font-size:.95rem;
+  text-decoration:none;border:1px solid rgba(255,255,255,.25);transition:all .2s}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.4)}}
+
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+.hero-inner{max-width:860px;margin:0 auto;position:relative}
+.hero-logo-row{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:28px}
+.hero-logo-icon{
+  width:64px;height:64px;background:rgba(255,255,255,.18);
+  border-radius:16px;display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-heading);font-weight:800;font-size:1.7rem;color:#fff;
+  box-shadow:0 8px 32px rgba(0,0,0,.2);backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,.25);
+}
+.hero h1{font-size:clamp(2rem,4vw,3rem);font-weight:900;color:#fff;line-height:1.15;margin-bottom:16px;letter-spacing:-1px}
+.hero h1 span{background:linear-gradient(135deg,#93c5fd,#c4b5fd);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-sub{font-size:1.1rem;color:rgba(255,255,255,.8);margin-bottom:36px;max-width:580px;margin-left:auto;margin-right:auto}
+.hero-badges{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:48px}
+.hbadge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,.15);backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,.25);border-radius:20px;
+  padding:6px 16px;font-size:.8rem;font-weight:600;color:#fff;
+}
+.hero-stats{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:20px;
+  background:rgba(255,255,255,.1);border-radius:16px;padding:24px;
+  border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(8px);
+}
+.hero-stat-num{font-family:var(--font-heading);font-size:2rem;font-weight:900;color:#fff}
+.hero-stat-lbl{font-size:.78rem;color:rgba(255,255,255,.7);font-weight:500;margin-top:2px}
+
+/* ── WAVE ── */
+.wave-divider{display:block;margin-top:-2px;line-height:0}
+.wave-divider svg{display:block;width:100%}
+
+/* ── MAIN ── */
+.main-wrap{max-width:1400px;margin:0 auto;padding:48px 40px 80px}
+
+/* ── SECTION HEADER ── */
+.section-label{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--primary-light);color:var(--primary);
+  border-radius:20px;padding:4px 14px;font-size:.78rem;font-weight:700;
+  margin-bottom:14px;border:1px solid #bfdbfe;
+}
+.section-title{font-size:1.75rem;font-weight:800;margin-bottom:8px;letter-spacing:-0.5px}
+.section-desc{color:var(--text-secondary);font-size:.95rem;margin-bottom:36px;max-width:620px}
+
+/* ── MODULE GRID ── */
+.modules-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(440px,1fr));gap:24px;margin-bottom:56px}
+
+/* ── MODULE CARD ── */
+.module-card{
+  background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);
+  overflow:hidden;transition:transform .2s,box-shadow .2s;position:relative;
+}
+.module-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.module-card-accent{height:4px;width:100%}
+.module-card-body{padding:22px 22px 18px}
+.module-card-header{display:flex;align-items:flex-start;gap:14px;margin-bottom:14px}
+.module-icon{
+  width:44px;height:44px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.25rem;flex-shrink:0;
+}
+.module-card-meta{flex:1}
+.module-card-title{font-size:1rem;font-weight:700;color:var(--text-primary);margin-bottom:4px;font-family:var(--font-heading)}
+.module-card-tag{
+  display:inline-flex;align-items:center;gap:4px;
+  font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:10px;
+}
+.module-card-desc{font-size:.85rem;color:var(--text-secondary);margin-bottom:14px;line-height:1.6}
+
+/* ── UI MOCK ── */
+.ui-mock{
+  background:#f8fafc;border:1px solid var(--border);border-radius:var(--radius-md);
+  overflow:hidden;margin-bottom:14px;
+}
+.mock-bar{
+  background:var(--bg-surface);border-bottom:1px solid var(--border);
+  padding:8px 12px;display:flex;align-items:center;gap:8px;
+}
+.mock-bar-dot{width:8px;height:8px;border-radius:50%;background:var(--primary)}
+.mock-bar-title{font-size:.72rem;font-weight:600;color:var(--text-secondary)}
+.mock-bar-badge{
+  margin-left:auto;font-size:.62rem;font-weight:700;
+  padding:2px 7px;border-radius:8px;
+}
+.mock-body{padding:10px 12px;display:flex;flex-direction:column;gap:7px}
+.mock-kpi-row{display:grid;gap:6px}
+.mock-kpi{
+  background:var(--bg-surface);border:1px solid var(--border);border-radius:6px;
+  padding:7px 10px;display:flex;align-items:center;gap:8px;
+}
+.mock-kpi-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.mock-kpi-lbl{font-size:.68rem;color:var(--text-secondary);flex:1}
+.mock-kpi-val{font-size:.82rem;font-weight:700}
+.mock-table{width:100%;border-collapse:collapse;font-size:.7rem}
+.mock-table th{background:#f1f5f9;padding:5px 8px;text-align:left;font-weight:600;color:var(--text-secondary);border-bottom:1px solid var(--border)}
+.mock-table td{padding:5px 8px;border-bottom:1px solid #f1f5f9;color:var(--text-primary)}
+.mock-table tr:last-child td{border-bottom:none}
+.mock-status{display:inline-block;padding:1px 7px;border-radius:8px;font-size:.63rem;font-weight:700}
+.mock-tabs{display:flex;gap:4px;padding:8px 10px;border-bottom:1px solid var(--border);background:var(--bg-surface)}
+.mock-tab{
+  font-size:.65rem;font-weight:600;padding:3px 8px;border-radius:6px;cursor:pointer;
+  background:#f1f5f9;color:var(--text-secondary);border:none;
+}
+.mock-tab.active{background:var(--primary);color:#fff}
+.mock-form-row{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.mock-input{
+  background:var(--bg-surface);border:1px solid var(--border);border-radius:6px;
+  padding:5px 8px;font-size:.68rem;color:var(--text-secondary);
+}
+.mock-btn{
+  display:inline-flex;align-items:center;gap:4px;
+  background:var(--primary);color:#fff;border:none;
+  border-radius:6px;padding:5px 10px;font-size:.68rem;font-weight:700;cursor:pointer;
+}
+.mock-btn.green{background:var(--success)}
+.mock-btn.red{background:var(--danger)}
+.mock-btn.purple{background:var(--purple)}
+.mock-btn.orange{background:var(--orange)}
+.mock-chip{
+  display:inline-flex;align-items:center;gap:3px;
+  background:var(--primary-light);color:var(--primary);
+  border-radius:10px;padding:2px 8px;font-size:.63rem;font-weight:600;
+  border:1px solid #bfdbfe;
+}
+.mock-chip.green{background:var(--success-light);color:var(--success);border-color:#a7f3d0}
+.mock-chip.purple{background:var(--purple-light);color:var(--purple);border-color:#ddd6fe}
+.mock-chip.orange{background:var(--orange-light);color:var(--orange);border-color:#fed7aa}
+.mock-chip.red{background:var(--danger-light);color:var(--danger);border-color:#fca5a5}
+.mock-chip.teal{background:var(--teal-light);color:var(--teal);border-color:#99f6e4}
+.mock-bar-chart{display:flex;align-items:flex-end;gap:5px;height:44px;padding:0 4px}
+.mock-bar-col{display:flex;flex-direction:column;align-items:center;gap:2px;flex:1}
+.mock-bar-fill{width:100%;border-radius:3px 3px 0 0}
+.mock-bar-lbl{font-size:.55rem;color:var(--text-muted)}
+.mock-progress{height:6px;background:#e2e8f0;border-radius:3px;overflow:hidden;margin:2px 0}
+.mock-progress-fill{height:100%;border-radius:3px}
+.mock-ai-box{
+  background:linear-gradient(135deg,var(--primary-light),var(--purple-light));
+  border:1px solid #bfdbfe;border-radius:8px;padding:8px 10px;
+  font-size:.68rem;color:var(--primary);line-height:1.5;
+}
+.mock-fridge{
+  background:var(--bg-surface);border:1px solid var(--border);border-radius:6px;
+  padding:7px 10px;display:flex;align-items:center;justify-content:space-between;
+}
+.mock-fridge-temp{font-family:var(--font-heading);font-size:1rem;font-weight:800}
+.mock-temp-ok{color:var(--success)}
+.mock-temp-warn{color:var(--warning)}
+.mock-temp-err{color:var(--danger)}
+.mock-timeline-dot{
+  width:8px;height:8px;border-radius:50%;background:var(--primary);
+  border:2px solid var(--primary-light);flex-shrink:0;margin-top:3px;
+}
+
+/* ── FEATURES CHIPS ROW ── */
+.features-row{display:flex;flex-wrap:wrap;gap:6px}
+.feat-chip{
+  display:inline-flex;align-items:center;gap:4px;
+  background:#f1f5f9;color:var(--text-secondary);
+  border-radius:8px;padding:3px 9px;font-size:.7rem;font-weight:600;
+  border:1px solid var(--border);
+}
+.feat-chip::before{content:'✓';color:var(--success);font-weight:700}
+
+/* ── COMPARISON TABLE ── */
+.comp-section{margin-bottom:56px}
+.comp-table{width:100%;border-collapse:collapse;border-radius:16px;overflow:hidden;border:1px solid var(--border);font-size:.85rem}
+.comp-table thead tr{background:var(--text-primary);color:#fff}
+.comp-table th{padding:12px 16px;text-align:left;font-weight:700;font-family:var(--font-heading)}
+.comp-table td{padding:10px 16px;border-bottom:1px solid #f1f5f9;vertical-align:middle}
+.comp-table tr:nth-child(even) td{background:#f8fafc}
+.comp-table td:first-child{font-weight:600;color:var(--text-primary)}
+.comp-table td.bad{color:var(--danger);font-size:.8rem}
+.comp-table td.good{color:var(--success);font-weight:700}
+
+/* ── CTA ── */
+.cta-section{
+  background:var(--primary-gradient);border-radius:var(--radius-lg);
+  padding:56px 40px;text-align:center;position:relative;overflow:hidden;
+}
+.cta-section::before{
+  content:'';position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Ccircle cx='20' cy='20' r='8'/%3E%3C/g%3E%3C/svg%3E");
+}
+.cta-logo-row{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:20px;position:relative}
+.cta-icon{width:52px;height:52px;background:rgba(255,255,255,.2);border-radius:14px;display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-weight:800;font-size:1.4rem;color:#fff;border:1px solid rgba(255,255,255,.3);backdrop-filter:blur(8px)}
+.cta-section h2{font-size:1.8rem;font-weight:900;color:#fff;margin-bottom:12px;position:relative;letter-spacing:-0.5px}
+.cta-section p{color:rgba(255,255,255,.85);font-size:1rem;margin-bottom:24px;position:relative}
+.cta-url{font-family:var(--font-heading);font-size:1.2rem;font-weight:800;color:#bfdbfe;letter-spacing:.5px;position:relative}
+
+/* ── FOOTER ── */
+.site-footer{background:var(--bg-surface);border-top:1px solid var(--border);padding:28px 40px;text-align:center}
+.footer-inner{max-width:1400px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.footer-logo{display:flex;align-items:center;gap:8px}
+.footer-nc-icon{
+  width:26px;height:26px;background:var(--primary-gradient);border-radius:6px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-heading);font-weight:800;font-size:.7rem;color:#fff;
+}
+.footer-text{font-size:.8rem;color:var(--text-muted)}
+
+/* ── NEW BADGE ── */
+.new-badge{
+  background:linear-gradient(135deg,#10b981,#059669);
+  color:#fff;font-size:.58rem;font-weight:800;padding:1px 6px;
+  border-radius:6px;text-transform:uppercase;letter-spacing:.5px;
+  vertical-align:top;margin-left:4px;
+}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .modules-grid{grid-template-columns:1fr}
+  .hero{padding:48px 20px 64px}
+  .main-wrap{padding:32px 20px 48px}
+  .hero-stats{grid-template-columns:repeat(2,1fr)}
+  .footer-inner{flex-direction:column;text-align:center}
+  .page-nav-inner{padding:0 16px}
+  .page-nav-link{padding:10px 11px;font-size:.73rem}
+}
+
+/* ── PAGE NAV ── */
+.page-nav{
+  background:var(--bg-surface);border-bottom:1px solid var(--border);
+  position:sticky;top:72px;z-index:190;
+  box-shadow:0 2px 8px rgba(0,0,0,.04);
+  overflow-x:auto;white-space:nowrap;
+}
+.page-nav-inner{
+  max-width:1400px;margin:0 auto;
+  display:flex;align-items:center;padding:0 40px;
+}
+.page-nav-link{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:12px 15px;font-size:.78rem;font-weight:600;
+  color:var(--text-secondary);border-bottom:3px solid transparent;
+  transition:all .2s;text-decoration:none;white-space:nowrap;cursor:pointer;
+}
+.page-nav-link:hover{color:var(--primary);background:#f8fafc;}
+.page-nav-link.active{color:var(--primary);border-bottom-color:var(--primary);background:var(--primary-light);}
+.back-to-top{
+  position:fixed;bottom:28px;right:28px;z-index:500;
+  width:44px;height:44px;background:var(--primary-gradient);
+  color:#fff;border:none;border-radius:50%;font-size:1.2rem;
+  cursor:pointer;box-shadow:0 4px 16px rgba(37,99,235,.35);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;transform:translateY(12px);
+  transition:opacity .25s,transform .25s;pointer-events:none;
+}
+.back-to-top.visible{opacity:1;transform:translateY(0);pointer-events:auto;}
+.back-to-top:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(37,99,235,.45);}
+
+/* ═══════════════════════════════════════════════════════════
+   RESPONSIVE — NextCare
+   Breakpoints: 1200px (lg) · 960px (md) · 768px (sm) · 480px (xs)
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Tablet large ≤1200px ─────────────────────────────────── */
+@media(max-width:1200px){
+  .hero-inner{gap:36px}
+  .section-inner,.wrap{max-width:960px}
+  .footer-grid{grid-template-columns:1fr 1fr 1fr}
+  .footer-brand{grid-column:1/-1}
+}
+
+/* ── Tablet ≤960px ────────────────────────────────────────── */
+@media(max-width:960px){
+  .hero-inner{grid-template-columns:1fr!important;gap:40px}
+  .hero-right{display:none!important}
+  .hero-left{max-width:100%!important;text-align:center}
+  .hero-ctas{justify-content:center}
+  .hero h1,.hero-h1{font-size:clamp(2rem,5vw,3rem)!important}
+  .section,.section-inner,.wrap{padding-left:24px!important;padding-right:24px!important}
+  .sim-grid{grid-template-columns:1fr!important}
+  .pricing-grid{grid-template-columns:1fr 1fr!important}
+  .feat-grid{grid-template-columns:repeat(2,1fr)!important}
+  .auto-grid{grid-template-columns:repeat(2,1fr)!important}
+  .manifesto-grid{grid-template-columns:1fr 1fr!important}
+  .cert-grid{grid-template-columns:1fr 1fr!important}
+  .footer-grid{grid-template-columns:1fr 1fr!important}
+  .footer-brand{grid-column:1/-1}
+}
+
+/* ── Mobile ≤768px ────────────────────────────────────────── */
+@media(max-width:768px){
+  :root{--nav-h:72px}
+  .burger{display:flex!important;align-items:center;justify-content:center}
+  .nav-menu{
+    display:none;position:fixed;top:var(--nav-h);left:0;right:0;
+    background:#fff;border-bottom:2px solid var(--br);
+    padding:16px 20px 20px;flex-direction:column;
+    align-items:flex-start;gap:6px;
+    box-shadow:0 12px 32px rgba(0,0,0,.12);
+    z-index:999;
+  }
+  .nav-menu.open{display:flex!important}
+  .nav-link{width:100%;padding:10px 14px;font-size:1rem}
+  .nav-cta{width:100%;text-align:center;margin:8px 0 0;padding:12px}
+  .nc-icon{width:46px!important;height:46px!important;font-size:1.05rem!important}
+  .nc-name{font-size:1.05rem!important}
+
+  .hero-inner{padding:48px 20px 40px!important}
+  .hero h1,.hero-h1{font-size:clamp(1.8rem,7vw,2.6rem)!important;text-align:center}
+  .hero-sub,.hero p{text-align:center!important;font-size:.9rem!important}
+  .hero-ctas{flex-direction:column;align-items:center;gap:12px;width:100%}
+  .btn-hero-primary,.btn-hero-sec{width:100%;text-align:center}
+
+  .pricing-grid{grid-template-columns:1fr!important}
+  .feat-grid{grid-template-columns:1fr!important}
+  .auto-grid{grid-template-columns:1fr!important}
+  .manifesto-grid{grid-template-columns:1fr!important}
+  .cert-grid{grid-template-columns:1fr!important}
+  .footer-grid{grid-template-columns:1fr!important}
+  .footer-col{margin-bottom:8px}
+
+  /* Sezione hero-stats */
+  .hero-stats{flex-direction:column;gap:12px}
+  .hstat{width:100%;padding:14px 20px}
+
+  /* Modal full-screen su mobile */
+  #simModal > div, #demoModal > div{
+    max-width:100%!important;border-radius:0!important;
+    min-height:100vh;margin:0;
+    padding:24px 20px!important;
+  }
+  #simModal > div > div[style*="grid-template-columns:1fr 1fr"]{
+    grid-template-columns:1fr!important;
+    display:grid!important;
+  }
+  .demoModal form, #demoForm{padding:20px 16px!important}
+
+  /* Timeline chi siamo */
+  .timeline{padding-left:20px}
+
+  /* Manifesto compatto home */
+  #manifesto-grid, [style*="grid-template-columns:repeat(3,1fr)"]{
+    grid-template-columns:1fr!important;
+  }
+
+  /* Section padding ridotto */
+  .section{padding:48px 20px!important}
+  .cta-block{padding:36px 20px!important}
+  .vision-block{padding:36px 20px!important}
+
+  /* Tier cards nella hero right: nasconde su mobile */
+  .hero-right{display:none!important}
+
+  /* Footer */
+  .footer-inner{padding:0 16px}
+  .footer-bottom{flex-direction:column;text-align:center;gap:6px}
+}
+
+/* ── Smartphone piccolo ≤480px ────────────────────────────── */
+@media(max-width:480px){
+  .hero h1,.hero-h1{font-size:clamp(1.6rem,8vw,2.2rem)!important}
+  .nc-icon{width:40px!important;height:40px!important;font-size:.95rem!important;border-radius:10px!important}
+  .nc-name{font-size:.95rem!important}
+  .section-title{font-size:1.5rem!important}
+  .cta-btns{flex-direction:column;align-items:center}
+  .btn-white,.btn-ghost{width:100%;text-align:center}
+  .hero-stats .hstat{padding:12px 16px}
+  .hstat-val{font-size:1.5rem!important}
+  #ticker{font-size:.82rem}
+  /* Manifesto 3-col → 1-col */
+  [style*="grid-template-columns:repeat(3"]{grid-template-columns:1fr!important}
+  /* Pricing cards hero */
+  [style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr!important}
+}
+
+
+/* ── SUBMENU MODULI ── */
+.mod-submenu{
+  position:sticky;top:var(--nav-h,84px);z-index:500;
+  background:rgba(255,255,255,.96);backdrop-filter:blur(12px);
+  border-bottom:1px solid #e2e8f0;
+  box-shadow:0 2px 12px rgba(37,99,235,.07);
+  overflow-x:auto;-webkit-overflow-scrolling:touch;
+}
+.mod-submenu::-webkit-scrollbar{height:3px}
+.mod-submenu::-webkit-scrollbar-track{background:#f1f5f9}
+.mod-submenu::-webkit-scrollbar-thumb{background:#bfdbfe;border-radius:2px}
+.mod-submenu-inner{
+  display:flex;align-items:center;gap:2px;
+  padding:8px 28px;white-space:nowrap;
+  max-width:1500px;margin:0 auto;
+}
+.mod-submenu-item{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:7px 14px;border-radius:8px;
+  font-family:Outfit,sans-serif;font-size:.8rem;font-weight:700;
+  color:#64748b;text-decoration:none;
+  transition:all .15s;white-space:nowrap;border:1px solid transparent;
+}
+.mod-submenu-item:hover{
+  background:#eff6ff;color:#2563eb;border-color:#bfdbfe;
+}
+.mod-submenu-item.active{
+  background:linear-gradient(135deg,#2563eb,#3b82f6);
+  color:#fff;border-color:transparent;
+  box-shadow:0 2px 8px rgba(37,99,235,.3);
+}
+.mod-sub-dot{width:4px;height:4px;border-radius:50%;
+  background:currentColor;opacity:.5;flex-shrink:0}
+@media(max-width:768px){
+  .mod-submenu-inner{padding:6px 16px;gap:4px}
+  .mod-submenu-item{padding:6px 10px;font-size:.75rem}
+}
+
+</style>
+
+<style>
+/* === NextCare unified color override === */
+:root{
+  --primary:#2563eb !important;
+  --primary-light:#eff6ff !important;
+  --primary-gradient:linear-gradient(135deg,#2563eb,#3b82f6) !important;
+  --success:#10b981 !important;
+  --danger:#ef4444 !important;
+  --warning:#f59e0b !important;
+  --purple:#8b5cf6 !important;
+  --text-primary:#1e293b !important;
+  --text-secondary:#64748b !important;
+  --text-muted:#94a3b8 !important;
+  --bg-base:#f4f6fa !important;
+  --bg-surface:#ffffff !important;
+  --border:#e2e8f0 !important;
+  --font-heading:'Outfit',sans-serif !important;
+  --font-body:'Inter',sans-serif !important;
+  --radius-sm:6px !important;
+  --radius-md:10px !important;
+  --radius-lg:16px !important;
+  --shadow-sm:0 1px 4px rgba(0,0,0,.06) !important;
+  --shadow-md:0 4px 16px rgba(37,99,235,.10) !important;
+  --shadow-lg:0 12px 40px rgba(37,99,235,.15) !important;
+}
+body{background:#f4f6fa;color:#1e293b;font-family:'Inter',sans-serif}
+/* Rimuovi qualsiasi nav preesistente nel file originale */
+nav:not(.topnav){display:none !important}
+/* Rimuovi sticky header originale se presente */
+header.sticky,header.site-header,.site-header:not(.topnav){display:none !important}
+</style>
+
+<style>
+:root{
+  --p:#2563eb;--pl:#eff6ff;--g:linear-gradient(135deg,#2563eb,#3b82f6);
+  --s:#10b981;--sl:#ecfdf5;--w:#f59e0b;--wl:#fffbeb;--d:#ef4444;--dl:#fef2f2;
+  --pu:#8b5cf6;--pul:#f5f3ff;--t:#14b8a6;--tl:#f0fdfa;--or:#f97316;--orl:#fff7ed;
+  --bg:#f4f6fa;--sf:#fff;--t1:#1e293b;--t2:#64748b;--t3:#94a3b8;--br:#e2e8f0;
+  --fh:'Outfit',sans-serif;--fb:'Inter',sans-serif;
+  --nav-h:84px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--fb);background:var(--bg);color:var(--t1);padding-top:var(--nav-h)}
+
+/* ── NAV ── */
+.topnav{position:fixed;top:0;left:0;right:0;z-index:1000;height:var(--nav-h);
+  background:rgba(255,255,255,.92);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--br);box-shadow:0 2px 12px rgba(37,99,235,.07)}
+.nav-inner{width:100%;height:100%;padding:0 60px;
+  display:flex;align-items:center;gap:20px}
+.nav-logo{display:flex;align-items:center;gap:14px;text-decoration:none}
+.nc-icon{width:46px;height:46px;background:var(--g);border-radius:10px;color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--fh);font-weight:800;font-size:1rem;
+  box-shadow:0 4px 12px rgba(37,99,235,.28);flex-shrink:0}
+.nc-name{font-family:var(--fh);font-weight:900;font-size:1.35rem;color:var(--t1);letter-spacing:-.4px;line-height:1.1}
+.nc-sub{font-size:.68rem;color:var(--t2);letter-spacing:1px;text-transform:uppercase;font-weight:600}
+.nav-menu{display:flex;align-items:center;gap:4px;margin-left:auto}
+.nav-link{text-decoration:none;padding:9px 16px;border-radius:9px;
+  font-size:.95rem;font-weight:600;color:var(--t2);transition:all .18s}
+.nav-link:hover{background:var(--pl);color:var(--p)}
+.nav-link.active{background:var(--pl);color:var(--p)}
+.nav-cta{text-decoration:none;background:var(--g);color:#fff;
+  padding:10px 22px;border-radius:10px;font-family:var(--fh);font-weight:700;
+  font-size:.92rem;margin-left:14px;transition:opacity .18s;white-space:nowrap}
+.nav-cta:hover{opacity:.88}
+.burger{display:none;background:none;border:none;font-size:1.4rem;
+  color:var(--t1);cursor:pointer;padding:4px}
+
+/* ── FOOTER ── */
+.site-footer{background:var(--t1);color:var(--t3);padding:48px 28px 28px;margin-top:80px}
+.footer-inner{max-width:1160px;margin:0 auto}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;margin-bottom:40px}
+.footer-brand .nc-icon{background:var(--g)}
+.footer-brand .nc-name{color:#fff}
+.footer-brand .nc-sub{color:var(--t3)}
+.footer-brand p{font-size:.83rem;color:var(--t3);margin-top:12px;line-height:1.7;max-width:220px}
+.footer-col h4{font-family:var(--fh);font-weight:700;font-size:.88rem;color:#fff;margin-bottom:14px}
+.footer-col a{display:block;text-decoration:none;font-size:.8rem;color:var(--t3);
+  margin-bottom:8px;transition:color .15s}
+.footer-col a:hover{color:#93c5fd}
+.footer-bottom{border-top:1px solid rgba(255,255,255,.08);padding-top:20px;
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;
+  font-size:.75rem;color:var(--t3)}
+
+@media(max-width:768px){
+  .burger{display:block}
+  .nav-menu{display:none;position:absolute;top:var(--nav-h);left:0;right:0;
+    background:#fff;border-bottom:1px solid var(--br);padding:12px 20px;
+    flex-direction:column;align-items:flex-start;gap:4px;box-shadow:0 8px 20px rgba(0,0,0,.08)}
+  .nav-menu.open{display:flex}
+  .nav-cta{margin-left:0;width:100%;text-align:center;margin-top:8px}
+  .footer-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:480px){
+  .footer-grid{grid-template-columns:1fr}
+}
+</style>
+<style>body{padding-top:var(--nav-h) !important}</style>
+</head>
+<body>
+<nav class="topnav" id="topnav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nc-icon">NC</div>
+      <div><div class="nc-name">NextCare</div><div class="nc-sub">nextcare.tech</div></div>
+    </a>
+    <button class="burger" id="burger" aria-label="Menu" onclick="document.getElementById('navmenu').classList.toggle('open')">&#9776;</button>
+    <div class="nav-menu" id="navmenu">
+      <a class="nav-link" href="index.html">🏠 Home</a>
+      <a class="nav-link active" href="moduli.html">&#129713; Funzionalità</a>
+      <a class="nav-link" href="integrazioni.html">🔌 Integrazioni</a>
+      <a class="nav-link" href="enterprise.html">🏗️ Enterprise</a>
+      <a class="nav-link" href="pricing.html">💰 Pricing</a>
+      <a class="nav-link" href="articoli.html">📰 Articoli</a>
+      <a class="nav-link" href="chisiamo.html">🏢 Chi Siamo</a>
+      <a href="javascript:void(0)" class="nav-cta" onclick="openDemoModal()">🎯 Demo Gratis</a>
+    </div>
+  </div>
+</nav>
+
+<!-- SIMULATOR MODAL -->
+<div id="simModal" style="display:none;position:fixed;inset:0;z-index:9999;
+  background:rgba(15,23,42,.72);backdrop-filter:blur(6px);
+  align-items:center;justify-content:center;padding:20px;overflow-y:auto">
+  <div style="background:linear-gradient(150deg,#0f172a,#1e3a8a 55%,#2563eb);
+    border-radius:22px;max-width:860px;width:100%;position:relative;
+    box-shadow:0 32px 80px rgba(0,0,0,.5);padding:40px 44px">
+    <!-- Close -->
+    <button onclick="closeSimModal()" style="position:absolute;top:16px;right:18px;
+      background:rgba(255,255,255,.12);border:none;color:#fff;border-radius:8px;
+      width:36px;height:36px;font-size:1.2rem;cursor:pointer;font-weight:700;
+      display:flex;align-items:center;justify-content:center">&#x2715;</button>
+    <!-- Header -->
+    <div style="text-align:center;margin-bottom:32px">
+      <div style="display:inline-flex;align-items:center;gap:10px;margin-bottom:10px">
+        <div style="width:48px;height:48px;background:linear-gradient(135deg,#2563eb,#3b82f6);
+          border-radius:12px;display:flex;align-items:center;justify-content:center;
+          font-family:Outfit,sans-serif;font-weight:800;color:#fff;font-size:.95rem">NC</div>
+        <span style="font-family:Outfit,sans-serif;font-weight:800;font-size:1.1rem;color:#fff">NextCare</span>
+      </div>
+      <div style="font-family:Outfit,sans-serif;font-weight:900;font-size:1.9rem;
+        color:#fff;letter-spacing:-.8px;margin-bottom:6px">Calcola il tuo canone mensile</div>
+      <p style="font-size:.88rem;color:rgba(255,255,255,.7)">
+        Imposta la dimensione della struttura e le integrazioni strumentali.
+        Il prezzo si aggiorna in tempo reale.</p>
+    </div>
+    <!-- Grid -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:40px">
+      <!-- LEFT: controls -->
+      <div style="display:flex;flex-direction:column;gap:18px">
+        <div>
+          <div style="font-size:.8rem;font-weight:700;color:rgba(255,255,255,.85);
+            display:flex;justify-content:space-between;margin-bottom:6px">
+            Medici attivi <span id="m-medici" style="color:#93c5fd;font-family:Outfit,sans-serif;font-weight:800">5</span>
+          </div>
+          <input type="range" id="m-sl-medici" min="1" max="50" value="5" oninput="calcModal()" style="width:100%">
+        </div>
+        <div>
+          <div style="font-size:.8rem;font-weight:700;color:rgba(255,255,255,.85);
+            display:flex;justify-content:space-between;margin-bottom:6px">
+            Utenti totali <span id="m-utenti" style="color:#93c5fd;font-family:Outfit,sans-serif;font-weight:800">10</span>
+          </div>
+          <input type="range" id="m-sl-utenti" min="1" max="100" value="10" oninput="calcModal()" style="width:100%">
+        </div>
+        <div>
+          <div style="font-size:.8rem;font-weight:700;color:rgba(255,255,255,.85);
+            display:flex;justify-content:space-between;margin-bottom:6px">
+            Referti / mese <span id="m-referti" style="color:#93c5fd;font-family:Outfit,sans-serif;font-weight:800">300</span>
+          </div>
+          <input type="range" id="m-sl-referti" min="0" max="5000" step="50" value="300" oninput="calcModal()" style="width:100%">
+        </div>
+        <!-- Extras -->
+        <div style="font-family:Outfit,sans-serif;font-weight:700;font-size:.85rem;
+          color:rgba(255,255,255,.85);margin-bottom:4px;margin-top:4px">Integrazioni strumentali (una tantum)</div>
+        <div id="m-extras" style="display:flex;flex-direction:column;gap:7px"></div>
+      </div>
+      <!-- RIGHT: result -->
+      <div style="display:flex;flex-direction:column;gap:14px">
+        <div id="m-tier-box" style="background:rgba(255,255,255,.1);
+          border:2px solid rgba(255,255,255,.2);border-radius:15px;
+          padding:22px;text-align:center;transition:border-color .3s">
+          <div style="font-size:.7rem;text-transform:uppercase;letter-spacing:1px;
+            color:rgba(255,255,255,.6);margin-bottom:6px;font-weight:700">Piano consigliato</div>
+          <div id="m-tier-name" style="font-family:Outfit,sans-serif;font-size:1.7rem;
+            font-weight:900;color:#fff;margin-bottom:5px">Starter</div>
+          <div id="m-tier-price" style="font-family:Outfit,sans-serif;font-size:2.8rem;
+            font-weight:900;letter-spacing:-1.5px;color:#86efac;line-height:1">&#8364; 149</div>
+          <div style="font-size:.78rem;color:rgba(255,255,255,.6);margin-top:4px">/mese &middot; tutto incluso</div>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:7px" id="m-breakdown"></div>
+        <a href="pricing.html" style="display:block;text-align:center;
+          background:#fff;color:#2563eb;border-radius:10px;padding:13px;
+          font-family:Outfit,sans-serif;font-weight:800;font-size:.9rem;
+          text-decoration:none;transition:opacity .2s;margin-top:4px"
+          onmouseover="this.style.opacity=.88" onmouseout="this.style.opacity=1">
+          Vedi tutti i dettagli del pricing &rarr;
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="nc-logo">
+      <div class="nc-logo-icon">NC</div>
+      <div class="nc-logo-text">
+        <span class="nc-logo-title">NextCare</span>
+        <span class="nc-logo-sub">Digital Health</span>
+      </div>
+    </div>
+    <div class="header-badge">
+      <span class="pulse"></span>
+      Healthcare Operating System (HOS)
+    </div>
+  </div>
+</header>
+
+<!-- PAGE NAV -->
+<nav class="page-nav">
+  <div class="page-nav-inner">
+    <a class="page-nav-link" data-target="sec-dashboard"  onclick="navTo('sec-dashboard')">🖥️ Dashboard & AI</a>
+    <a class="page-nav-link" data-target="sec-pazienti"   onclick="navTo('sec-pazienti')">👥 Pazienti & CUP</a>
+    <a class="page-nav-link" data-target="sec-diagnostica" onclick="navTo('sec-diagnostica')">🔬 LIS & RIS</a>
+    <a class="page-nav-link" data-target="sec-admin"      onclick="navTo('sec-admin')">💳 Billing & Contabilità</a>
+    <a class="page-nav-link" data-target="sec-avanzati"   onclick="navTo('sec-avanzati')">🏥 Funzionalità Avanzate</a>
+    <a class="page-nav-link" data-target="sec-org"        onclick="navTo('sec-org')">👔 Organizzazione</a>
+    <a class="page-nav-link" data-target="sec-referti"    onclick="navTo('sec-referti')">📄 Referti & Config</a>
+    <a class="page-nav-link" data-target="sec-report"     onclick="navTo('sec-report')">📊 Report</a>
+    <a class="page-nav-link" data-target="sec-tech"       onclick="navTo('sec-tech')">🔌 Integrazioni</a>
+    <a class="page-nav-link" data-target="sec-confronto"  onclick="navTo('sec-confronto')">⚖️ Confronto</a>
+  </div>
+</nav>
+
+<!-- BACK TO TOP -->
+<button class="back-to-top" id="back-to-top" title="Torna su" onclick="window.scrollTo({top:0,behavior:'smooth'});">↑</button>
+
+
+<section class="hero">
+  <div class="hero-inner">
+
+    <!-- LEFT -->
+    <div class="hero-left">
+      <!-- Label -->
+      <div style="display:inline-flex;align-items:center;gap:8px;
+        background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);
+        border-radius:20px;padding:6px 14px;margin-bottom:20px">
+        <span style="width:7px;height:7px;background:#86efac;border-radius:50%;
+          flex-shrink:0;animation:pulse-dot 2s infinite"></span>
+        <span style="font-size:.78rem;font-weight:700;color:rgba(255,255,255,.9);
+          letter-spacing:.4px;text-transform:uppercase">tutte le funzionalità · Tutti inclusi</span>
+      </div>
+
+      <h1 style="font-family:Outfit,sans-serif;font-weight:900;
+        font-size:clamp(2.2rem,4vw,3.2rem);color:#fff;
+        letter-spacing:-1px;line-height:1.1;margin-bottom:16px">
+        La piattaforma completa<br>
+        <span style="background:linear-gradient(90deg,#93c5fd,#c4b5fd);
+          -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+          background-clip:text">che ha tutto, sempre</span>
+      </h1>
+
+      <p class="hero-sub" style="font-size:1.05rem;color:rgba(255,255,255,.72);
+        line-height:1.7;margin-bottom:28px;max-width:520px">
+        funzionalità integrate nativamente. Nessun acquisto extra.
+        Intelligenza artificiale in ogni sezione.
+        Configurazione automatica senza ufficio IT.
+      </p>
+
+      <!-- CTA -->
+      <div class="hero-ctas">
+        <a href="javascript:void(0)" onclick="openDemoModal()"
+          class="btn-hero-primary" id="moduli-demo-btn"
+          style="display:inline-flex;align-items:center;gap:7px">
+          &#x1F3AF; Richiedi Demo Gratis
+        </a>
+        <a href="pricing.html" class="btn-hero-sec">
+          Vedi i prezzi &rarr;
+        </a>
+      </div>
+
+      <!-- Badge row -->
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:24px">
+        <span style="background:rgba(16,185,129,.15);border:1px solid rgba(16,185,129,.3);
+          border-radius:8px;padding:5px 12px;font-size:.75rem;font-weight:700;color:#86efac">
+          ✓ LIS · HL7/ASTM
+        </span>
+        <span style="background:rgba(99,102,241,.15);border:1px solid rgba(99,102,241,.3);
+          border-radius:8px;padding:5px 12px;font-size:.75rem;font-weight:700;color:#c4b5fd">
+          ✓ RIS · DICOM
+        </span>
+        <span style="background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);
+          border-radius:8px;padding:5px 12px;font-size:.75rem;font-weight:700;color:#fcd34d">
+          ✓ CUP · Prenotazioni AI
+        </span>
+        <span style="background:rgba(59,130,246,.15);border:1px solid rgba(59,130,246,.3);
+          border-radius:8px;padding:5px 12px;font-size:.75rem;font-weight:700;color:#93c5fd">
+          ✓ Contabilità · BI
+        </span>
+      </div>
+    </div>
+
+    <!-- RIGHT — stats card -->
+    <div class="hero-right">
+      <div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.15);
+        border-radius:20px;padding:28px;backdrop-filter:blur(10px)">
+        <div style="font-family:Outfit,sans-serif;font-weight:800;font-size:.85rem;
+          color:rgba(255,255,255,.6);letter-spacing:.5px;text-transform:uppercase;
+          margin-bottom:20px">In un unico canone mensile</div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px">
+          <div style="background:rgba(255,255,255,.08);border-radius:12px;padding:16px;text-align:center">
+            <div style="font-family:Outfit,sans-serif;font-weight:900;font-size:2.2rem;
+              color:#86efac;line-height:1">27</div>
+            <div style="font-size:.72rem;color:rgba(255,255,255,.6);margin-top:4px;font-weight:600">Moduli integrati</div>
+          </div>
+          <div style="background:rgba(255,255,255,.08);border-radius:12px;padding:16px;text-align:center">
+            <div style="font-family:Outfit,sans-serif;font-weight:900;font-size:2.2rem;
+              color:#93c5fd;line-height:1">6</div>
+            <div style="font-size:.72rem;color:rgba(255,255,255,.6);margin-top:4px;font-weight:600">Ruoli RBAC</div>
+          </div>
+          <div style="background:rgba(255,255,255,.08);border-radius:12px;padding:16px;text-align:center">
+            <div style="font-family:Outfit,sans-serif;font-weight:900;font-size:2.2rem;
+              color:#fcd34d;line-height:1">3</div>
+            <div style="font-size:.72rem;color:rgba(255,255,255,.6);margin-top:4px;font-weight:600">Protocolli LIS</div>
+          </div>
+          <div style="background:rgba(255,255,255,.08);border-radius:12px;padding:16px;text-align:center">
+            <div style="font-family:Outfit,sans-serif;font-weight:900;font-size:2.2rem;
+              color:#c4b5fd;line-height:1">&#x221E;</div>
+            <div style="font-size:.72rem;color:rgba(255,255,255,.6);margin-top:4px;font-weight:600">Prestazioni</div>
+          </div>
+        </div>
+
+        <div style="background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.25);
+          border-radius:10px;padding:12px 14px;display:flex;align-items:center;gap:10px">
+          <span style="font-size:1.2rem">✅</span>
+          <div>
+            <div style="font-family:Outfit,sans-serif;font-weight:800;font-size:.82rem;color:#86efac">
+              Zero moduli a pagamento
+            </div>
+            <div style="font-size:.72rem;color:rgba(255,255,255,.55);margin-top:2px">
+              Tutto incluso nel canone mensile
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- WAVE -->
+<div class="wave-divider">
+  <svg viewBox="0 0 1440 48" preserveAspectRatio="none" height="48" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,48 L0,16 Q360,48 720,24 Q1080,0 1440,20 L1440,48 Z" fill="#f4f6fa"/>
+  </svg>
+</div>
+
+<!-- SUBMENU SEZIONI -->
+<nav class="mod-submenu">
+  <div class="mod-submenu-inner">
+    <a class="mod-submenu-item" href="#sec-dashboard" data-sec="sec-dashboard"><span>📊</span>Dashboard & AI</a>
+    <a class="mod-submenu-item" href="#sec-pazienti" data-sec="sec-pazienti"><span>👥</span>Pazienti & CUP</a>
+    <a class="mod-submenu-item" href="#sec-diagnostica" data-sec="sec-diagnostica"><span>🔬</span>LIS · RIS · DICOM</a>
+    <a class="mod-submenu-item" href="#sec-admin" data-sec="sec-admin"><span>💳</span>Accettazione & Billing</a>
+    <a class="mod-submenu-item" href="#sec-avanzati" data-sec="sec-avanzati"><span>🏥</span>Funzionalità Sanitarie</a>
+    <a class="mod-submenu-item" href="#sec-org" data-sec="sec-org"><span>👔</span>Organizzazione</a>
+    <a class="mod-submenu-item" href="#sec-referti" data-sec="sec-referti"><span>📋</span>Referti & Config</a>
+    <a class="mod-submenu-item" href="#sec-report" data-sec="sec-report"><span>📈</span>Report & BI</a>
+    <a class="mod-submenu-item" href="#sec-tech" data-sec="sec-tech"><span>🔌</span>Integrazioni</a>
+    <a class="mod-submenu-item" href="#sec-confronto" data-sec="sec-confronto"><span>⚖️</span>Confronto</a>
+  </div>
+</nav>
+<main class="main-wrap">
+
+<!-- ══════════════════════════════════════════════
+     SEZIONE 1 — DASHBOARDS & AI
+══════════════════════════════════════════════ -->
+<div id="sec-dashboard" style="scroll-margin-top:120px"></div>
+<div class="section-label">🏥 Operatività quotidiana</div>
+<h2 class="section-title">Dashboard & Intelligenza Artificiale</h2>
+<p class="section-desc">Il pannello di controllo in tempo reale con AI Predictive integrata e Business Intelligence avanzata.</p>
+
+<div class="modules-grid">
+
+  <!-- Dashboard & AI -->
+  <div class="module-card">
+    <div class="module-card-accent" style="background:var(--primary-gradient)"></div>
+    <div class="module-card-body">
+      <div class="module-card-header">
+        <div class="module-icon" style="background:#eff6ff">🖥️</div>
+        <div class="module-card-meta">
+          <div class="module-card-title">Dashboard & AI <span style="font-size:.65rem;background:linear-gradient(135deg,#eff6ff,#f5f3ff);color:#7c3aed;border-radius:8px;padding:2px 8px;font-weight:700;border:1px solid #ddd6fe;">✨ Predictive AI</span></div>
+          <span class="module-card-tag" style="background:#eff6ff;color:var(--primary)">Centro di controllo</span>
+        </div>
+      </div>
+      <div class="ui-mock">
+        <div class="mock-bar">
+          <div class="mock-bar-dot"></div>
+          <span class="mock-bar-title">Benvenuto in NextCare — Healthcare Operating System</span>
+          <span class="mock-bar-badge" style="background:#eff6ff;color:var(--primary)">● Database Connesso</span>
+        </div>
+        <div class="mock-body">
+          <div style="display:flex;gap:6px;margin-bottom:2px">
+            <div class="mock-btn" style="flex:1;justify-content:center;font-size:.62rem">✨ Nuova Prenotazione CUP</div>
+            <div class="mock-btn green" style="flex:1;justify-content:center;font-size:.62rem">🧪 Accettazione LIS</div>
+            <div class="mock-btn" style="flex:1;justify-content:center;font-size:.62rem;background:#06b6d4">📡 Accettazione RIS</div>
+          </div>
+          <div class="mock-kpi-row" style="grid-template-columns:repeat(4,1fr)">
+            <div class="mock-kpi"><div class="mock-kpi-dot" style="background:var(--primary)"></div><div class="mock-kpi-lbl">Pazienti</div><div class="mock-kpi-val" style="color:var(--primary)">1.284</div></div>
+            <div class="mock-kpi"><div class="mock-kpi-dot" style="background:var(--success)"></div><div class="mock-kpi-lbl">CUP oggi</div><div class="mock-kpi-val" style="color:var(--success)">47</div></div>
+            <div class="mock-kpi"><div class="mock-kpi-dot" style="background:var(--purple)"></div><div class="mock-kpi-lbl">LIS pend.</div><div class="mock-kpi-val" style="color:var(--purple)">23</div></div>
+            <div class="mock-kpi"><div class="mock-kpi-dot" style="background:var(--orange)"></div><div class="mock-kpi-lbl">Ricoverati</div><div class="mock-kpi-val" style="color:var(--orange)">8</div></div>
+          </div>
+          <div style="display:grid;grid-template-columns:1.2fr 0.8fr;gap:6px">
+            <div>
+              <div style="font-size:.62rem;font-weight:700;color:var(--text-secondary);margin-bottom:4px">Saturazione Reparti & Occupazione</div>
+              <div class="mock-bar-chart">
+                <div class="mock-bar-col"><div class="mock-bar-fill" style="height:70%;background:var(--primary);opacity:.8"></div><div class="mock-bar-lbl">Card.</div></div>
+                <div class="mock-bar-col"><div class="mock-bar-fill" style="height:45%;background:var(--success);opacity:.8"></div><div class="mock-bar-lbl">Orto.</div></div>
+                <div class="mock-bar-col"><div class="mock-bar-fill" style="height:90%;background:var(--danger);opacity:.8"></div><div class="mock-bar-lbl">Lab.</div></div>
+                <div class="mock-bar-col"><div class="mock-bar-fill" style="height:55%;background:var(--orange);opacity:.8"></div><div class="mock-bar-lbl">Rad.</div></div>
+                <div class="mock-bar-col"><div class="mock-bar-fill" style="height:30%;background:var(--teal);opacity:.8"></div><div class="mock-bar-lbl">Fis.</div></div>
+              </div>
+            </div>
+            <div class="mock-ai-box">
+              <div style="font-weight:700;margin-bottom:4px">NextCare AI</div>
+              <div style="color:var(--text-secondary);font-size:.64rem">Chiedimi: <em>"Qual è il reparto più saturo?"</em> o <em>"Fatturato previsto"</em></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="features-row">
+        <span class="feat-chip">4 KPI in tempo reale</span>
+        <span class="feat-chip">Grafico saturazione branche</span>
+        <span class="feat-chip">Stato analizzatori LIS</span>
+        <span class="feat-chip">Pie chart stati campioni</span>
+        <span class="feat-chip">AI assistant chat</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Business Intelligence & AI -->
+  <div class="module-card">
+    <div class="module-card-accent" style="background:linear-gradient(135deg,#f59e0b,#f97316)"></div>
+    <div class="module-card-body">
+      <div class="module-card-header">
+        <div class="module-icon" style="background:#fffbeb">📊</div>
+        <div class="module-card-meta">
+          <div class="module-card-title">Business Intelligence & AI <span class="new-badge">NUOVO</span></div>
+          <span class="module-card-tag" style="background:#fffbeb;color:var(--warning)">Controllo di gestione</span>
+        </div>
+      </div>
+      <div class="ui-mock">
+        <div class="mock-bar">
+          <div class="mock-bar-dot" style="background:var(--warning)"></div>
+          <span class="mock-bar-title">Business Intelligence & Assistente AI — Analisi Dinamica Performance</span>
+        </div>
+        <div class="mock-body">
+          <div class="mock-kpi-row" style="grid-template-columns:repeat(4,1fr)">
+            <div class="mock-kpi"><div class="mock-kpi-dot" style="background:var(--primary)"></div><div class="mock-kpi-lbl">Produzione</div><div class="mock-kpi-val" style="color:var(--primary);font-size:.75rem">€ 48.200</div></div>
+            <div class="mock-kpi"><div class="mock-kpi-dot" style="background:var(--success)"></div><div class="mock-kpi-lbl">Incassato</div><div class="mock-kpi-val" style="color:var(--success);font-size:.75rem">€ 41.700</div></div>
+            <div class="mock-kpi"><div class="mock-kpi-dot" style="background:var(--warning)"></div><div class="mock-kpi-lbl">Sospeso</div><div class="mock-kpi-val" style="color:var(--warning);font-size:.75rem">€ 6.500</div></div>
+            <div class="mock-kpi"><div class="mock-kpi-dot" style="background:var(--cyan)"></div><div class="mock-kpi-lbl">Volume</div><div class="mock-kpi-val" style="color:var(--cyan);font-size:.75rem">1.284</div></div>
+          </div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin:2px 0">
+            <span class="mock-chip">Raggruppa: Azienda</span>
+            <span class="mock-chip">Raggruppa: Branca</span>
+            <span class="mock-chip green">Profit Center</span>
+            <span class="mock-chip purple">Strumento LIS</span>
+          </div>
+          <div class="mock-ai-box">
+            <div style="font-weight:700;margin-bottom:3px">AI Controllo di Gestione</div>
+            <div style="color:var(--text-secondary);font-size:.63rem"><em>"Quali esami generano più profitto?"</em> • <em>"Ripartizione ricavi per azienda"</em> • <em>"Azioni strategiche sulle insolvenze"</em></div>
+          </div>
+        </div>
+      </div>
+      <div class="features-row">
+        <span class="feat-chip">Andamento mensile SVG</span>
+        <span class="feat-chip">Ripartizione % per categoria</span>
+        <span class="feat-chip">AI conversazionale</span>
+        <span class="feat-chip">Filtro da/a data</span>
+        <span class="feat-chip">Export dati</span>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /modules-grid -->
+
+<!-- ══════════════════════════════════════════════
+     SEZIONE 2 — PAZIENTI & PRENOTAZIONI
+══════════════════════════════════════════════ -->
+<div id="sec-pazienti" style="scroll-margin-top:120px"></div>
+<div class="section-label">👥 Pazienti & Prenotazioni</div>
+<h2 class="section-title">Anagrafica, GDPR & CUP</h2>
+<p class="section-desc">Registro unico pazienti, conformità GDPR nativa e Centro Unico Prenotazioni con wizard AI.</p>
+
+<div class="modules-grid">
+
+  <!-- Anagrafica & GDPR -->
+  <div class="module-card">
+    <div class="module-card-accent" style="background:linear-gradient(135deg,var(--success),#059669)"></div>
+    <div class="module-card-body">
+      <div class="module-card-header">
+        <div class="module-icon" style="background:var(--success-light)">👥</div>
+        <div class="module-card-meta">
+          <div class="module-card-title">Anagrafica Pazienti & GDPR</div>
+          <span class="module-card-tag" style="background:var(--success-light);color:var(--success)">GDPR Compliant · Audit Trail</span>
+        </div>
+      </div>
+      <div class="ui-mock">
+        <div class="mock-bar">
+          <div class="mock-bar-dot" style="background:var(--success)"></div>
+          <span class="mock-bar-title">Anagrafica Pazienti & GDPR — Registro Unico</span>
+          <div class="mock-btn green" style="padding:2px 8px;font-size:.62rem">+ Nuovo Paziente</div>
+        </div>
+        <div class="mock-body">
+          <div style="margin-bottom:4px"><span class="mock-chip">Filtra per Azienda ▾</span></div>
+          <table class="mock-table">
+            <thead><tr><th>Paziente</th><th>C.F.</th><th>Genere/Età</th><th>Consensi GDPR</th></tr></thead>
+            <tbody>
+              <tr><td>Mario Rossi</td><td>RSSMRA75…</td><td>M / 49</td><td><span class="mock-status" style="background:var(--success-light);color:var(--success)">✓ Firmato</span></td></tr>
+              <tr><td>Laura Bianchi</td><td>BNCLRA90…</td><td>F / 34</td><td><span class="mock-status" style="background:var(--warning-light);color:var(--warning)">⏳ Parziale</span></td></tr>
+              <tr><td>Giovanni Verdi</td><td>VRDGVN68…</td><td>M / 56</td><td><span class="mock-status" style="background:var(--success-light);color:var(--success)">✓ Firmato</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="features-row">
+        <span class="feat-chip">Dossier unico multi-modulo</span>
+        <span class="feat-chip">Firma digitale consensi</span>
+        <span class="feat-chip">Placeholder automatici</span>
+        <span class="feat-chip">Editor rich text consensi</span>
+        <span class="feat-chip">Filtra per azienda</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CUP -->
+  <div class="module-card">
+    <div class="module-card-accent" style="background:linear-gradient(135deg,var(--purple),#7c3aed)"></div>
+    <div class="module-card-body">
+      <div class="module-card-header">
+        <div class="module-icon" style="background:var(--purple-light)">📅</div>
+        <div class="module-card-meta">
+          <div class="module-card-title">CUP — Centro Unico Prenotazioni</div>
+          <span class="module-card-tag" style="background:linear-gradient(135deg,#eff6ff,#f5f3ff);color:#7c3aed">✨ AI Booking Wizard</span>
+        </div>
+      </div>
+      <div class="ui-mock">
+        <div class="mock-bar">
+          <div class="mock-bar-dot" style="background:var(--purple)"></div>
+          <span class="mock-bar-title">Centro Unico Prenotazioni (CUP)</span>
+          <div class="mock-btn purple" style="padding:2px 8px;font-size:.62rem">✨ Wizard</div>
+        </div>
+        <div class="mock-body">
+          <div style="display:flex;gap:4px;margin-bottom:4px">
+            <span class="mock-chip" style="background:var(--primary);color:#fff;border-color:var(--primary)">Prenotazioni Attive</span>
+            <span class="mock-chip">No-Show <span style="background:var(--danger);color:#fff;border-radius:8px;padding:0 5px;font-size:.6rem">3</span></span>
+            <span class="mock-chip">Passate</span>
+          </div>
+          <div style="background:linear-gradient(135deg,#f5f3ff,#eff6ff);border:1px solid #ddd6fe;border-radius:6px;padding:6px 8px;font-size:.66rem;margin-bottom:4px">
+            <span style="color:var(--purple);font-weight:700">✨</span> Cerca con AI: <em style="color:var(--text-muted)">"prenotazioni attive di Rossi da lunedì a venerdì"</em>
+            <div style="display:flex;gap:4px;margin-top:4px;flex-wrap:wrap">
+              <span class="mock-chip purple">mostra attive</span>
+              <span class="mock-chip purple">Dr. Verdi oggi</span>
+              <span class="mock-chip purple">cardiologiche giugno</span>
+            </div>
+          </div>
+          <table class="mock-table">
+            <thead><tr><th>Data & Ora</th><th>Paziente</th><th>Prestazione</th><th>Stato</th></tr></thead>
+            <tbody>
+              <tr><td>14/06 09:30</td><td>M. Rossi</td><td>Visita Card.</td><td><span class="mock-status" style="background:#eff6ff;color:var(--primary)">Pianificato</span></td></tr>
+              <tr><td>14/06 10:00</td><td>L. Bianchi</td><td>ECG</td><td><span class="mock-status" style="background:var(--success-light);color:var(--success)">Completato</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="features-row">
+        <span class="feat-chip">Wizard AI in linguaggio naturale</span>
+        <span class="feat-chip">Calendario agende</span>
+        <span class="feat-chip">No-Show tracker</span>
+        <span class="feat-chip">Chip suggeriti AI</span>
+        <span class="feat-chip">Stampa report</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SEZIONE 3 — LABORATORIO & RADIOLOGIA
+══════════════════════════════════════════════ -->
+<div id="sec-diagnostica" style="scroll-margin-top:120px"></div>
+<div class="section-label">🔬 Diagnostica</div>
+<h2 class="section-title">LIS Laboratorio & RIS Radiologia</h2>
+<p class="section-desc">Laboratory e Radiology Information System completamente integrati con HL7, DICOM e PACS.</p>
+
+<div class="modules-grid">
+
+  <!-- LIS -->
+  <div class="module-card">
+    <div class="module-card-accent" style="background:linear-gradient(135deg,var(--teal),#0d9488)"></div>
+    <div class="module-card-body">
+      <div class="module-card-header">
+        <div class="module-icon" style="background:var(--teal-light)">🔬</div>
+        <div class="module-card-meta">
+          <div class="module-card-title">LIS — Laboratory Information System</div>
+          <span class="module-card-tag" style="background:var(--teal-light);color:var(--teal)">HL7 · XML · Barcode · Accettazione Multipla</span>
+        </div>
+      </div>
+      <div class="ui-mock">
+        <div class="mock-tabs">
+          <button class="mock-tab active">Accettazioni LIS</button>
+          <button class="mock-tab">Campioni/Provette</button>
+          <button class="mock-tab">Fogli Lavoro</button>
+          <button class="mock-tab">Validazione</button>
+          <button class="mock-tab">Gestione Massiva</button>
+        </div>
+        <div class="mock-body">
+          <div style="display:flex;gap:4px;margin-bottom:4px">
+            <div class="mock-btn" style="background:var(--teal);font-size:.62rem">🧪 Accetta Campione</div>
+            <div class="mock-btn purple" style="font-size:.62rem">👥 Accettazione Multipla</div>
+            <div class="mock-btn" style="background:#94a3b8;font-size:.62rem">❓ FAQ LIS</div>
+          </div>
+          <table class="mock-table">
+            <thead><tr><th>Paziente</th><th>Campioni</th><th>Stato</th><th>Esami</th></tr></thead>
+            <tbody>
+              <tr><td>M. Rossi</td><td>🟡 001-002</td><td><span class="mock-status" style="background:var(--warning-light);color:var(--warning)">Da validare</span></td><td>Glicemia, CBC</td></tr>
+              <tr><td>L. Bianchi</td><td>🔴 003</td><td><span class="mock-status" style="background:var(--teal-light);color:var(--teal)">In lavorazione</span></td><td>Urine, PCR</td></tr>
+              <tr><td>G. Verdi</td><td>🟣 004</td><td><span class="mock-status" style="background:var(--success-light);color:var(--success)">Refertato</span></td><td>Ematologia</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="features-row">
+        <span class="feat-chip">6 sotto-tab workflow</span>
+        <span class="feat-chip">Accettazione multipla</span>
+        <span class="feat-chip">Flag valori fuori range</span>
+        <span class="feat-chip">Export CSV</span>
+        <span class="feat-chip">Gestione massiva</span>
+        <span class="feat-chip">Ricerca AI</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIS -->
+  <div class="module-card">
+    <div class="module-card-accent" style="background:linear-gradient(135deg,var(--cyan),#0284c7)"></div>
+    <div class="module-card-body">
+      <div class="module-card-header">
+        <div class="module-icon" style="background:var(--cyan-light)">🩻</div>
+        <div class="module-card-meta">
+          <div class="module-card-title">RIS — Radiology Information System</div>
+          <span class="module-card-tag" style="background:var(--cyan-light);color:var(--cyan)">DICOM · PACS · Classi Dose · Euratom</span>
+        </div>
+      </div>
+      <div class="ui-mock">
+        <div class="mock-tabs">
+          <button class="mock-tab active">Lista Esami & Refertazione</button>
+          <button class="mock-tab">Gestione TSRM</button>
+          <button class="mock-tab">Classi Dose</button>
+        </div>
+        <div class="mock-body">
+          <table class="mock-table">
+            <thead><tr><th>Paziente</th><th>Esame</th><th>TSRM</th><th>Stato</th></tr></thead>
+            <tbody>
+              <tr><td>M. Rossi</td><td>RX Torace</td><td>Tecnico A</td><td><span class="mock-status" style="background:#ecfeff;color:var(--cyan)">Da refertare</span></td></tr>
+              <tr><td>L. Bianchi</td><td>TC Addome</td><td>Tecnico B</td><td><span class="mock-status" style="background:var(--success-light);color:var(--success)">Firmato</span></td></tr>
+            </tbody>
+          </table>
+          <div style="font-size:.66rem;color:var(--text-secondary);border-top:1px solid var(--border);padding-top:6px;margin-top:4px">
+            <span style="font-weight:600;color:var(--text-primary)">Config DICOM:</span> AE Title: <code style="background:#f1f5f9;padding:1px 4px;border-radius:3px">NEXTCARE_VIEWER</code> : <code style="background:#f1f5f9;padding:1px 4px;border-radius:3px">11112</code> → PACS Server: <code style="background:#f1f5f9;padding:1px 4px;border-radius:3px">104</code>
+          </div>
+        </div>
+      </div>
+      <div class="features-row">
+        <span class="feat-chip">Viewer DICOM integrato</span>
+        <span class="feat-chip">Firma digitale referto</span>
+        <span class="feat-chip">Worklist TSRM</span>
+        <span class="feat-chip">Classi dose D.Lgs. 101/2020</span>
+        <span class="feat-chip">Config PACS</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SEZIONE 4 — ACCETTAZIONE & BILLING
+══════════════════════════════════════════════ -->
+<div id="sec-admin" style="scroll-margin-top:120px"></div>
+<div class="section-label">💳 Amministrazione</div>
+<h2 class="section-title">Accettazione, Fatturazione & Contabilità</h2>
+<p class="section-desc">Dal check-in alla fattura, dalla prima nota al profit center. Tutto in un unico flusso.</p>
+
+<div class="modules-grid">
+
+  <!-- Accettazione & Billing -->
+  <div class="module-card">
+    <div class="module-card-accent" style="background:linear-gradient(135deg,var(--orange),#ea580c)"></div>
+    <div class="module-card-body">
+      <div class="module-card-header">
+        <div class="module-icon" style="background:var(--orange-light)">📋</div>
+        <div class="module-card-meta">
+          <div class="module-card-title">Accettazione & Billing</div>
+          <span class="module-card-tag" style="background:var(--orange-light);color:var(--orange)">LIS · RIS · Visite · Nota di credito auto</span>
+        </div>
+      </div>
+      <div class="ui-mock">
+        <div class="mock-bar">
+          <div class="mock-bar-dot" style="background:var(--orange)"></div>
+          <span class="mock-bar-title">Accettazione & Billing — Dal check-in alla fattura</span>
+        </div>
+        <div class="mock-body">
+          <div class="mock-form-row">
+            <div class="mock-input">Paziente: Mario Rossi</div>
+            <div class="mock-input">Tipo: Visita Cardiologica</div>
+          </div>
+          <div class="mock-form-row" style="margin-top:4px">
+            <div class="mock-input">Sconto: 10%</div>
+            <div class="mock-input">Metodo: POS/Carta</div>
+          </div>
+          <div style="display:flex;gap:4px;margin-top:4px;flex-wrap:wrap">
+            <span class="mock-chip orange">Quota paziente</span>
+            <span class="mock-chip">Quota assicurazione</span>
+            <span class="mock-chip green">Nota credito auto</span>
+          </div>
+          <div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:6px;padding:6px 8px;font-size:.66rem;color:var(--orange);font-weight:600;margin-top:4px">
+            💡 Modifica post-fatturazione → nota di credito generata e già registrata in contabilità
+          </div>
+        </div>
+      </div>
+      <div class="features-row">
+        <span class="feat-chip">LIS + RIS + Visite unificati</span>
+        <span class="feat-chip">Sconto % o fisso</span>
+        <span class="feat-chip">Quota assicurazione</span>
+        <span class="feat-chip">4 metodi pagamento</span>
+        <span class="feat-chip">Nota di credito automatica</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contabilità -->
+  <div class="module-card">
+    <div class="module-card-accent" style="background:linear-gradient(135deg,var(--success),#059669)"></div>
+    <div class="module-card-body">
+      <div class="module-card-header">
+        <div class="module-icon" style="background:var(--success-light)">💰</div>
+        <div class="module-card-meta">
+          <div class="module-card-title">Contabilità — Prima Nota & Profit Center</div>
+          <span class="module-card-tag" style="background:var(--success-light);color:var(--success)">Ricerca AI · Profit Center · CSV</span>
+        </div>
+      </div>
+      <div class="ui-mock">
+        <div class="mock-tabs">
+          <button class="mock-tab active">Riepilogo Contabile</button>
+          <button class="mock-tab">Prima Nota</button>
+          <button class="mock-tab">Profit Center</button>
+        </div>
+        <div class="mock-body">
+          <div class="mock-kpi-row" style="grid-template-columns:repeat(2,1fr)">
+            <div class="mock-kpi"><div class="mock-kpi-dot" style="background:var(--primary)"></div><div class="mock-kpi-lbl">Totale Emesso</div><div class="mock-kpi-val" style="color:var(--primary)">€ 48.200</div></div>
+            <div class="mock-kpi"><div class="mock-kpi-dot" style="background:var(--success)"></div><div class="mock-kpi-lbl">Totale Incassato</div><div class="mock-kpi-val" style="color:var(--success)">€ 41.700</div></div>
+            <div class="mock-kpi"><div class="mock-kpi-dot" style="background:var(--warning)"></div><div class="mock-kpi-lbl">Totale Sospeso</div><div class="mock-kpi-val" style="color:var(--warning)">€ 6.500</div></div>
+            <div class="mock-kpi"><div class="mock-kpi-dot" style="background:var(--text-muted)"></div><div class="mock-kpi-lbl">Metodo Prev.</div><div class="mock-kpi-val">POS/Carta</div></div>
+          </div>
+          <div style="background:linear-gradient(135deg,#f5f3ff,#eff6ff);border:1px solid #ddd6fe;border-radius:6px;padding:5px 8px;font-size:.66rem;color:var(--purple)">
+            ✨ Cerca: <em>"fatture non pagate a giugno"</em> · <em>"pagate con bonifico"</em>
+          </div>
+        </div>
+      </div>
+      <div class="features-row">
+        <span class="feat-chip">Prima nota con saldo cassa</span>
+        <span class="feat-chip">Profit center per branca</span>
+        <span class="feat-chip">Ricerca AI fatture</span>
+        <span class="feat-chip">Export CSV</span>
+        <span class="feat-chip">Registro fatture</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Compensi Medici -->
+  <div class="module-card">
+    <div class="module-card-accent" style="background:linear-gradient(135deg,#a855f7,#7c3aed)"></div>
+    <div class="module-card-body">
+      <div class="module-card-header">
+        <div class="module-icon" style="background:#f5f3ff">💼</div>
+        <div class="module-card-meta">
+          <div class="module-card-title">Compensi Medici <span class="new-badge">NUOVO</span></div>
+          <span class="module-card-tag" style="background:#f5f3ff;color:var(--purple)">Liquidazione · Regole % o fisso</span>
+        </div>
+      </div>
+      <div class="ui-mock">
+        <div class="mock-bar">
+          <div class="mock-bar-dot" style="background:var(--purple)"></div>
+          <span class="mock-bar-title">Compensi Maturati e da Liquidare</span>
+          <div class="mock-btn purple" style="font-size:.62rem;padding:2px 8px">Esegui Liquidazione</div>
+        </div>
+        <div class="mock-body">
+          <table class="mock-table">
+            <thead><tr><th>Medico</th><th>Evento</th><th>Importo Base</th><th>Compenso</th><th>Stato</th></tr></thead>
+            <tbody>
+              <tr><td>Dr. Rossi</td><td>Refertato</td><td>€ 80,00</td><td>€ 24,00 (30%)</td><td><span class="mock-status" style="background:var(--warning-light);color:var(--warning)">Da liquidare</span></td></tr>
+              <tr><td>Dr.ssa Bianchi</td><td>Incassato</td><td>€ 120,00</td><td>€ 40,00 (fix)</td><td><span class="mock-status" style="background:var(--success-light);color:var(--success)">Liquidato</span></td></tr>
+            </tbody>
+          </table>
+          <div style="font-size:.66rem;color:var(--text-secondary);margin-top:4px">Trigger: <span class="mock-chip purple">Erogato</span> <span class="mock-chip purple">Refertato</span> <span class="mock-chip purple">Fatturato</span> <span class="mock-chip purple">Incassato</span></div>
+        </div>
+      </div>
+      <div class="features-row">
+        <span class="feat-chip">Regole % o quota fissa</span>
+        <span class="feat-chip">Per medico e per branca</span>
+        <span class="feat-chip">4 eventi trigger</span>
+        <span class="feat-chip">Filtro per medico</span>
+        <span class="feat-chip">Liquidazione massiva</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rendicontazione ASL -->
+  <div class="module-card">
+    <div class="module-card-accent" style="background:linear-gradient(135deg,#0ea5e9,#0284c7)"></div>
+    <div class="module-card-body">
+      <div class="module-card-header">
+        <div class="module-icon" style="background:#ecfeff">🏛️</div>
+        <div class="module-card-meta">
+          <div class="module-card-title">Rendicontazione ASL & Gestione SSN <span class="new-badge">NUOVO</span></div>
+          <span class="module-card-tag" style="background:#ecfeff;color:var(--cyan)">Flusso C/M · DCR · Ticket · Esenzioni</span>
+        </div>
+      </div>
+      <div class="ui-mock">
+        <div class="mock-bar">
+          <div class="mock-bar-dot" style="background:var(--cyan)"></div>
+          <span class="mock-bar-title">Rendicontazione ASL & Gestione SSN</span>
+        </div>
+        <div class="mock-body">
+          <div class="mock-form-row">
+            <div class="mock-input">Mese: Giugno ▾</div>
+            <div class="mock-input">Anno: 2026</div>
+          </div>
+          <div class="mock-input" style="margin-top:4px">Regione: Campania ▾</div>
+          <div class="mock-btn" style="width:100%;justify-content:center;margin-top:6px;background:var(--cyan)">Genera Flusso C/M & DCR</div>
+          <table class="mock-table" style="margin-top:6px">
+            <thead><tr><th>NRE Ricetta</th><th>Paziente</th><th>Esenzione</th><th>Ticket</th><th>Rimborso ASL</th></tr></thead>
+            <tbody>
+              <tr><td>R123456789</td><td>M. Rossi</td><td>E00</td><td>€ 0,00</td><td>€ 80,00</td></tr>
+              <tr><td>R987654321</td><td>L. Bianchi</td><td>—</td><td>€ 36,15</td><td>€ 63,85</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="features-row">
+        <span class="feat-chip">Export Flusso C/M</span>
+        <span class="feat-chip">Gestione esenzioni</span>
+        <span class="feat-chip">Calcolo ticket</span>
+        <span class="feat-chip">Rimborso ASL</span>
+        <span class="feat-chip">Multi-regione</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Invio STS -->
+  <div class="module-card">
+    <div class="module-card-accent" style="background:linear-gradient(135deg,#10b981,#059669)"></div>
+    <div class="module-card-body">
+      <div class="module-card-header">
+        <div class="module-icon" style="background:var(--success-light)">📤</div>
+        <div class="module-card-meta">
+          <div class="module-card-title">Invio Spese Sanitarie STS (730) <span class="new-badge">NUOVO</span></div>
+          <span class="module-card-tag" style="background:var(--success-light);color:var(--success)">Tessera Sanitaria · XML · Telematico</span>
+        </div>
+      </div>
+      <div class="ui-mock">
+        <div class="mock-bar">
+          <div class="mock-bar-dot" style="background:var(--success)"></div>
+          <span class="mock-bar-title">Invio Spese Sanitarie STS — Fatture Saldate da Inviare</span>
+        </div>
+        <div class="mock-body">
+          <div style="display:flex;gap:4px;margin-bottom:4px">
+            <div class="mock-btn" style="background:#94a3b8;font-size:.62rem">⬇ Genera XML Selezionate</div>
+            <div class="mock-btn green" style="font-size:.62rem">📤 Invia Selezionate</div>
+          </div>
+          <table class="mock-table">
+            <thead><tr><th>☐</th><th>Fattura</th><th>Paziente</th><th>Importo</th><th>Stato STS</th></tr></thead>
+            <tbody>
+              <tr><td>☐</td><td>F/2026/001</td><td>M. Rossi</td><td>€ 80,00</td><td><span class="mock-status" style="background:var(--warning-light);color:var(--warning)">Da inviare</span></td></tr>
+              <tr><td>☑</td><td>F/2026/002</td><td>L. Bianchi</td><td>€ 120,00</td><td><span class="mock-status" style="background:var(--success-light);color:var(--success)">Inviato</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="features-row">
+        <span class="feat-chip">Trasmissione telematica STS</span>
+        <span class="feat-chip">Genera XML selezionate</span>
+        <span class="feat-chip">Dichiarazione precompilata 730</span>
+        <span class="feat-chip">Stato invio tracciato</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SEZIONE 5 — MODULI SANITARI AVANZATI
+══════════════════════════════════════════════ -->
+<div id="sec-avanzati" style="scroll-margin-top:120px"></div>
+<div class="section-label">🏥 Funzionalità Sanitarie Avanzate</div>
+<h2 class="section-title">Magazzino, Riabilitazione, Portali & FSE</h2>
+<p class="section-desc">Funzionalità avanzate per la gestione completa della struttura sanitaria moderna.</p>
+
+<div class="modules-grid">
+
+  <!-- Magazzino & Cold Chain -->
+  <div class="module-card">
+    <div class="module-card-accent" style="background:linear-gradient(135deg,#0ea5e9,#0369a1)"></div>
+    <div class="module-card-body">
+      <div class="module-card-header">
+        <div class="module-icon" style="background:#ecfeff">🧊</div>
+        <div class="module-card-meta">
+          <div class="module-card-title">Magazzino & Cold Chain <span class="new-badge">NUOVO</span></div>
+          <span class="module-card-tag" style="background:#ecfeff;color:var(--cyan)">DDT · Lotti · Frigoriferi · Alert scadenze</span>
+        </div>
+      </div>
+      <div class="ui-mock">
+        <div class="mock-bar">
+          <div class="mock-bar-dot" style="background:var(--cyan)"></div>
+          <span class="mock-bar-title">Gestione Magazzino & Cold Chain — DDT · Inventario · Temperature</span>
+        </div>
+        <div class="mock-body">
+          <div class="mock-form-row">
+            <div class="mock-input">Fornitore DDT ▾</div>
+            <div class="mock-input">N° DDT: DDT/1294</div>
+          </div>
+          <div class="mock-form-row" style="margin-top:4px">
+            <div class="mock-input">Lotto: LOT-92842</div>
+            <div class="mock-input">Scadenza: 12/2027</div>
+          </div>
+          <div style="margin-top:6px;display:grid;grid-template-columns:1fr 1fr;gap:6px">
+            <div class="mock-fridge">
+              <div><div style="font-size:.65rem;font-weight:600">Frigo Bio 1</div><div class="mock-fridge-temp mock-temp-ok">+4.2°C</div></div>
+              <span class="mock-status" style="background:var(--success-light);color:var(--success)">● OK</span>
+            </div>
+            <div class="mock-fridge">
+              <div><div style="font-size:.65rem;font-weight:600">Frigo Reagenti</div><div class="mock-fridge-temp mock-temp-warn">+7.8°C</div></div>
+              <span class="mock-status" style="background:var(--warning-light);color:var(--warning)">⚠ Alert</span>
+            </div>
+          </div>
+          <div style="background:var(--danger-light);border:1px solid #fca5a5;border-radius:6px;padding:5px 8px;font-size:.64rem;color:var(--danger);font-weight:600;margin-top:4px">
+            🚨 Alert: Reagente Glicemia — Scadenza tra 14 giorni · Sotto-scorta (3 rimasti)
+          </div>
+        </div>
+      </div>
+      <div class="features-row">
+        <span class="feat-chip">Registra DDT carico/scarico</span>
+        <span class="feat-chip">Gestione lotti con scadenza</span>
+        <span class="feat-chip">Monitoraggio frigoriferi</span>
+        <span class="feat-chip">Alert sotto-scorta</span>
+        <span class="feat-chip">Storico movimentazioni</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Riabilitazione & VAS -->
+  <div class="module-card">
+    <div class="module-card-accent" style="background:linear-gradient(135deg,#f43f5e,#e11d48)"></div>
+    <div class="module-card-body">
+      <div class="module-card-header">
+        <div class="module-icon" style="background:#fdf2f8">❤️</div>
+        <div class="module-card-meta">
+          <div class="module-card-title">Riabilitazione & Fisioterapia VAS <span class="new-badge">NUOVO</span></div>
+          <span class="module-card-tag" style="background:#fdf2f8;color:#e11d48">Cicli · Sedute · Diario Clinico · Scala VAS</span>
+        </div>
+      </div>
+      <div class="ui-mock">
+        <div class="mock-bar">
+          <div class="mock-bar-dot" style="background:#f43f5e"></div>
+          <span class="mock-bar-title">Cicli di Riabilitazione & Fisioterapia — Sedute · VAS</span>
+          <div class="mock-btn" style="background:#f43f5e;font-size:.62rem;padding:2px 8px">+ Nuovo Ciclo</div>
+        </div>
+        <div class="mock-body">
+          <table class="mock-table">
+            <thead><tr><th>Paziente</th><th>Trattamento</th><th>Sedute</th><th>Fatturazione</th></tr></thead>
+            <tbody>
+              <tr><td>M. Rossi</td><td>Lombalgia L4-L5</td><td>8/20 completate</td><td><span class="mock-status" style="background:var(--success-light);color:var(--success)">Attiva</span></td></tr>
+            </tbody>
+          </table>
+          <div style="margin-top:6px;background:#fff1f2;border:1px solid #fecdd3;border-radius:6px;padding:7px 10px">
+            <div style="font-size:.65rem;font-weight:700;color:#e11d48;margin-bottom:4px">Scala VAS seduta corrente</div>
+            <div style="display:flex;align-items:center;gap:6px">
+              <div style="flex:1;height:8px;background:#fecdd3;border-radius:4px;overflow:hidden"><div style="width:40%;height:100%;background:#f43f5e;border-radius:4px"></div></div>
+              <span style="font-size:.8rem;font-weight:700;color:#e11d48">4 / 10</span>
+            </div>
+            <div style="font-size:.62rem;color:#e11d48;margin-top:2px">Progressione dolore con grafico SVG per seduta</div>
+          </div>
+        </div>
+      </div>
+      <div class="features-row">
+        <span class="feat-chip">Cicli riabilitativi</span>
+        <span class="feat-chip">Scala VAS 0-10</span>
+        <span class="feat-chip">Diario clinico giornaliero</span>
+        <span class="feat-chip">Timeline sedute</span>
+        <span class="feat-chip">Grafico progressione dolore</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- FSE -->
+  <div class="module-card">
+    <div class="module-card-accent" style="background:linear-gradient(135deg,#10b981,#0891b2)"></div>
+    <div class="module-card-body">
+      <div class="module-card-header">
+        <div class="module-icon" style="background:var(--success-light)">🛡️</div>
+        <div class="module-card-meta">
+          <div class="module-card-title">Fascicolo Sanitario Elettronico (FSE) <span class="new-badge">NUOVO</span></div>
+          <span class="module-card-tag" style="background:var(--success-light);color:var(--success)">Trasmissione · INI · Regionale</span>
+        </div>
+      </div>
+      <div class="ui-mock">
+        <div class="mock-bar">
+          <div class="mock-bar-dot" style="background:var(--success)"></div>
+          <span class="mock-bar-title">Fascicolo Sanitario Elettronico (FSE 2.0)</span>
+        </div>
+        <div class="mock-body">
+          <table class="mock-table">
+            <thead><tr><th>Paziente</th><th>Documento</th><th>Tipo</th><th>Stato FSE</th></tr></thead>
+            <tbody>
+              <tr><td>M. Rossi</td><td>Referto LIS</td><td>REF_LAB</td><td><span class="mock-status" style="background:var(--success-light);color:var(--success)">Trasmesso</span></td></tr>
+              <tr><td>L. Bianchi</td><td>Referto RIS</td><td>REF_RAD</td><td><span class="mock-status" style="background:var(--warning-light);color:var(--warning)">In attesa</span></td></tr>
+            </tbody>
+          </table>
+          <div style="font-size:.65rem;color:var(--text-secondary);margin-top:4px;padding:5px 8px;background:#f0fdfa;border-radius:6px;border:1px solid #99f6e4">
+            ✔ Trasmissione INI regionale · Firma digitale documenti · Stato trasmissione tracciato per referto
+          </div>
+        </div>
+      </div>
+      <div class="features-row">
+        <span class="feat-chip">Trasmissione FSE 2.0</span>
+        <span class="feat-chip">Referti LIS + RIS</span>
+        <span class="feat-chip">Stato per paziente</span>
+        <span class="feat-chip">Firma digitale</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Portali Paziente & Azienda -->
+  <div class="module-card">
+    <div class="module-card-accent" style="background:linear-gradient(135deg,#6366f1,#4f46e5)"></div>
+    <div class="module-card-body">
+      <div class="module-card-header">
+        <div class="module-icon" style="background:#eef2ff">🌐</div>
+        <div class="module-card-meta">
+          <div class="module-card-title">Portali Web Paziente & Azienda <span class="new-badge">NUOVO</span></div>
+          <span class="module-card-tag" style="background:#eef2ff;color:#6366f1">Medicina del Lavoro · Area Riservata</span>
+        </div>
+      </div>
+      <div class="ui-mock">
+        <div class="mock-tabs">
+          <button class="mock-tab active" style="background:#6366f1">Portale Paziente</button>
+          <button class="mock-tab">Portale Azienda (Med. Lavoro)</button>
+        </div>
+        <div class="mock-body">
+          <div style="background:#f0f4ff;border:1px solid #c7d2fe;border-radius:8px;padding:12px;text-align:center">
+            <div style="font-size:.8rem;font-weight:700;color:#4f46e5;margin-bottom:10px">Accedi al Portale Paziente NextCare</div>
+            <div class="mock-input" style="text-align:left;margin-bottom:4px">Codice Fiscale *</div>
+            <div class="mock-input" style="text-align:left;margin-bottom:8px">Password Accesso *</div>
+            <div class="mock-btn" style="width:100%;justify-content:center;background:#6366f1">Accedi all'Area Personale</div>
+          </div>
+          <div style="font-size:.65rem;color:var(--text-secondary);margin-top:6px">
+            ✔ Referti clinici firmati scaricabili · Fatture · Prenotazioni · Area aziendale per medicina del lavoro
+          </div>
+        </div>
+      </div>
+      <div class="features-row">
+        <span class="feat-chip">Portale paziente self-service</span>
+        <span class="feat-chip">Download referti</span>
+        <span class="feat-chip">Portale aziende (med. lavoro)</span>
+        <span class="feat-chip">Login sicuro CF + password</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SEZIONE 6 — ORGANIZZAZIONE & HR
+══════════════════════════════════════════════ -->
+<div id="sec-org" style="scroll-margin-top:120px"></div>
+<div class="section-label">👔 Organizzazione</div>
+<h2 class="section-title">HRIS, Cliniche & Asset</h2>
+<p class="section-desc">Gestione del personale sanitario, turni, agende operative e asset della struttura.</p>
+
+<div class="modules-grid">
+
+  <!-- HRIS & Turni -->
+  <div class="module-card">
+    <div class="module-card-accent" style="background:var(--primary-gradient)"></div>
+    <div class="module-card-body">
+      <div class="module-card-header">
+        <div class="module-icon" style="background:var(--primary-light)">👔</div>
+        <div class="module-card-meta">
+          <div class="module-card-title">HRIS & Turni — Risorse Umane</div>
+          <span class="module-card-tag" style="background:var(--primary-light);color:var(--primary)">6 Ruoli RBAC · Agende · Chiusure</span>
+        </div>
+      </div>
+      <div class="ui-mock">
+        <div class="mock-bar">
+          <div class="mock-bar-dot"></div>
+          <span class="mock-bar-title">HRIS & Turni — Personale Sanitario & Agende Operative</span>
+        </div>
+        <div class="mock-body">
+          <div style="margin-bottom:6px">
+            <div style="font-size:.65rem;font-weight:700;color:var(--text-secondary);margin-bottom:4px">Selettore Ruolo (RBAC)</div>
+            <select style="width:100%;padding:5px 8px;border:1px solid var(--border);border-radius:6px;font-size:.7rem;background:var(--bg-surface)">
+              <option>Amministratore (Admin)</option>
+              <option>Medico: Dr. Rossi</option>
+              <option>Medico: Dr.ssa Bianchi</option>
+              <option>Segreteria</option>
+              <option>Tecnico TSRM</option>
+              <option>Infermiere</option>
+              <option>Biologo</option>
+            </select>
+          </div>
+          <table class="mock-table">
+            <thead><tr><th>Operatore</th><th>Ruolo</th><th>Turno Oggi</th></tr></thead>
+            <tbody>
+              <tr><td>Dr. Rossi</td><td><span class="mock-chip">Medico</span></td><td>08:00–14:00</td></tr>
+              <tr><td>Tecnico A</td><td><span class="mock-chip teal">TSRM</span></td><td>07:30–13:30</td></tr>
+              <tr><td>Dott.ssa B.</td><td><span class="mock-chip purple">Biologo</span></td><td>09:00–17:00</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="features-row">
+        <span class="feat-chip">6 ruoli RBAC nativi</span>
+        <span class="feat-chip">Tabellone turni</span>
+        <span class="feat-chip">Agende operative medici</span>
+        <span class="feat-chip">Gestione chiusure</span>
+        <span class="feat-chip">Durata slot configurabile</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cliniche & Asset -->
+  <div class="module-card">
+    <div class="module-card-accent" style="background:linear-gradient(135deg,#64748b,#475569)"></div>
+    <div class="module-card-body">
+      <div class="module-card-header">
+        <div class="module-icon" style="background:#f8fafc">🏥</div>
+        <div class="module-card-meta">
+          <div class="module-card-title">Cliniche & Gestione Asset</div>
+          <span class="module-card-tag" style="background:#f1f5f9;color:#475569">Ambulatori · Strumenti · Manutenzione</span>
+        </div>
+      </div>
+      <div class="ui-mock">
+        <div class="mock-bar">
+          <div class="mock-bar-dot" style="background:#64748b"></div>
+          <span class="mock-bar-title">Cliniche & Asset — Ambulatori, Strumenti, Manutenzione</span>
+        </div>
+        <div class="mock-body">
+          <table class="mock-table">
+            <thead><tr><th>Ambulatorio</th><th>Strumento</th><th>Stato</th><th>Prossima Man.</th></tr></thead>
+            <tbody>
+              <tr><td>Sala Card. 1</td><td>ECG 12 derivazioni</td><td><span class="mock-status" style="background:var(--success-light);color:var(--success)">Operativo</span></td><td>15/07/2026</td></tr>
+              <tr><td>Sala RIS A</td><td>RX Digitale</td><td><span class="mock-status" style="background:var(--warning-light);color:var(--warning)">Manutenzione</span></td><td>Urgente</td></tr>
+              <tr><td>Lab. Analisi</td><td>Analizzatore ematologico</td><td><span class="mock-status" style="background:var(--success-light);color:var(--success)">Operativo</span></td><td>01/09/2026</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="features-row">
+        <span class="feat-chip">Gestione ambulatori</span>
+        <span class="feat-chip">Inventario strumenti</span>
+        <span class="feat-chip">Stato manutenzione</span>
+        <span class="feat-chip">Multi-sede</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SEZIONE 7 — REFERTI & CONFIGURAZIONE
+══════════════════════════════════════════════ -->
+<div id="sec-referti" style="scroll-margin-top:120px"></div>
+<div class="section-label">📄 Referti & Configurazione</div>
+<h2 class="section-title">Referti, Prestazioni & Documenti</h2>
+<p class="section-desc">Archivio referti unificato, catalogo prestazioni con AI e gestione documenti clinici.</p>
+
+<div class="modules-grid">
+
+  <!-- Referti Unificati -->
+  <div class="module-card">
+    <div class="module-card-accent" style="background:linear-gradient(135deg,var(--primary),var(--purple))"></div>
+    <div class="module-card-body">
+      <div class="module-card-header">
+        <div class="module-icon" style="background:var(--primary-light)">📄</div>
+        <div class="module-card-meta">
+          <div class="module-card-title">Referti Unificati</div>
+          <span class="module-card-tag" style="background:var(--primary-light);color:var(--primary)">LIS · RIS · Visite · Email · PDF</span>
+        </div>
+      </div>
+      <div class="ui-mock">
+        <div class="mock-bar">
+          <div class="mock-bar-dot"></div>
+          <span class="mock-bar-title">Referti Unificati — LIS, RIS e Visite in un pannello</span>
+        </div>
+        <div class="mock-body">
+          <table class="mock-table">
+            <thead><tr><th>Paziente</th><th>Tipo</th><th>Medico</th><th>Stato</th><th>Azioni</th></tr></thead>
+            <tbody>
+              <tr><td>M. Rossi</td><td><span class="mock-chip teal">LIS</span></td><td>Dr. Bianchi</td><td><span class="mock-status" style="background:var(--success-light);color:var(--success)">Firmato</span></td><td>📥 📧</td></tr>
+              <tr><td>L. Bianchi</td><td><span class="mock-chip" style="background:#ecfeff;color:var(--cyan);border-color:#a5f3fc">RIS</span></td><td>Dr. Verdi</td><td><span class="mock-status" style="background:var(--warning-light);color:var(--warning)">Bozza</span></td><td>✏️</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="features-row">
+        <span class="feat-chip">Archivio unificato</span>
+        <span class="feat-chip">Stampa PDF</span>
+        <span class="feat-chip">Invio email paziente</span>
+        <span class="feat-chip">Filtri avanzati</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Configura Prestazioni -->
+  <div class="module-card">
+    <div class="module-card-accent" style="background:linear-gradient(135deg,#64748b,#334155)"></div>
+    <div class="module-card-body">
+      <div class="module-card-header">
+        <div class="module-icon" style="background:#f1f5f9">⚙️</div>
+        <div class="module-card-meta">
+          <div class="module-card-title">Configura Prestazioni (CUP · LIS · RIS)</div>
+          <span class="module-card-tag" style="background:#f1f5f9;color:#475569">AI · Import Excel · Azioni Gruppo · Paginazione</span>
+        </div>
+      </div>
+      <div class="ui-mock">
+        <div class="mock-tabs">
+          <button class="mock-tab active">Elenco Prestazioni</button>
+          <button class="mock-tab">Provette LIS</button>
+          <button class="mock-tab">Fogli Lavoro</button>
+          <button class="mock-tab">Tipi Prelievo</button>
+          <button class="mock-tab">Classi Dose</button>
+        </div>
+        <div class="mock-body">
+          <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:4px">
+            <span class="mock-chip orange">Azioni di Gruppo</span>
+            <span class="mock-chip">⬆ Import LIS (Excel)</span>
+            <span class="mock-chip">⬆ Import RIS (Excel)</span>
+            <div class="mock-btn" style="font-size:.62rem;padding:2px 8px">+ Nuova Prestazione</div>
+          </div>
+          <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:4px;margin-bottom:4px">
+            <div class="mock-input">Cerca Nome o Codice…</div>
+            <div class="mock-input">Tipologia ▾</div>
+            <div class="mock-input">Branca ▾</div>
+            <div class="mock-input">Min €</div>
+            <div class="mock-input">Max €</div>
+          </div>
+          <table class="mock-table">
+            <thead><tr><th>☐</th><th>Codice</th><th>Nome</th><th>Tipo</th><th>Prezzo</th></tr></thead>
+            <tbody>
+              <tr><td>☐</td><td>C090.001</td><td>Glicemia</td><td><span class="mock-chip teal">LIS</span></td><td>€ 8,00</td></tr>
+              <tr><td>☑</td><td>P001.001</td><td>Visita Card.</td><td><span class="mock-chip">CUP</span></td><td>€ 80,00</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="features-row">
+        <span class="feat-chip">Catalogo CUP/LIS/RIS</span>
+        <span class="feat-chip">Import Excel massivo</span>
+        <span class="feat-chip">Azioni di gruppo</span>
+        <span class="feat-chip">Paginazione configurabile</span>
+        <span class="feat-chip">Gestione classi dose Euratom</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modelli Referto -->
+  <div class="module-card">
+    <div class="module-card-accent" style="background:linear-gradient(135deg,#f59e0b,#d97706)"></div>
+    <div class="module-card-body">
+      <div class="module-card-header">
+        <div class="module-icon" style="background:var(--warning-light)">📝</div>
+        <div class="module-card-meta">
+          <div class="module-card-title">Modelli Referto & Consensi</div>
+          <span class="module-card-tag" style="background:var(--warning-light);color:var(--warning)">Rich Text · Logo Base64 · Placeholder</span>
+        </div>
+      </div>
+      <div class="ui-mock">
+        <div class="mock-tabs">
+          <button class="mock-tab active">Intestazione & Logo</button>
+          <button class="mock-tab">Gestione Consensi</button>
+        </div>
+        <div class="mock-body">
+          <div style="background:var(--bg-surface);border:1px solid var(--border);border-radius:6px;padding:8px;font-size:.66rem">
+            <div style="display:flex;gap:6px;align-items:center;margin-bottom:6px">
+              <div style="width:28px;height:28px;background:var(--primary-gradient);border-radius:6px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:.65rem">NC</div>
+              <div><div style="font-weight:700;font-size:.72rem">Poliambulatorio Example S.r.l.</div><div style="color:var(--text-muted)">Via Roma 1 · P.IVA 01234567890</div></div>
+            </div>
+            <div style="border-top:1px solid var(--border);padding-top:5px;color:var(--text-secondary);font-size:.63rem">
+              Documento informatico firmato ai sensi dell'art. 20 D.Lgs. 82/2005 (CAD) · {paziente} · {data} · {medico}
+            </div>
+          </div>
+          <div style="font-size:.63rem;color:var(--text-secondary);margin-top:4px">Placeholder automatici: <code>{paziente}</code> <code>{codice_fiscale}</code> <code>{data}</code> <code>{prestazioni}</code> <code>{medico}</code></div>
+        </div>
+      </div>
+      <div class="features-row">
+        <span class="feat-chip">Logo clinica (Base64)</span>
+        <span class="feat-chip">Editor rich text consensi</span>
+        <span class="feat-chip">Placeholder automatici</span>
+        <span class="feat-chip">Regole per genere/età</span>
+        <span class="feat-chip">Import .txt/.doc</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Listini & Convenzioni -->
+  <div class="module-card">
+    <div class="module-card-accent" style="background:linear-gradient(135deg,#10b981,#0d9488)"></div>
+    <div class="module-card-body">
+      <div class="module-card-header">
+        <div class="module-icon" style="background:var(--success-light)">🛡️</div>
+        <div class="module-card-meta">
+          <div class="module-card-title">Listini & Convenzioni</div>
+          <span class="module-card-tag" style="background:var(--success-light);color:var(--success)">Privato · SSN · Assicurazioni · Massimali</span>
+        </div>
+      </div>
+      <div class="ui-mock">
+        <div class="mock-body" style="padding-top:10px">
+          <div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px">
+            <span class="mock-chip green">Privato</span>
+            <span class="mock-chip">SSN/Convenzione</span>
+            <span class="mock-chip orange">UniSalute</span>
+            <span class="mock-chip purple">Generali</span>
+            <span class="mock-chip">Medici Associati</span>
+          </div>
+          <table class="mock-table">
+            <thead><tr><th>Prestazione</th><th>Listino Privato</th><th>Quota Ass.</th><th>Massimale</th></tr></thead>
+            <tbody>
+              <tr><td>Visita Card.</td><td>€ 80,00</td><td>€ 60,00</td><td>€ 500/anno</td></tr>
+              <tr><td>Glicemia</td><td>€ 8,00</td><td>€ 0,00 (SSN)</td><td>—</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="features-row">
+        <span class="feat-chip">Listini multipli</span>
+        <span class="feat-chip">Applicazione automatica</span>
+        <span class="feat-chip">Quota assicurazione</span>
+        <span class="feat-chip">Massimali e franchigie</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SEZIONE 8 — REPORT & NOTIFICHE
+══════════════════════════════════════════════ -->
+<div id="sec-report" style="scroll-margin-top:120px"></div>
+<div class="section-label">📊 Report & Comunicazioni</div>
+<h2 class="section-title">Reportistica, Notifiche & Riepilogo</h2>
+
+<div class="modules-grid">
+
+  <!-- Riepilogo Prestazioni -->
+  <div class="module-card">
+    <div class="module-card-accent" style="background:linear-gradient(135deg,var(--primary),var(--cyan))"></div>
+    <div class="module-card-body">
+      <div class="module-card-header">
+        <div class="module-icon" style="background:var(--primary-light)">📊</div>
+        <div class="module-card-meta">
+          <div class="module-card-title">Riepilogo Prestazioni & Accettazioni</div>
+          <span class="module-card-tag" style="background:var(--primary-light);color:var(--primary)">Filtri avanzati · Export · AI search</span>
+        </div>
+      </div>
+      <div class="ui-mock">
+        <div class="mock-tabs">
+          <button class="mock-tab active">Riepilogo Prestazioni</button>
+          <button class="mock-tab">Riepilogo Accettazioni</button>
+        </div>
+        <div class="mock-body">
+          <div class="mock-form-row">
+            <div class="mock-input">Da data</div>
+            <div class="mock-input">A data</div>
+          </div>
+          <div style="display:flex;gap:4px;margin:4px 0;flex-wrap:wrap">
+            <span class="mock-chip">Branca ▾</span>
+            <span class="mock-chip">Medico ▾</span>
+            <span class="mock-chip teal">Tipo: LIS</span>
+            <div class="mock-btn" style="background:#94a3b8;font-size:.62rem;padding:2px 8px">⬇ Export CSV</div>
+          </div>
+          <table class="mock-table">
+            <thead><tr><th>Prestazione</th><th>N°</th><th>Totale</th><th>Branca</th></tr></thead>
+            <tbody>
+              <tr><td>Glicemia</td><td>284</td><td>€ 2.272</td><td><span class="mock-chip teal">LIS</span></td></tr>
+              <tr><td>Visita Card.</td><td>94</td><td>€ 7.520</td><td><span class="mock-chip">CUP</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="features-row">
+        <span class="feat-chip">Report per branca e medico</span>
+        <span class="feat-chip">Export CSV</span>
+        <span class="feat-chip">Filtri data</span>
+        <span class="feat-chip">Ricerca AI</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notifiche Email -->
+  <div class="module-card">
+    <div class="module-card-accent" style="background:linear-gradient(135deg,#f59e0b,#ef4444)"></div>
+    <div class="module-card-body">
+      <div class="module-card-header">
+        <div class="module-icon" style="background:var(--warning-light)">📧</div>
+        <div class="module-card-meta">
+          <div class="module-card-title">Notifiche Email Automatiche</div>
+          <span class="module-card-tag" style="background:var(--warning-light);color:var(--warning)">SMTP · Microsoft 365 · Gmail</span>
+        </div>
+      </div>
+      <div class="ui-mock">
+        <div class="mock-body" style="padding-top:10px">
+          <div class="mock-form-row">
+            <div class="mock-input">SMTP Host: smtp.example.it</div>
+            <div class="mock-input">Porta: 587</div>
+          </div>
+          <div class="mock-form-row" style="margin-top:4px">
+            <div class="mock-input">Utente email</div>
+            <div class="mock-input">Password ••••</div>
+          </div>
+          <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:4px">
+            <span class="mock-chip green">✓ Conf. prenotazione</span>
+            <span class="mock-chip green">✓ Referto disponibile</span>
+            <span class="mock-chip orange">⏳ Promemoria</span>
+          </div>
+          <div class="mock-btn" style="margin-top:6px;background:#f59e0b;width:100%;justify-content:center">Invia Email di Test</div>
+        </div>
+      </div>
+      <div class="features-row">
+        <span class="feat-chip">SMTP configurabile</span>
+        <span class="feat-chip">Microsoft 365 / Gmail</span>
+        <span class="feat-chip">Conferma prenotazione</span>
+        <span class="feat-chip">Referto disponibile</span>
+        <span class="feat-chip">Promemoria appuntamento</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SEZIONE 9 — INTEGRAZIONI & TECNICA
+══════════════════════════════════════════════ -->
+<div id="sec-tech" style="scroll-margin-top:120px"></div>
+<div class="section-label">🔌 Integrazioni & Tecnica</div>
+<h2 class="section-title">Integrazioni LIS, Database, Audit & Licenza</h2>
+
+<div class="modules-grid">
+
+  <!-- Integrazioni LIS -->
+  <div class="module-card">
+    <div class="module-card-accent" style="background:linear-gradient(135deg,#7c3aed,#0ea5e9)"></div>
+    <div class="module-card-body">
+      <div class="module-card-header">
+        <div class="module-icon" style="background:var(--purple-light)">🔌</div>
+        <div class="module-card-meta">
+          <div class="module-card-title">Integrazioni Sistemi Esterni LIS</div>
+          <span class="module-card-tag" style="background:var(--purple-light);color:var(--purple)">Synlab XML · Bianalisi REST · Dedalus HL7</span>
+        </div>
+      </div>
+      <div class="ui-mock">
+        <div class="mock-tabs">
+          <button class="mock-tab active">🔵 Synlab</button>
+          <button class="mock-tab">🟢 Bianalisi</button>
+          <button class="mock-tab">🔴 Dedalus</button>
+        </div>
+        <div class="mock-body">
+          <div style="background:var(--purple-light);border:1px solid #ddd6fe;border-radius:6px;padding:7px 10px;font-size:.66rem">
+            <div style="font-weight:700;color:var(--purple);margin-bottom:4px">🔵 Synlab — SynlabNET XML Exchange</div>
+            <div class="mock-form-row">
+              <div class="mock-input">Export: C:\NextCare_LIS\export</div>
+              <div class="mock-input">Import: C:\NextCare_LIS\import</div>
+            </div>
+            <div style="display:flex;gap:4px;margin-top:4px">
+              <span class="mock-chip purple">Trascodifica codici</span>
+              <span class="mock-chip purple">Log real-time</span>
+              <span class="mock-chip purple">Simulatore offline</span>
+            </div>
+          </div>
+          <div style="margin-top:4px;font-size:.63rem;color:var(--text-secondary)">
+            <strong>Bianalisi:</strong> REST API bidirezionale &nbsp;·&nbsp; <strong>Dedalus:</strong> HL7 v2.6 standard
+          </div>
+        </div>
+      </div>
+      <div class="features-row">
+        <span class="feat-chip">Synlab SynlabNET XML</span>
+        <span class="feat-chip">Bianalisi REST API</span>
+        <span class="feat-chip">Dedalus HL7 v2.6</span>
+        <span class="feat-chip">Tabella trascodifica</span>
+        <span class="feat-chip">Simulatore integrato</span>
+        <span class="feat-chip">Log comunicazione</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Log & Simulatori LIS -->
+  <div class="module-card">
+    <div class="module-card-accent" style="background:linear-gradient(135deg,#1e293b,#334155)"></div>
+    <div class="module-card-body">
+      <div class="module-card-header">
+        <div class="module-icon" style="background:#f1f5f9">🖥️</div>
+        <div class="module-card-meta">
+          <div class="module-card-title">Log & Simulatori LIS</div>
+          <span class="module-card-tag" style="background:#f1f5f9;color:#475569">Debug · Test offline · Real-time</span>
+        </div>
+      </div>
+      <div class="ui-mock">
+        <div class="mock-bar" style="background:#1e293b">
+          <div class="mock-bar-dot" style="background:#10b981"></div>
+          <span class="mock-bar-title" style="color:#94a3b8;font-family:monospace">Log Comunicazione Analizzatori — Real-time</span>
+        </div>
+        <div style="background:#0f172a;padding:8px 10px;font-family:monospace;font-size:.63rem;color:#94a3b8;min-height:60px;border-radius:0 0 8px 8px">
+          <div style="color:#10b981">[14:02:11] SYNLAB → Connessione OK</div>
+          <div style="color:#3b82f6">[14:02:12] EXPORT → DDT-2024-001.xml inviato</div>
+          <div style="color:#f59e0b">[14:02:15] IMPORT → Risultati ricevuti (42 esami)</div>
+          <div style="color:#10b981">[14:02:16] VALIDAZIONE → 42/42 esami importati</div>
+        </div>
+      </div>
+      <div class="features-row">
+        <span class="feat-chip">Log real-time per analizzatore</span>
+        <span class="feat-chip">Simulatore offline</span>
+        <span class="feat-chip">Debug XML/HL7</span>
+        <span class="feat-chip">Test senza hardware</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Database SQL & DICOM -->
+  <div class="module-card">
+    <div class="module-card-accent" style="background:linear-gradient(135deg,#0f172a,#1e3a8a)"></div>
+    <div class="module-card-body">
+      <div class="module-card-header">
+        <div class="module-icon" style="background:#eff6ff">🗄️</div>
+        <div class="module-card-meta">
+          <div class="module-card-title">Database SQL & Config DICOM</div>
+          <span class="module-card-tag" style="background:var(--primary-light);color:var(--primary)">MySQL · PACS · AE Title · DDL Export</span>
+        </div>
+      </div>
+      <div class="ui-mock">
+        <div class="mock-body" style="padding-top:10px">
+          <div class="mock-form-row">
+            <div class="mock-input">Host: localhost</div>
+            <div class="mock-input">Porta: 3306</div>
+          </div>
+          <div class="mock-form-row" style="margin-top:4px">
+            <div class="mock-input">Database: nextcare_db</div>
+            <div class="mock-btn" style="font-size:.62rem;padding:3px 8px">🔌 Test & Verifica</div>
+          </div>
+          <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:6px;padding:7px 10px;font-size:.65rem;margin-top:6px">
+            <strong>DICOM:</strong> AE Title: <code>NEXTCARE_VIEWER</code> : <code>11112</code><br>
+            <strong>PACS:</strong> <code>PACS_SERVER</code> @ IP : <code>104</code>
+          </div>
+        </div>
+      </div>
+      <div class="features-row">
+        <span class="feat-chip">Config MySQL</span>
+        <span class="feat-chip">Test connessione</span>
+        <span class="feat-chip">Config DICOM AE Title</span>
+        <span class="feat-chip">Server PACS</span>
+        <span class="feat-chip">Export schema DDL</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Audit Log -->
+  <div class="module-card">
+    <div class="module-card-accent" style="background:linear-gradient(135deg,#ef4444,#dc2626)"></div>
+    <div class="module-card-body">
+      <div class="module-card-header">
+        <div class="module-icon" style="background:var(--danger-light)">🔍</div>
+        <div class="module-card-meta">
+          <div class="module-card-title">Log Attività (Audit) <span class="new-badge">NUOVO</span></div>
+          <span class="module-card-tag" style="background:var(--danger-light);color:var(--danger)">Tracciabilità · Compliance · Admin only</span>
+        </div>
+      </div>
+      <div class="ui-mock">
+        <div class="mock-bar">
+          <div class="mock-bar-dot" style="background:var(--danger)"></div>
+          <span class="mock-bar-title">Log Attività — Tracciabilità completa accessi e modifiche</span>
+        </div>
+        <div class="mock-body">
+          <table class="mock-table">
+            <thead><tr><th>Data</th><th>Operatore</th><th>Azione</th><th>Entità</th></tr></thead>
+            <tbody>
+              <tr><td>14/06 09:12</td><td>Admin</td><td><span class="mock-status" style="background:#eff6ff;color:var(--primary)">LOGIN</span></td><td>Sistema</td></tr>
+              <tr><td>14/06 09:25</td><td>Dr. Rossi</td><td><span class="mock-status" style="background:var(--success-light);color:var(--success)">REFERTATO</span></td><td>LIS #1284</td></tr>
+              <tr><td>14/06 09:40</td><td>Segreteria</td><td><span class="mock-status" style="background:var(--warning-light);color:var(--warning)">FATTURA</span></td><td>F/001</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="features-row">
+        <span class="feat-chip">Ogni azione registrata</span>
+        <span class="feat-chip">Per operatore e ruolo</span>
+        <span class="feat-chip">Filtro per data e tipo</span>
+        <span class="feat-chip">Solo Admin visibile</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Licenza HOS -->
+  <div class="module-card">
+    <div class="module-card-accent" style="background:var(--primary-gradient)"></div>
+    <div class="module-card-body">
+      <div class="module-card-header">
+        <div class="module-icon" style="background:var(--primary-light)">🔑</div>
+        <div class="module-card-meta">
+          <div class="module-card-title">Licenza HOS <span class="new-badge">NUOVO</span></div>
+          <span class="module-card-tag" style="background:var(--primary-light);color:var(--primary)">Healthcare OS · Attivazione · SaaS/On-Premise</span>
+        </div>
+      </div>
+      <div class="ui-mock">
+        <div class="mock-body" style="padding-top:10px">
+          <div style="background:linear-gradient(135deg,#eff6ff,#f5f3ff);border:1px solid #bfdbfe;border-radius:8px;padding:12px;text-align:center">
+            <div class="nc-logo-icon" style="margin:0 auto 10px;width:36px;height:36px;font-size:1rem">NC</div>
+            <div style="font-family:'Outfit',sans-serif;font-weight:800;font-size:.9rem;color:var(--primary)">NextCare HOS — Licenza Attiva</div>
+            <div style="font-size:.7rem;color:var(--text-secondary);margin-top:4px">Healthcare Operating System · Versione 2.0</div>
+            <div style="margin-top:8px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap">
+              <span class="mock-chip green">✓ SaaS Cloud</span>
+              <span class="mock-chip">On-Premise</span>
+              <span class="mock-chip">Scade: 31/12/2026</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="features-row">
+        <span class="feat-chip">Gestione licenza HOS</span>
+        <span class="feat-chip">Attivazione codice</span>
+        <span class="feat-chip">SaaS o On-Premise</span>
+        <span class="feat-chip">Scadenza e rinnovo</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ & Supporto AI -->
+  <div class="module-card">
+    <div class="module-card-accent" style="background:linear-gradient(135deg,var(--purple),var(--primary))"></div>
+    <div class="module-card-body">
+      <div class="module-card-header">
+        <div class="module-icon" style="background:var(--purple-light)">🆘</div>
+        <div class="module-card-meta">
+          <div class="module-card-title">FAQ & Supporto AI</div>
+          <span class="module-card-tag" style="background:linear-gradient(135deg,#eff6ff,#f5f3ff);color:var(--purple)">✨ AI Support · In-app · Zero IT</span>
+        </div>
+      </div>
+      <div class="ui-mock">
+        <div class="mock-ai-box" style="margin:10px 12px">
+          <div style="font-weight:700;margin-bottom:6px;color:var(--primary)">✨ NextCare AI Support</div>
+          <div style="font-size:.65rem;color:var(--text-secondary);line-height:1.6">
+            <em>"Come aggiungo un nuovo paziente?"</em><br>
+            <em>"Come configuro il server PACS?"</em><br>
+            <em>"Come importo il nomenclatore LIS da Excel?"</em>
+          </div>
+        </div>
+        <div style="margin:0 12px 10px;display:flex;gap:6px">
+          <div class="mock-input" style="flex:1">Scrivi la tua domanda…</div>
+          <div class="mock-btn" style="font-size:.62rem;padding:4px 8px">Invia</div>
+        </div>
+      </div>
+      <div class="features-row">
+        <span class="feat-chip">AI risponde in linguaggio naturale</span>
+        <span class="feat-chip">Guide operative in-app</span>
+        <span class="feat-chip">Zero ufficio IT</span>
+        <span class="feat-chip">Sempre disponibile</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══════════════════════════════════════════════
+     CONFRONTO
+══════════════════════════════════════════════ -->
+<div class="comp-section">
+<div id="sec-confronto" style="scroll-margin-top:120px"></div>
+  <div class="section-label">⚖️ Confronto</div>
+  <h2 class="section-title">NextCare vs Software Tradizionali</h2>
+  <p class="section-desc">La differenza fondamentale: nessun modulo da acquistare, tutto incluso dal primo giorno.</p>
+  <table class="comp-table">
+    <thead><tr><th>Caratteristica</th><th>Software tradizionali</th><th>NextCare</th></tr></thead>
+    <tbody>
+      <tr><td>Modello commerciale</td><td class="bad">Modulare a pagamento</td><td class="good">✓ Tutto incluso dal primo accesso</td></tr>
+      <tr><td>Configurazione iniziale</td><td class="bad">Tecnico IT dedicato, settimane</td><td class="good">✓ AI automatica, minuti</td></tr>
+      <tr><td>LIS con HL7/XML</td><td class="bad">Modulo aggiuntivo</td><td class="good">✓ Incluso (+ Bianalisi REST + Dedalus)</td></tr>
+      <tr><td>RIS con DICOM/PACS</td><td class="bad">Modulo aggiuntivo</td><td class="good">✓ Incluso con classi dose Euratom</td></tr>
+      <tr><td>Business Intelligence</td><td class="bad">Non disponibile o separato</td><td class="good">✓ BI + AI conversazionale integrata</td></tr>
+      <tr><td>Magazzino & Cold Chain</td><td class="bad">Non disponibile</td><td class="good">✓ DDT, lotti, frigoriferi, alert</td></tr>
+      <tr><td>Riabilitazione & VAS</td><td class="bad">Non disponibile</td><td class="good">✓ Cicli, sedute, diario clinico, VAS</td></tr>
+      <tr><td>Portale Paziente/Azienda</td><td class="bad">Separato o a pagamento</td><td class="good">✓ Incluso con medicina del lavoro</td></tr>
+      <tr><td>FSE 2.0</td><td class="bad">Modulo aggiuntivo</td><td class="good">✓ Trasmissione integrata</td></tr>
+      <tr><td>Rendicontazione ASL</td><td class="bad">Separato o non disponibile</td><td class="good">✓ Flusso C/M, ticket, esenzioni</td></tr>
+      <tr><td>Invio STS (730)</td><td class="bad">Non disponibile</td><td class="good">✓ Trasmissione telematica XML</td></tr>
+      <tr><td>Compensi Medici</td><td class="bad">Non disponibile</td><td class="good">✓ Regole %, fisse, per evento</td></tr>
+      <tr><td>Audit Log</td><td class="bad">Non disponibile o separato</td><td class="good">✓ Ogni azione tracciata</td></tr>
+      <tr><td>AI integrata</td><td class="bad">Non disponibile</td><td class="good">✓ In ogni sezione nativamente</td></tr>
+      <tr><td>Pricing SaaS</td><td class="bad">Per modulo + per utente</td><td class="good">✓ Per utilizzo reale (prenotazioni, referti)</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- CTA -->
+<div class="cta-section">
+  <div class="cta-logo-row">
+    <div class="cta-icon">NC</div>
+    <div style="text-align:left">
+      <div style="font-family:var(--font-heading);font-size:1.3rem;font-weight:800;color:#fff">NextCare</div>
+      <div style="font-size:.75rem;color:rgba(255,255,255,.7)">Healthcare Operating System (HOS)</div>
+    </div>
+  </div>
+  <h2>Vuoi vedere NextCare in azione?</h2>
+  <p>In 30 minuti ti mostriamo tutti i funzionalità complete — dall'accettazione al referto, dalla BI alla cold chain — su dati reali della tua struttura. Nessun impegno.</p>
+  <div class="cta-url">nextcare.tech — Richiedi una Demo Gratuita</div>
+</div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-logo">
+      <div class="footer-nc-icon">NC</div>
+      <span style="font-family:var(--font-heading);font-weight:700;color:var(--text-primary)">NextCare</span>
+      <span style="color:var(--text-muted);font-size:.85rem">Digital Healthcare Platform</span>
+    </div>
+    <div class="footer-text">Where Digital Meets Care · nextcare.tech</div>
+    <div class="footer-text">Contenuto generato dal codice sorgente reale dell'applicazione — aggiornato al 14 giugno 2026</div>
+  </div>
+</footer>
+
+
+<!-- DEMO MODAL -->
+<div id="demoModal" style="display:none;position:fixed;inset:0;z-index:10000;
+  background:rgba(15,23,42,.78);backdrop-filter:blur(8px);
+  align-items:center;justify-content:center;padding:20px;overflow-y:auto">
+  <div style="background:#fff;border-radius:22px;max-width:540px;width:100%;
+    position:relative;box-shadow:0 32px 80px rgba(0,0,0,.22);overflow:hidden">
+    <div style="background:linear-gradient(135deg,#1e3a8a,#2563eb);padding:28px 32px 24px;position:relative">
+      <button onclick="closeDemoModal()" style="position:absolute;top:14px;right:16px;
+        background:rgba(255,255,255,.15);border:none;color:#fff;border-radius:8px;
+        width:32px;height:32px;font-size:1.1rem;cursor:pointer;font-weight:700;
+        display:flex;align-items:center;justify-content:center">&#x2715;</button>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+        <div style="width:42px;height:42px;background:rgba(255,255,255,.18);border-radius:11px;
+          display:flex;align-items:center;justify-content:center;
+          font-family:Outfit,sans-serif;font-weight:800;color:#fff;font-size:.9rem;
+          border:1px solid rgba(255,255,255,.3)">NC</div>
+        <span style="font-family:Outfit,sans-serif;font-weight:700;font-size:.88rem;color:rgba(255,255,255,.85)">NextCare &middot; nextcare.tech</span>
+      </div>
+      <div style="font-family:Outfit,sans-serif;font-weight:900;font-size:1.55rem;color:#fff;letter-spacing:-.5px;margin-bottom:5px">Richiedi una Demo Gratuita</div>
+      <p style="font-size:.82rem;color:rgba(255,255,255,.75);line-height:1.55;margin:0">30 minuti su Zoom con il team. Nessun impegno. Risposta entro 24h.</p>
+    </div>
+    <form id="demoForm" style="padding:28px 32px;display:flex;flex-direction:column;gap:16px" onsubmit="submitDemo(event)">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div>
+          <label style="font-size:.74rem;font-weight:700;color:#374151;display:block;margin-bottom:5px">Nome e Cognome *</label>
+          <input type="text" id="d-nome" name="nome" required placeholder="Mario Rossi"
+            style="width:100%;padding:10px 13px;border:1.5px solid #e5e7eb;border-radius:9px;font-size:.88rem;font-family:Inter,sans-serif;color:#1e293b;outline:none;background:#fafafa;box-sizing:border-box"
+            onfocus="this.style.borderColor='#2563eb'" onblur="this.style.borderColor='#e5e7eb'">
+        </div>
+        <div>
+          <label style="font-size:.74rem;font-weight:700;color:#374151;display:block;margin-bottom:5px">Telefono</label>
+          <input type="tel" id="d-tel" name="telefono" placeholder="+39 333 1234567"
+            style="width:100%;padding:10px 13px;border:1.5px solid #e5e7eb;border-radius:9px;font-size:.88rem;font-family:Inter,sans-serif;color:#1e293b;outline:none;background:#fafafa;box-sizing:border-box"
+            onfocus="this.style.borderColor='#2563eb'" onblur="this.style.borderColor='#e5e7eb'">
+        </div>
+      </div>
+      <div>
+        <label style="font-size:.74rem;font-weight:700;color:#374151;display:block;margin-bottom:5px">Struttura / Azienda *</label>
+        <input type="text" id="d-azienda" name="azienda" required placeholder="Poliambulatorio / Laboratorio / Clinica..."
+          style="width:100%;padding:10px 13px;border:1.5px solid #e5e7eb;border-radius:9px;font-size:.88rem;font-family:Inter,sans-serif;color:#1e293b;outline:none;background:#fafafa;box-sizing:border-box"
+          onfocus="this.style.borderColor='#2563eb'" onblur="this.style.borderColor='#e5e7eb'">
+      </div>
+      <div>
+        <label style="font-size:.74rem;font-weight:700;color:#374151;display:block;margin-bottom:5px">Email *</label>
+        <input type="email" id="d-email" name="email" required placeholder="mario@clinica.it"
+          style="width:100%;padding:10px 13px;border:1.5px solid #e5e7eb;border-radius:9px;font-size:.88rem;font-family:Inter,sans-serif;color:#1e293b;outline:none;background:#fafafa;box-sizing:border-box"
+          onfocus="this.style.borderColor='#2563eb'" onblur="this.style.borderColor='#e5e7eb'">
+      </div>
+      <div>
+        <label style="font-size:.74rem;font-weight:700;color:#374151;display:block;margin-bottom:5px">Note / Richieste specifiche</label>
+        <textarea id="d-note" name="note" rows="3"
+          placeholder="Es: gestisco 15 medici, ho bisogno di LIS e integrazione HL7..."
+          style="width:100%;padding:10px 13px;border:1.5px solid #e5e7eb;border-radius:9px;font-size:.88rem;font-family:Inter,sans-serif;color:#1e293b;outline:none;background:#fafafa;resize:vertical;min-height:76px;box-sizing:border-box"
+          onfocus="this.style.borderColor='#2563eb'" onblur="this.style.borderColor='#e5e7eb'"></textarea>
+      </div>
+      <div style="display:flex;align-items:flex-start;gap:9px">
+        <input type="checkbox" id="d-privacy" required style="margin-top:3px;accent-color:#2563eb;width:15px;height:15px;flex-shrink:0">
+        <label for="d-privacy" style="font-size:.72rem;color:#6b7280;line-height:1.55;cursor:pointer">
+          Acconsento al trattamento dei dati personali ai sensi del GDPR (Regolamento UE 2016/679) per la gestione della richiesta.</label>
+      </div>
+      <button type="submit" id="demoSubmitBtn"
+        style="background:linear-gradient(135deg,#2563eb,#3b82f6);color:#fff;border:none;border-radius:10px;padding:13px 24px;font-family:Outfit,sans-serif;font-weight:800;font-size:.95rem;cursor:pointer;box-shadow:0 4px 14px rgba(37,99,235,.35);transition:opacity .2s"
+        onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+        Invia Richiesta Demo &#x2192;
+      </button>
+      <div id="demoSuccess" style="display:none;background:#ecfdf5;border:1.5px solid #a7f3d0;border-radius:10px;padding:14px 16px;text-align:center">
+        <div style="font-size:1.4rem;margin-bottom:4px">&#x2705;</div>
+        <div style="font-family:Outfit,sans-serif;font-weight:800;font-size:.95rem;color:#065f46;margin-bottom:4px">Richiesta inviata!</div>
+        <div style="font-size:.8rem;color:#047857;line-height:1.5">Ti contatteremo entro 24 ore per fissare la demo.<br>Controlla anche la cartella spam.</div>
+      </div>
+      <div id="demoError" style="display:none;background:#fef2f2;border:1.5px solid #fca5a5;border-radius:10px;padding:14px 16px;text-align:center">
+        <div style="font-size:1.4rem;margin-bottom:4px">&#x26A0;&#xFE0F;</div>
+        <div style="font-family:Outfit,sans-serif;font-weight:800;font-size:.9rem;color:#991b1b;margin-bottom:4px">Errore nell&apos;invio</div>
+        <div id="demoErrorMsg" style="font-size:.78rem;color:#b91c1c">Riprova o scrivi a <a href="mailto:info@nextcare.tech" style="color:#b91c1c;font-weight:700">info@nextcare.tech</a></div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+function navTo(id){
+  const el = document.getElementById(id);
+  if(el) el.scrollIntoView({behavior:'smooth'});
+}
+const _secs = ['sec-dashboard','sec-pazienti','sec-diagnostica','sec-admin','sec-avanzati','sec-org','sec-referti','sec-report','sec-tech','sec-confronto'];
+const _lnks = document.querySelectorAll('.page-nav-link');
+const _btt  = document.getElementById('back-to-top');
+window.addEventListener('scroll', () => {
+  _btt.classList.toggle('visible', window.scrollY > 500);
+  let cur = '';
+  for(const id of _secs){
+    const el = document.getElementById(id);
+    if(el && el.getBoundingClientRect().top <= 150) cur = id;
+  }
+  _lnks.forEach(l => l.classList.toggle('active', l.dataset.target === cur));
+}, {passive:true});
+</script>
+
+
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo" style="display:flex;align-items:center;gap:10px;margin-bottom:0">
+          <div class="nc-icon">NC</div>
+          <div><div class="nc-name">NextCare</div><div class="nc-sub">nextcare.tech</div></div>
+        </div>
+        <p>Healthcare Operating System per poliambulatori, laboratori e strutture sanitarie private. funzionalità sempre incluse. Sempre tutto incluso.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Prodotto</h4>
+        <a href="moduli.html">tutte le funzionalità</a>
+        <a href="pricing.html">Pricing</a>
+        <a href="pricing.html#simulator">Simula i costi</a>
+        <a href="articoli.html">Articoli</a>
+      </div>
+      <div class="footer-col">
+        <h4>Integrazioni</h4>
+        <a href="moduli.html#lis">LIS — HL7/ASTM</a>
+        <a href="moduli.html#ris">RIS — DICOM/PACS</a>
+        <a href="moduli.html#microbiologia">Microbiologia</a>
+        <a href="moduli.html#fse">FSE 2.0</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contatti</h4>
+        <a href="https://nextcare.tech" target="_blank">nextcare.tech</a>
+        <a href="mailto:info@nextcare.tech">info@nextcare.tech</a>
+        <a href="javascript:void(0)" onclick="openDemoModal()">Richiedi Demo</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 NextCare · Healthcare Operating System · nextcare.tech &nbsp;|&nbsp; <a href="privacy.html" style="color:var(--t3);text-decoration:none">Privacy Policy</a> &nbsp;·&nbsp; <a href="cookie.html" style="color:var(--t3);text-decoration:none">Cookie Policy</a></span>
+      <span>"Where Digital Meets Care"</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ============================================================
+   NextCare — Simulatore Costi + Demo Modal
+   Email delivery: FormSubmit.co (no account, no client email)
+   NOTA: Al primo invio arriva 1 email di verifica a pironrob@gmail.com
+         Cliccala una volta — poi funziona per sempre automaticamente.
+   ============================================================ */
+
+/* ── Simulatore Costi ───────────────────────────────────────── */
+var M_EXTRAS=[
+  {k:"hl7",  label:"Strumenti HL7/ASTM",  price:500,  max:10},
+  {k:"file", label:"Via File XML/CSV",     price:350,  max:10},
+  {k:"dicom",label:"DICOM Worklist",       price:500,  max:10},
+  {k:"pacs", label:"Nodi PACS",            price:500,  max:10},
+  {k:"micro",label:"Modulo Microbiologia", price:3500, max:1 },
+];
+var mcnt={hl7:0,file:0,dicom:0,pacs:0,micro:0};
+
+(function buildExtras(){
+  var div=document.getElementById("m-extras");
+  if(!div)return;
+  M_EXTRAS.forEach(function(e){
+    var row=document.createElement("div");
+    row.style.cssText="display:flex;align-items:center;justify-content:space-between;gap:10px;"+
+      "background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);"+
+      "border-radius:10px;padding:9px 12px;";
+    row.innerHTML='<div style="flex:1">'+
+      '<div style="font-size:.78rem;font-weight:600;color:rgba(255,255,255,.9)">'+e.label+'</div>'+
+      '<div style="font-size:.66rem;color:rgba(255,255,255,.5)">\u20ac '+
+        e.price.toLocaleString('it-IT')+' una tantum</div></div>'+
+      '<div style="display:flex;align-items:center;gap:7px">'+
+        '<button type="button" onclick="mchg(\''+e.k+'\',-1)" '+
+          'style="width:25px;height:25px;border-radius:6px;border:none;background:rgba(255,255,255,.15);'+
+          'color:#fff;cursor:pointer;font-weight:700;font-size:.95rem">\u2212</button>'+
+        '<span id="mc-'+e.k+'" style="min-width:20px;text-align:center;'+
+          'font-family:Outfit,sans-serif;font-weight:800;font-size:.9rem;color:#fff">0</span>'+
+        '<button type="button" onclick="mchg(\''+e.k+'\',1)" '+
+          'style="width:25px;height:25px;border-radius:6px;border:none;background:rgba(255,255,255,.15);'+
+          'color:#fff;cursor:pointer;font-weight:700;font-size:.95rem">+</button>'+
+      '</div>';
+    div.appendChild(row);
+  });
+})();
+
+function mchg(k,d){
+  var e=M_EXTRAS.filter(function(x){return x.k===k;})[0];
+  mcnt[k]=Math.max(0,Math.min(e.max,mcnt[k]+d));
+  document.getElementById("mc-"+k).textContent=mcnt[k];
+  calcModal();
+}
+function fmtE(n){return "\u20ac "+n.toLocaleString('it-IT');}
+
+function calcModal(){
+  var medEl=document.getElementById("m-sl-medici"),
+      utEl=document.getElementById("m-sl-utenti"),
+      refEl=document.getElementById("m-sl-referti");
+  if(!medEl)return;
+  var m=parseInt(medEl.value),u=parseInt(utEl.value),r=parseInt(refEl.value);
+  document.getElementById("m-medici").textContent=m;
+  document.getElementById("m-utenti").textContent=u;
+  document.getElementById("m-referti").textContent=r.toLocaleString('it-IT');
+  var tier,price,col;
+  if(m<=10&&u<=20&&r<=500){tier="Starter";price=149;col="#86efac";}
+  else if(m<=20&&u<=40&&r<=1500){tier="Professional";price=289;col="#93c5fd";}
+  else{tier="Enterprise";price=499;col="#c4b5fd";}
+  var ot=0;
+  M_EXTRAS.forEach(function(e){ot+=mcnt[e.k]*e.price;});
+  document.getElementById("m-tier-name").textContent=tier;
+  var prEl=document.getElementById("m-tier-price");
+  prEl.style.color=col;prEl.textContent=fmtE(price);
+  document.getElementById("m-breakdown").innerHTML=[
+    {l:"Canone mensile",v:fmtE(price)+"/mese"},
+    {l:"Integrazioni (una tantum)",v:fmtE(ot)},
+    {l:"Anno 1 totale",v:fmtE(price*12+ot)},
+    {l:"Dal 2\u00b0 anno",v:fmtE(price)+"/mese",tot:true},
+  ].map(function(r){
+    var bg=r.tot?"background:rgba(16,185,129,.18);border-color:rgba(16,185,129,.3)":
+      "background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.1)";
+    var lc=r.tot?"color:#86efac":"color:rgba(255,255,255,.75)";
+    var vc=r.tot?"color:#86efac;font-size:1rem":"color:#fff";
+    return '<div style="'+bg+';border:1px solid;border-radius:9px;padding:10px 13px;'+
+      'display:flex;justify-content:space-between;align-items:center">'+
+      '<span style="font-size:.78rem;font-weight:600;'+lc+'">'+r.l+'</span>'+
+      '<span style="font-family:Outfit,sans-serif;font-weight:800;font-size:.88rem;'+vc+'">'+r.v+'</span></div>';
+  }).join('');
+}
+
+function openSimModal(){
+  document.getElementById("simModal").style.display="flex";
+  calcModal();
+  document.body.style.overflow="hidden";
+}
+function closeSimModal(){
+  document.getElementById("simModal").style.display="none";
+  document.body.style.overflow="";
+}
+document.getElementById("simModal").addEventListener('click',function(e){
+  if(e.target===this)closeSimModal();
+});
+
+/* ── Demo Modal ─────────────────────────────────────────────── */
+
+/* Email destinatario — offuscata, non in chiaro nel sorgente */
+var _e=["p","i","r","o","n","r","o","b","@","g","m","a","i","l",".","c","o","m"];
+var _dest=_e.join("");
+
+function openDemoModal(){
+  var m=document.getElementById("demoModal");
+  if(!m)return;
+  m.style.display="flex";
+  document.body.style.overflow="hidden";
+  document.getElementById("demoSuccess").style.display="none";
+  document.getElementById("demoError").style.display="none";
+  document.getElementById("demoForm").style.display="flex";
+  var btn=document.getElementById("demoSubmitBtn");
+  if(btn){btn.disabled=false;btn.innerHTML="Invia Richiesta Demo &rarr;";}
+}
+function closeDemoModal(){
+  var m=document.getElementById("demoModal");
+  if(m)m.style.display="none";
+  document.body.style.overflow="";
+}
+var _dm=document.getElementById("demoModal");
+if(_dm){_dm.addEventListener('click',function(e){if(e.target===this)closeDemoModal();});}
+
+/* ── ESC chiude entrambi i modal ────────────────────────────── */
+document.addEventListener('keydown',function(e){
+  if(e.key==="Escape"){
+    var dm=document.getElementById("demoModal");
+    var sm=document.getElementById("simModal");
+    if(dm&&dm.style.display==="flex")closeDemoModal();
+    else if(sm&&sm.style.display==="flex")closeSimModal();
+  }
+});
+
+/* ── Invio form via FormSubmit.co (AJAX, nessun client email) ─ */
+function submitDemo(evt){
+  evt.preventDefault();
+  var btn=document.getElementById("demoSubmitBtn");
+  btn.disabled=true;
+  btn.textContent="Invio in corso...";
+
+  var nome    = document.getElementById("d-nome").value.trim();
+  var azienda = document.getElementById("d-azienda").value.trim();
+  var email   = document.getElementById("d-email").value.trim();
+  var tel     = document.getElementById("d-tel").value.trim()||"\u2014";
+  var note    = document.getElementById("d-note").value.trim()||"\u2014";
+
+  var payload = {
+    _subject: "[NextCare.tech] Demo richiesta da " + azienda + " (" + nome + ")",
+    _template: "table",
+    _captcha: "false",
+    Nome: nome,
+    Azienda: azienda,
+    Email: email,
+    Telefono: tel,
+    Note: note
+  };
+
+  fetch("https://formsubmit.co/ajax/" + _dest, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    },
+    body: JSON.stringify(payload)
+  })
+  .then(function(res){ return res.json(); })
+  .then(function(data){
+    if(data.success === "true" || data.success === true){
+      document.getElementById("demoForm").style.display="none";
+      document.getElementById("demoSuccess").style.display="block";
+    } else {
+      throw new Error(data.message || "Risposta non valida dal server");
+    }
+  })
+  .catch(function(err){
+    document.getElementById("demoError").style.display="block";
+    document.getElementById("demoErrorMsg").innerHTML=
+      "Errore: "+err.message+
+      ". Riprova o scrivi a <strong>info@nextcare.tech</strong>";
+    btn.disabled=false;
+    btn.innerHTML="Invia Richiesta Demo &rarr;";
+  });
+}
+</script>
+
+<!-- COOKIE BANNER -->
+<div id="cookieBanner" style="display:none;position:fixed;bottom:0;left:0;right:0;z-index:99999;
+  background:rgba(15,23,42,.97);backdrop-filter:blur(10px);
+  border-top:1px solid rgba(255,255,255,.1);padding:18px 32px;
+  box-shadow:0 -8px 32px rgba(0,0,0,.3)">
+  <div style="max-width:1400px;margin:0 auto;display:flex;align-items:center;
+    justify-content:space-between;gap:24px;flex-wrap:wrap">
+    <div style="flex:1;min-width:260px">
+      <div style="font-family:Outfit,sans-serif;font-weight:800;font-size:.95rem;
+        color:#fff;margin-bottom:5px">🍪 Questo sito utilizza i cookie</div>
+      <p style="font-size:.78rem;color:rgba(255,255,255,.65);line-height:1.6;margin:0">
+        Utilizziamo cookie tecnici necessari al funzionamento del sito e, previo consenso,
+        cookie analitici per migliorare l'esperienza utente.
+        <a href="cookie.html" style="color:#93c5fd;font-weight:600">Cookie Policy</a> ·
+        <a href="privacy.html" style="color:#93c5fd;font-weight:600">Privacy Policy</a>
+      </p>
+    </div>
+    <div style="display:flex;gap:10px;flex-shrink:0;flex-wrap:wrap">
+      <button onclick="cookieChoice('necessary')"
+        style="background:rgba(255,255,255,.1);color:rgba(255,255,255,.85);border:1px solid rgba(255,255,255,.25);
+        border-radius:8px;padding:9px 18px;font-family:Outfit,sans-serif;font-weight:700;
+        font-size:.82rem;cursor:pointer;white-space:nowrap">Solo necessari</button>
+      <button onclick="cookieChoice('all')"
+        style="background:linear-gradient(135deg,#2563eb,#3b82f6);color:#fff;border:none;
+        border-radius:8px;padding:9px 20px;font-family:Outfit,sans-serif;font-weight:700;
+        font-size:.82rem;cursor:pointer;white-space:nowrap">Accetta tutti</button>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  if(!localStorage.getItem('nc_cookie_consent')){
+    document.getElementById('cookieBanner').style.display='block';
+  }
+})();
+function cookieChoice(type){
+  localStorage.setItem('nc_cookie_consent', type);
+  localStorage.setItem('nc_cookie_date', new Date().toISOString());
+  document.getElementById('cookieBanner').style.display='none';
+}
+</script>
+
+<script>
+/* Submenu moduli — active state on scroll */
+(function(){
+  var items = document.querySelectorAll('.mod-submenu-item[data-sec]');
+  if(!items.length) return;
+  function updateActive(){
+    var scrollY = window.scrollY + 150;
+    var active = null;
+    items.forEach(function(item){
+      var sec = document.getElementById(item.dataset.sec);
+      if(!sec) return;
+      if(sec.offsetTop <= scrollY) active = item;
+    });
+    items.forEach(function(i){i.classList.remove('active');});
+    if(active) active.classList.add('active');
+  }
+  window.addEventListener('scroll', updateActive, {passive:true});
+  updateActive();
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NextCare — Il gestionale sanitario che non ha moduli</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#2563eb;--primary-light:#eff6ff;
+  --grad:linear-gradient(135deg,#2563eb,#3b82f6);
+  --success:#10b981;--success-light:#ecfdf5;
+  --warning:#f59e0b;--warning-light:#fffbeb;
+  --danger:#ef4444;--danger-light:#fef2f2;
+  --purple:#8b5cf6;--purple-light:#f5f3ff;
+  --teal:#14b8a6;--teal-light:#f0fdfa;
+  --cyan:#06b6d4;--cyan-light:#ecfeff;
+  --orange:#f97316;--orange-light:#fff7ed;
+  --bg:#f4f6fa;--surface:#fff;
+  --t1:#1e293b;--t2:#64748b;--t3:#94a3b8;
+  --border:#e2e8f0;
+  --fh:'Outfit','Inter',sans-serif;
+  --fb:'Inter',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--fb);background:var(--bg);color:var(--t1)}
+h1,h2,h3,h4{font-family:var(--fh);font-weight:700}
+a{text-decoration:none;color:inherit}
+.nc-icon{width:38px;height:38px;background:var(--grad);border-radius:10px;color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--fh);font-weight:800;font-size:1.1rem;
+  box-shadow:0 4px 12px rgba(37,99,235,.28);flex-shrink:0}
+.nc-icon-sm{width:28px;height:28px;border-radius:7px;font-size:.78rem}
+.nc-logo{display:flex;align-items:center;gap:10px}
+.nc-name{font-family:var(--fh);font-weight:800;font-size:1.05rem;letter-spacing:-.3px;color:var(--t1)}
+.nc-sub{font-size:.65rem;color:var(--t2);letter-spacing:.8px;text-transform:uppercase}
+@media print{
+  .no-print{display:none!important}
+  body{background:#fff}
+  .hero-section{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+
+<style>
+/* ── ARTICLE ── */
+.site-header{background:var(--surface);border-bottom:1px solid var(--border);
+  padding:0 40px;position:sticky;top:0;z-index:200;
+  box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.header-inner{max-width:800px;margin:0 auto;height:64px;display:flex;align-items:center;justify-content:space-between}
+.print-btn{background:var(--grad);color:#fff;border:none;border-radius:8px;
+  padding:8px 18px;font-family:var(--fh);font-weight:700;font-size:.82rem;
+  cursor:pointer;display:flex;align-items:center;gap:6px;transition:opacity .2s}
+.print-btn:hover{opacity:.88}
+.hero-section{background:linear-gradient(150deg,#0f172a 0%,#1e3a8a 55%,#2563eb 100%);
+  padding:60px 40px 64px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.hero-inner{max-width:800px;margin:0 auto}
+.art-tag{display:inline-flex;align-items:center;gap:6px;
+  background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.2);
+  border-radius:20px;padding:5px 14px;font-size:.75rem;font-weight:700;
+  color:rgba(255,255,255,.9);margin-bottom:20px}
+.hero-section h1{font-size:clamp(1.9rem,4vw,2.7rem);font-weight:900;color:#fff;
+  letter-spacing:-1px;line-height:1.12;margin-bottom:14px}
+.hero-section h1 em{font-style:normal;background:linear-gradient(135deg,#93c5fd,#c4b5fd);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.art-meta{display:flex;align-items:center;gap:14px;margin-top:18px;flex-wrap:wrap}
+.meta-av{width:36px;height:36px;background:rgba(255,255,255,.18);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--fh);font-weight:800;font-size:.78rem;color:#fff;
+  border:2px solid rgba(255,255,255,.3)}
+.meta-t{font-size:.78rem;color:rgba(255,255,255,.75)}
+.meta-t strong{color:#fff;font-weight:600}
+.rt-badge{display:inline-flex;align-items:center;gap:5px;
+  background:rgba(255,255,255,.12);border-radius:12px;
+  padding:4px 10px;font-size:.72rem;color:rgba(255,255,255,.8);font-weight:600}
+.art-wrap{max-width:800px;margin:0 auto;padding:48px 40px 80px}
+.art-body p{font-size:1rem;color:var(--t2);line-height:1.9;margin-bottom:18px}
+.art-body p strong{color:var(--t1);font-weight:700}
+.art-body h2{font-size:1.4rem;font-weight:800;color:var(--t1);
+  margin:40px 0 12px;letter-spacing:-.3px;
+  padding-top:28px;border-top:2px solid var(--border)}
+.art-body ul{padding-left:0;margin-bottom:18px;display:flex;flex-direction:column;gap:8px}
+.art-body li{list-style:none;display:flex;gap:10px;align-items:flex-start;
+  font-size:.95rem;color:var(--t2);line-height:1.65}
+.art-body li::before{content:'✓';color:var(--success);font-weight:800;flex-shrink:0;margin-top:3px}
+.art-body em{font-style:italic;color:var(--t3)}
+.hbox{background:linear-gradient(135deg,var(--primary-light),var(--purple-light));
+  border:1px solid #bfdbfe;border-radius:14px;padding:20px 24px;margin:22px 0}
+.hbox p{color:var(--primary);margin-bottom:0;font-weight:600}
+.hbox p strong{color:var(--primary)}
+.feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:18px 0}
+.feat-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  padding:14px 16px;display:flex;align-items:flex-start;gap:10px}
+.feat-icon{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;
+  justify-content:center;font-size:1.05rem;flex-shrink:0}
+.feat-title{font-family:var(--fh);font-size:.88rem;font-weight:700;color:var(--t1);margin-bottom:2px}
+.feat-sub{font-size:.72rem;color:var(--t2);line-height:1.45}
+.ptable{width:100%;border-collapse:collapse;border-radius:14px;overflow:hidden;
+  border:1px solid var(--border);margin:18px 0;font-size:.88rem}
+.ptable thead tr{background:var(--t1);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.ptable th{padding:12px 16px;text-align:left;font-weight:700;color:#fff;font-family:var(--fh)}
+.ptable td{padding:10px 16px;border-bottom:1px solid #f1f5f9;color:var(--t2);vertical-align:middle}
+.ptable tr:last-child td{border-bottom:none}
+.ptable td:first-child{font-weight:700;color:var(--t1)}
+.ptable td strong{color:var(--primary);font-weight:800}
+.ctable{width:100%;border-collapse:collapse;border-radius:12px;overflow:hidden;
+  border:1px solid var(--border);margin:14px 0;font-size:.85rem}
+.ctable th{background:#f8fafc;padding:10px 14px;text-align:left;font-weight:700;
+  color:var(--t2);border-bottom:1px solid var(--border)}
+.ctable td{padding:9px 14px;border-bottom:1px solid #f1f5f9;color:var(--t2)}
+.ctable td:first-child{font-weight:600;color:var(--t1)}
+.ctable td:last-child{font-weight:800;color:var(--primary);white-space:nowrap}
+.ctable tr:last-child td{border-bottom:none}
+.art-cta{background:var(--grad);border-radius:16px;padding:40px 32px;text-align:center;
+  margin-top:48px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.art-cta h3{font-size:1.4rem;font-weight:900;color:#fff;margin-bottom:10px}
+.art-cta p{color:rgba(255,255,255,.82);font-size:.92rem;margin-bottom:0}
+.cta-url{font-family:var(--fh);font-size:1.15rem;font-weight:800;color:#bfdbfe;
+  display:block;margin-top:12px;letter-spacing:.5px}
+.cta-logo-row{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:18px}
+.cta-nc{width:48px;height:48px;background:rgba(255,255,255,.18);border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--fh);font-weight:800;font-size:1.2rem;color:#fff;
+  border:1px solid rgba(255,255,255,.25)}
+.art-hr{border:none;border-top:2px solid var(--border);margin:36px 0}
+.site-footer{background:var(--surface);border-top:1px solid var(--border);
+  padding:20px 40px;text-align:center}
+.footer-inner{max-width:800px;margin:0 auto;display:flex;align-items:center;
+  justify-content:space-between;flex-wrap:wrap;gap:10px}
+.ft{font-size:.75rem;color:var(--t3)}
+@media(max-width:640px){
+  .feat-grid{grid-template-columns:1fr}
+  .art-wrap{padding:32px 20px 48px}
+  .hero-section{padding:40px 20px 44px}
+  .site-header{padding:0 20px}
+}
+</style>
+</head>
+<body>
+
+<header class="site-header no-print">
+  <div class="header-inner">
+    <div class="nc-logo">
+  <div class="nc-icon">NC</div>
+  <div>
+    <div class="nc-name">NextCare</div>
+    <div class="nc-sub">nextcare.tech</div>
+  </div>
+</div>
+    <button class="print-btn" onclick="window.print()">🖨️ Stampa / Salva PDF</button>
+  </div>
+</header>
+
+<div class="hero-section">
+  <div class="hero-inner">
+    <div class="art-tag">📝 LinkedIn Article · nextcare.tech</div>
+    <h1>Il gestionale sanitario<br>che non ha <em>moduli</em></h1>
+    <div class="art-meta">
+      <div class="meta-av">NC</div>
+      <div class="meta-t"><strong>NextCare Team</strong> · nextcare.tech</div>
+      <span class="rt-badge">⏱ 5 min lettura</span>
+      <span class="meta-t">Healthcare · SaaS · AI</span>
+    </div>
+  </div>
+</div>
+
+<div class="art-wrap">
+<div class="art-body">
+
+<h2>Il problema che tutti ignorano</h2>
+<p>Quando una struttura sanitaria cerca un nuovo gestionale, il processo è sempre lo stesso: demo brillante, prezzo iniziale convincente, firma del contratto. Poi arriva il momento di configurare davvero il sistema, e iniziano le sorprese.</p>
+<p><em>"Il modulo LIS è separato."</em> <em>"Il collegamento agli analizzatori ha un costo annuale."</em> <em>"La Business Intelligence è in un piano enterprise."</em> <em>"Il portale pazienti? Modulo aggiuntivo."</em> <em>"Il PACS? Ci vuole un'integrazione custom."</em></p>
+<p>A fine anno, quel gestionale che sembrava costare €200 al mese ne costa €600. Più il tecnico IT. Più la formazione annuale. Più i rinnovi delle integrazioni.</p>
+<div class="hbox"><p><strong>Il mercato del software sanitario vive su questo meccanismo da decenni.</strong> Il prezzo base è basso. I moduli aggiuntivi sono dove si fa il margine. NextCare è stato costruito per rompere questo schema.</p></div>
+
+<h2>Un'unica piattaforma. 27 moduli. Zero extra.</h2>
+<p>NextCare è un <strong>Healthcare Operating System (HOS)</strong>: una piattaforma completa che include nativamente tutto ciò di cui una struttura sanitaria moderna ha bisogno — dal primo accesso, senza dover acquistare nulla in più.</p>
+<div class="feat-grid">
+  <div class="feat-card"><div class="feat-icon" style="background:#eff6ff">📅</div><div><div class="feat-title">CUP con AI Wizard</div><div class="feat-sub">Prenota in linguaggio naturale. L'AI trova lo slot, conferma e invia l'email.</div></div></div>
+  <div class="feat-card"><div class="feat-icon" style="background:#f0fdfa">🔬</div><div><div class="feat-title">LIS Laboratorio completo</div><div class="feat-sub">Campioni, barcode, HL7/ASTM, validazione AI, microbiologia con antibiogrammi.</div></div></div>
+  <div class="feat-card"><div class="feat-icon" style="background:#ecfeff">🩻</div><div><div class="feat-title">RIS + DICOM viewer</div><div class="feat-sub">Worklist TSRM, classi dose Euratom, firma digitale referto, collegamento PACS.</div></div></div>
+  <div class="feat-card"><div class="feat-icon" style="background:#ecfdf5">💰</div><div><div class="feat-title">Contabilità completa</div><div class="feat-sub">Prima nota, profit center per branca, registro fatture, note di credito automatiche.</div></div></div>
+  <div class="feat-card"><div class="feat-icon" style="background:#fffbeb">📊</div><div><div class="feat-title">Business Intelligence AI</div><div class="feat-sub">Produzione vs incassato, breakdown medico/branca, AI conversazionale su dati finanziari.</div></div></div>
+  <div class="feat-card"><div class="feat-icon" style="background:#ecfeff">🧊</div><div><div class="feat-title">Magazzino & Cold Chain</div><div class="feat-sub">DDT, lotti, scadenze, monitoraggio temperatura frigoriferi biologici, alert sotto-scorta.</div></div></div>
+  <div class="feat-card"><div class="feat-icon" style="background:#fdf2f8">❤️</div><div><div class="feat-title">Riabilitazione & VAS</div><div class="feat-sub">Cicli, sedute, scala VAS, diario clinico, grafico progressione dolore nel tempo.</div></div></div>
+  <div class="feat-card"><div class="feat-icon" style="background:#ecfdf5">🛡️</div><div><div class="feat-title">FSE 2.0 + Portali</div><div class="feat-sub">Fascicolo Sanitario Elettronico, portale paziente e portale aziende per medicina lavoro.</div></div></div>
+  <div class="feat-card"><div class="feat-icon" style="background:#f5f3ff">💼</div><div><div class="feat-title">Compensi Medici</div><div class="feat-sub">Regole percentuali o fisse, quattro eventi trigger, liquidazione massiva a fine mese.</div></div></div>
+  <div class="feat-card"><div class="feat-icon" style="background:#ecfeff">🏛️</div><div><div class="feat-title">Rendicontazione ASL + STS</div><div class="feat-sub">Flusso C/M, ticket ed esenzioni, trasmissione telematica spese sanitarie 730.</div></div></div>
+  <div class="feat-card"><div class="feat-icon" style="background:#eff6ff">👔</div><div><div class="feat-title">HRIS & Turni</div><div class="feat-sub">Sei ruoli RBAC nativi, tabellone turni, agende medici, gestione chiusure struttura.</div></div></div>
+  <div class="feat-card"><div class="feat-icon" style="background:#fef2f2">🔍</div><div><div class="feat-title">Audit Log completo</div><div class="feat-sub">Ogni azione tracciata per operatore, data e tipo. Visibile solo all'amministratore.</div></div></div>
+</div>
+
+<h2>Il ruolo dell'intelligenza artificiale</h2>
+<p>NextCare è il <strong>primo gestionale sanitario che si configura da solo grazie all'AI</strong>. Non come funzione di marketing — l'AI è il motore operativo presente in ogni sezione con uno scopo specifico:</p>
+<ul>
+  <li><strong>Nel CUP:</strong> interpreta le richieste in linguaggio naturale, suggerisce chip contestuali, filtra l'agenda in tempo reale.</li>
+  <li><strong>Nel LIS:</strong> flagga automaticamente i valori fuori range, suggerisce la validazione, monitora lo stato dei campioni.</li>
+  <li><strong>Nella BI:</strong> risponde in linguaggio naturale ai dati finanziari — "fatture non pagate a giugno", "branca più redditizia".</li>
+  <li><strong>Nella configurazione:</strong> riconosce automaticamente esami, branche, materiali e dosi. Zero tecnico IT, zero nomenclatore caricato manualmente.</li>
+  <li><strong>Nel supporto:</strong> la FAQ AI risponde alle domande operative del personale dall'interno dell'applicazione, senza aprire ticket.</li>
+</ul>
+<div class="hbox"><p>Non avrai bisogno di un ufficio IT per configurare e mantenere il sistema. L'AI fa tutto: legge la struttura della tua clinica, interpreta i tuoi dati e configura automaticamente ogni sezione.</p></div>
+
+<h2>Come funziona il pricing</h2>
+<p>Il canone SaaS di NextCare si basa su tre variabili reali. Non su quante funzionalità vuoi sbloccare — <strong>tutto è sempre incluso</strong>:</p>
+<table class="ptable">
+  <thead><tr><th>Tier</th><th>Medici attivi</th><th>Utenti totali</th><th>Referti/mese</th><th>Canone mensile</th></tr></thead>
+  <tbody>
+    <tr><td>🌱 Starter</td><td>fino a 10</td><td>fino a 20</td><td>fino a 500</td><td><strong>€ 149/mese</strong></td></tr>
+    <tr><td>⭐ Professional</td><td>fino a 20</td><td>fino a 40</td><td>fino a 1.500</td><td><strong>€ 289/mese</strong></td></tr>
+    <tr><td>🏛️ Enterprise</td><td>illimitati</td><td>illimitati</td><td>illimitati</td><td><strong>€ 499/mese</strong></td></tr>
+  </tbody>
+</table>
+<p><strong>Tutte le funzionalità sono incluse in ogni tier.</strong> Non esiste una versione "light" con funzioni disabilitate. Il tier determina solo i volumi, non le funzioni disponibili.</p>
+
+<h2>Le connessioni agli strumenti fisici</h2>
+<p>Le uniche voci fuori dal canone mensile sono le connessioni a dispositivi fisici (analizzatori LIS, strumenti DICOM, PACS). Si pagano <strong>una volta sola</strong> all'attivazione — non ogni anno, non come abbonamento ricorrente:</p>
+<table class="ctable">
+  <thead><tr><th>Tipo connessione</th><th>Protocollo</th><th>Una tantum</th></tr></thead>
+  <tbody>
+    <tr><td>🔵 LIS Analizzatore</td><td>HL7 / ASTM</td><td>€ 500 per strumento</td></tr>
+    <tr><td>📁 LIS Via File</td><td>XML / CSV / TXT</td><td>€ 350 per strumento</td></tr>
+    <tr><td>🦠 LIS Microbiologia</td><td>Modulo dedicato + integrazione</td><td>€ 3.500</td></tr>
+    <tr><td>🩻 DICOM Worklist</td><td>Per strumento RIS collegato</td><td>€ 500 per strumento</td></tr>
+    <tr><td>🗄️ PACS Storage</td><td>Per nodo DICOM storage</td><td>€ 500 per nodo</td></tr>
+  </tbody>
+</table>
+
+<h2>Perché questo modello vince</h2>
+<ul>
+  <li>Aggiungi un medico? Sale il tier se superi la soglia — nessun costo nascosto da rinegoziare.</li>
+  <li>Cambi l'analizzatore LIS? Stessa quota di connessione una tantum. Nessun rinnovo.</li>
+  <li>Hai bisogno di BI, FSE, Riabilitazione o Cold Chain? Sono già lì — non devi acquistarli.</li>
+  <li>Risparmio annuo medio rispetto al software a moduli: <strong>€ 2.000 – €4.000</strong>.</li>
+</ul>
+
+<h2>Per chi è NextCare</h2>
+<ul>
+  <li><strong>Poliambulatori multibranch</strong> con laboratorio, radiologia e visite specialistiche.</li>
+  <li><strong>Laboratori di analisi</strong> con uno o più analizzatori collegati via HL7 o file.</li>
+  <li><strong>Centri di riabilitazione</strong> con fisioterapia e gestione cicli terapeutici.</li>
+  <li><strong>Cliniche private</strong> con degenza e medicina del lavoro aziendale.</li>
+  <li><strong>Reti multi-sede</strong> con esigenze di controllo di gestione centralizzato.</li>
+</ul>
+
+<hr class="art-hr">
+
+<div class="art-cta">
+  <div class="cta-logo-row">
+    <div class="cta-nc">NC</div>
+    <div style="text-align:left">
+      <div style="font-family:var(--fh);font-size:1.1rem;font-weight:800;color:#fff">NextCare</div>
+      <div style="font-size:.7rem;color:rgba(255,255,255,.65)">Healthcare Operating System</div>
+    </div>
+  </div>
+  <h3>Vuoi vedere NextCare in azione?</h3>
+  <p>In 30 minuti ti mostriamo tutti i 27 moduli su dati reali della tua struttura.<br>Nessun impegno. Nessuna pressione commerciale.</p>
+  <span class="cta-url">nextcare.tech → Demo Gratuita</span>
+</div>
+
+</div></div>
+
+<footer class="site-footer no-print">
+  <div class="footer-inner">
+    <div class="nc-logo">
+      <div class="nc-icon" style="width:26px;height:26px;border-radius:6px;font-size:.7rem">NC</div>
+      <span style="font-family:var(--fh);font-weight:700;font-size:.9rem">NextCare</span>
+    </div>
+    <span class="ft">Healthcare Operating System · nextcare.tech · Giugno 2026</span>
+    <span class="ft">"Where Digital Meets Care"</span>
+  </div>
+</footer>
+</body>
+</html>

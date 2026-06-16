@@ -1,0 +1,43 @@
+"    // FORM: Enter LIS Results (Supporting modification/edit)
+    document.getElementById('form-enter-results').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const sampleId = parseInt(document.getElementById('res-sample-id').value);
+        const tests = DB.get('lab_tests');
+        const samTests = tests.filter(t => t.sample_id === sampleId);
+        
+        samTests.forEach(t => {
+            const inputVal = document.getElementById(`test-input-${t.id}`).value;
+            t.result_value = inputVal;
+            
+            const range = t.reference_range ? t.reference_range.split('-') : [];
+            if (range.length === 2) {
+                const min = parseFloat(range[0]);
+                const max = parseFloat(range[1]);
+                const val = parseFloat(inputVal);
+                if (val < min || val > max) t.status = 'flagged';
+                else t.status = 'completed';
+            } else {
+                t.status = 'completed';
+            }
+            t.verified_by = 5;
+            t.verified_at = new Date().toISOString();
+        });
+        
+        DB.set('lab_tests', tests);
+        
+        const reportNotesHTML = document.getElementById('lis-report-editor').innerHTML;
+        const updatedSam = DB.update('lab_samples', sampleId, { status: 'completed', report_notes: reportNotesHTML });
+        DB.logAudit(5, "LAB_REFERTATION", "lab_samples", sampleId, { verified_by: 5 });
+        
+        // Trigger Email Notification
+        const patient = DB.get('patients').find(p => p.id === updatedSam.patient_id);
+        if (patient) {
+            const testNames = samTests.map(t => t.test_name).join(', ');
+            sendSimulatedEmail(patient.id, 'report_ready', {
+                paziente: `${patient.first_name} ${patient.last_name}`,
+                data: new Date().toLocaleDateString('it-IT'),
+                prestazione: testNames,
+                dettaglio: `Codice campione LIS: ${updatedSam.barcode}`
+            });
+  
+<truncated 97 bytes>

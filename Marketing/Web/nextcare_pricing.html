@@ -1,0 +1,871 @@
+﻿<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NextCare — Pricing & Modello Commerciale</title>
+<meta name="description" content="NextCare: tutto incluso, prezzo trasparente. SaaS a tier su medici, utenti e referti. Strumenti LIS e DICOM con quota una tantum. Nessuna sorpresa a fine mese.">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ── DESIGN SYSTEM — NextCare ── */
+:root {
+  --primary:#2563eb; --primary-light:#eff6ff;
+  --primary-gradient:linear-gradient(135deg,#2563eb,#3b82f6);
+  --success:#10b981; --success-light:#ecfdf5;
+  --warning:#f59e0b; --warning-light:#fffbeb;
+  --danger:#ef4444;  --danger-light:#fef2f2;
+  --purple:#8b5cf6;  --purple-light:#f5f3ff;
+  --orange:#f97316; --orange-light:#fff7ed;
+  --teal:#14b8a6;   --teal-light:#f0fdfa;
+  --bg-base:#f4f6fa; --bg-surface:#ffffff;
+  --text-primary:#1e293b; --text-secondary:#64748b; --text-muted:#94a3b8;
+  --border:#e2e8f0;
+  --radius-md:12px; --radius-lg:18px;
+  --shadow-md:0 4px 16px rgba(0,0,0,.07);
+  --shadow-lg:0 12px 40px rgba(37,99,235,.12);
+  --font-heading:'Outfit','Inter',sans-serif;
+  --font-body:'Inter',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-body);background:var(--bg-base);color:var(--text-primary);line-height:1.6}
+h1,h2,h3,h4{font-family:var(--font-heading);font-weight:700}
+
+/* ── HEADER ── */
+.site-header{background:var(--bg-surface);border-bottom:1px solid var(--border);padding:0 40px;position:sticky;top:0;z-index:200;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.header-inner{max-width:1200px;margin:0 auto;height:68px;display:flex;align-items:center;justify-content:space-between}
+.nc-logo{display:flex;align-items:center;gap:12px}
+.nc-logo-icon{width:40px;height:40px;background:var(--primary-gradient);border-radius:12px;color:#fff;display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-weight:800;font-size:1.25rem;box-shadow:0 4px 12px rgba(37,99,235,.30);flex-shrink:0}
+.nc-logo-title{font-family:var(--font-heading);font-size:1.2rem;font-weight:700;letter-spacing:-0.5px;display:block}
+.nc-logo-sub{font-size:.7rem;color:var(--text-secondary);text-transform:uppercase;letter-spacing:1px;font-weight:500;display:block}
+.hdr-badge{display:inline-flex;align-items:center;gap:6px;background:var(--success-light);color:var(--success);border:1px solid #a7f3d0;border-radius:20px;padding:5px 14px;font-size:.78rem;font-weight:700}
+.pulse{width:7px;height:7px;background:var(--success);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.4)}}
+
+/* ── HERO ── */
+.hero{background:linear-gradient(150deg,#0f172a 0%,#1e3a8a 50%,#2563eb 100%);padding:80px 40px 120px;text-align:center;position:relative;overflow:hidden}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.04) 1px,transparent 1px);background-size:40px 40px}
+.hero-inner{max-width:900px;margin:0 auto;position:relative}
+.hero-logo-row{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:32px}
+.hero-nc-icon{width:68px;height:68px;background:rgba(255,255,255,.15);border-radius:18px;display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-weight:800;font-size:1.8rem;color:#fff;box-shadow:0 8px 32px rgba(0,0,0,.25);border:1px solid rgba(255,255,255,.2);backdrop-filter:blur(10px)}
+.hero-pretag{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:5px 16px;font-size:.78rem;font-weight:600;color:rgba(255,255,255,.85);margin-bottom:24px;backdrop-filter:blur(8px)}
+.hero h1{font-size:clamp(2.2rem,4.5vw,3.4rem);font-weight:900;color:#fff;letter-spacing:-1.5px;line-height:1.1;margin-bottom:20px}
+.hero h1 em{font-style:normal;background:linear-gradient(135deg,#60a5fa,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:1.1rem;color:rgba(255,255,255,.75);max-width:620px;margin:0 auto 40px}
+.hero-pills{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:56px}
+.hero-pill{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);border-radius:20px;padding:7px 18px;font-size:.82rem;font-weight:600;color:#fff;backdrop-filter:blur(6px)}
+.hero-pill-icon{font-size:.9rem}
+
+/* ── WAVE ── */
+.wave{display:block;line-height:0;margin-top:-2px}
+.wave svg{display:block;width:100%}
+
+/* ── WRAP ── */
+.main-wrap{max-width:1200px;margin:0 auto;padding:56px 40px 80px}
+.section-eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:.78rem;font-weight:700;border-radius:20px;padding:4px 14px;border:1px solid;margin-bottom:14px}
+.section-title{font-size:1.8rem;font-weight:900;letter-spacing:-0.5px;margin-bottom:10px}
+.section-sub{color:var(--text-secondary);font-size:.95rem;max-width:600px;margin-bottom:40px;line-height:1.7}
+
+/* ── LOGIC BANNER ── */
+.logic-banner{background:var(--primary-gradient);border-radius:var(--radius-lg);padding:36px 40px;margin-bottom:56px;position:relative;overflow:hidden;display:flex;align-items:center;gap:32px}
+.logic-banner::before{content:'';position:absolute;right:-60px;top:-60px;width:240px;height:240px;background:rgba(255,255,255,.06);border-radius:50%}
+.logic-banner::after{content:'';position:absolute;right:60px;bottom:-80px;width:160px;height:160px;background:rgba(255,255,255,.04);border-radius:50%}
+.logic-icon{width:64px;height:64px;background:rgba(255,255,255,.2);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:1.8rem;flex-shrink:0;border:1px solid rgba(255,255,255,.25);position:relative}
+.logic-text h2{font-size:1.4rem;font-weight:800;color:#fff;margin-bottom:8px;letter-spacing:-0.3px}
+.logic-text p{color:rgba(255,255,255,.82);font-size:.93rem;line-height:1.65}
+.logic-text strong{color:#fff}
+
+/* ── SAAS TIERS ── */
+.tiers-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-bottom:56px}
+.tier-card{background:var(--bg-surface);border:2px solid var(--border);border-radius:var(--radius-lg);padding:28px;position:relative;transition:transform .2s,box-shadow .2s;overflow:hidden}
+.tier-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
+.tier-card.featured{border-color:var(--primary);box-shadow:var(--shadow-lg)}
+.tier-badge{position:absolute;top:16px;right:16px;background:var(--primary-gradient);color:#fff;font-size:.65rem;font-weight:800;padding:3px 10px;border-radius:10px;text-transform:uppercase;letter-spacing:.5px}
+.tier-icon{width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin-bottom:16px}
+.tier-name{font-family:var(--font-heading);font-size:1.15rem;font-weight:800;margin-bottom:4px}
+.tier-desc{font-size:.82rem;color:var(--text-secondary);margin-bottom:20px;line-height:1.5}
+.tier-price{margin-bottom:6px}
+.tier-price-label{font-size:.72rem;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:4px}
+.tier-price-amount{font-family:var(--font-heading);font-size:2.2rem;font-weight:900;letter-spacing:-1px;line-height:1}
+.tier-price-currency{font-size:1.1rem;font-weight:700;vertical-align:top;margin-top:4px;display:inline-block}
+.tier-price-period{font-size:.8rem;color:var(--text-muted);font-weight:500}
+.tier-divider{border:none;border-top:1px solid var(--border);margin:18px 0}
+.tier-limits{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
+.tier-limit{display:flex;align-items:center;gap:8px;font-size:.82rem}
+.tier-limit-icon{width:20px;height:20px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:.65rem;flex-shrink:0}
+.tier-features{display:flex;flex-direction:column;gap:6px}
+.tier-feature{display:flex;align-items:center;gap:7px;font-size:.8rem;color:var(--text-secondary)}
+.tier-feature::before{content:'✓';color:var(--success);font-weight:800;flex-shrink:0}
+.tier-cta{width:100%;padding:11px;border:none;border-radius:10px;font-family:var(--font-heading);font-size:.9rem;font-weight:700;cursor:pointer;margin-top:18px;transition:all .2s}
+
+/* ── CONNECTIONS ── */
+.connections-title{font-size:1.5rem;font-weight:900;letter-spacing:-0.5px;margin-bottom:6px}
+.connections-sub{color:var(--text-secondary);font-size:.9rem;margin-bottom:32px}
+
+.conn-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px}
+
+.conn-card{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;transition:transform .2s,box-shadow .2s}
+.conn-card:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.conn-card-header{padding:18px 20px 14px;display:flex;align-items:flex-start;gap:12px;border-bottom:1px solid var(--border)}
+.conn-card-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0}
+.conn-card-title{font-family:var(--font-heading);font-size:1rem;font-weight:800;margin-bottom:2px}
+.conn-card-subtitle{font-size:.75rem;color:var(--text-secondary);font-weight:500}
+.conn-card-body{padding:16px 20px}
+.conn-items{display:flex;flex-direction:column;gap:10px}
+.conn-item{border:1px solid var(--border);border-radius:10px;padding:12px 14px;position:relative;transition:border-color .2s}
+.conn-item:hover{border-color:var(--primary)}
+.conn-item-header{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.conn-item-icon{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:.8rem;flex-shrink:0}
+.conn-item-name{font-size:.88rem;font-weight:700;flex:1}
+.conn-item-fee{display:flex;flex-direction:column;align-items:flex-end}
+.conn-item-tantum{font-family:var(--font-heading);font-size:1.05rem;font-weight:900}
+.conn-item-tantum-lbl{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.3px;color:var(--text-muted)}
+.conn-item-desc{font-size:.76rem;color:var(--text-secondary);line-height:1.5;margin-bottom:6px}
+.conn-item-monthly{display:inline-flex;align-items:center;gap:4px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;padding:3px 8px;font-size:.7rem;font-weight:600;color:var(--text-secondary)}
+
+/* ── MICRO CARD SPECIAL ── */
+.conn-item.special{background:linear-gradient(135deg,#fff7ed,#fef2f2);border-color:#fed7aa}
+.conn-item.special:hover{border-color:var(--orange)}
+
+/* ── CALC ── */
+.calc-card{background:var(--bg-surface);border:2px solid var(--primary);border-radius:var(--radius-lg);padding:32px;margin-bottom:56px;box-shadow:var(--shadow-lg)}
+.calc-title{font-family:var(--font-heading);font-size:1.3rem;font-weight:800;margin-bottom:4px;color:var(--text-primary)}
+.calc-sub{font-size:.85rem;color:var(--text-secondary);margin-bottom:24px}
+.calc-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:24px}
+.calc-field{display:flex;flex-direction:column;gap:6px}
+.calc-label{font-size:.75rem;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.4px}
+.calc-input{width:100%;padding:10px 14px;border:2px solid var(--border);border-radius:8px;font-family:var(--font-heading);font-size:1.1rem;font-weight:700;color:var(--text-primary);background:var(--bg-surface);outline:none;transition:border-color .2s;-webkit-appearance:none}
+.calc-input:focus{border-color:var(--primary)}
+.calc-input[type=range]{padding:0;height:6px;border-radius:3px;cursor:pointer;accent-color:var(--primary);border:none}
+.calc-val{font-family:var(--font-heading);font-size:.95rem;font-weight:800;color:var(--primary);text-align:center}
+.calc-divider{border:none;border-top:2px solid var(--border);margin:20px 0}
+.calc-checkboxes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.calc-check{display:flex;align-items:center;gap:8px;background:#f8fafc;border:1px solid var(--border);border-radius:8px;padding:8px 12px;cursor:pointer;transition:all .15s;user-select:none}
+.calc-check:hover{border-color:var(--primary);background:var(--primary-light)}
+.calc-check input[type=checkbox]{accent-color:var(--primary);width:14px;height:14px}
+.calc-check-lbl{font-size:.8rem;font-weight:600;flex:1}
+.calc-check-fee{font-size:.72rem;color:var(--text-muted);font-weight:600}
+.calc-result{background:var(--primary-gradient);border-radius:var(--radius-md);padding:20px 24px;display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center}
+.calc-result-breakdown{display:flex;flex-direction:column;gap:4px}
+.calc-result-line{font-size:.8rem;color:rgba(255,255,255,.75);display:flex;justify-content:space-between;gap:12px}
+.calc-result-line strong{color:#fff}
+.calc-result-total-lbl{font-size:.78rem;color:rgba(255,255,255,.7);font-weight:600;margin-top:4px}
+.calc-result-total{font-family:var(--font-heading);font-size:3rem;font-weight:900;color:#fff;line-height:1;letter-spacing:-2px}
+.calc-result-total span{font-size:1.2rem;font-weight:700;vertical-align:top;margin-top:8px;display:inline-block}
+.calc-result-note{font-size:.68rem;color:rgba(255,255,255,.6);margin-top:4px}
+.calc-result-tantum{background:rgba(255,255,255,.15);border-radius:8px;padding:8px 14px;text-align:center;border:1px solid rgba(255,255,255,.2)}
+.calc-result-tantum-val{font-family:var(--font-heading);font-size:1.4rem;font-weight:900;color:#fff}
+.calc-result-tantum-lbl{font-size:.68rem;color:rgba(255,255,255,.7);font-weight:600}
+
+/* ── COMPARE ── */
+.compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:56px}
+.compare-card{border-radius:var(--radius-lg);padding:28px;border:2px solid}
+.compare-card.bad{border-color:#fca5a5;background:linear-gradient(135deg,#fff,#fff5f5)}
+.compare-card.good{border-color:#6ee7b7;background:linear-gradient(135deg,#fff,#f0fdf9)}
+.compare-card-title{font-size:1rem;font-weight:800;margin-bottom:18px;display:flex;align-items:center;gap:8px}
+.compare-rows{display:flex;flex-direction:column;gap:10px}
+.compare-row{display:flex;gap:10px;align-items:flex-start;font-size:.83rem;padding:8px 10px;border-radius:8px}
+.compare-row.bad{background:rgba(239,68,68,.07)}
+.compare-row.good{background:rgba(16,185,129,.07)}
+.compare-row-icon{font-size:.95rem;flex-shrink:0;margin-top:1px}
+.compare-row-text{line-height:1.5;color:var(--text-secondary)}
+.compare-row-text strong{color:var(--text-primary)}
+
+/* ── FAQ QUICK ── */
+.faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:56px}
+.faq-item{background:var(--bg-surface);border:1px solid var(--border);border-radius:var(--radius-md);padding:16px 18px}
+.faq-q{font-size:.88rem;font-weight:700;color:var(--text-primary);margin-bottom:6px;display:flex;gap:8px}
+.faq-q::before{content:'?';background:var(--primary-light);color:var(--primary);border-radius:50%;width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;flex-shrink:0;margin-top:1px}
+.faq-a{font-size:.8rem;color:var(--text-secondary);line-height:1.6;padding-left:26px}
+
+/* ── CTA ── */
+.cta-section{background:var(--primary-gradient);border-radius:var(--radius-lg);padding:52px 40px;text-align:center;position:relative;overflow:hidden;margin-bottom:0}
+.cta-section::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='50' height='50' viewBox='0 0 50 50' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='25' cy='25' r='10' fill='white' fill-opacity='0.03'/%3E%3C/svg%3E")}
+.cta-icon-row{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:18px;position:relative}
+.cta-nc-icon{width:52px;height:52px;background:rgba(255,255,255,.18);border-radius:14px;display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-weight:800;font-size:1.4rem;color:#fff;border:1px solid rgba(255,255,255,.25)}
+.cta-section h2{font-size:1.9rem;font-weight:900;color:#fff;margin-bottom:10px;position:relative;letter-spacing:-0.5px}
+.cta-section p{color:rgba(255,255,255,.82);font-size:.98rem;margin-bottom:6px;position:relative}
+.cta-url{font-family:var(--font-heading);font-size:1.15rem;font-weight:800;color:#bfdbfe;letter-spacing:.5px;position:relative;margin-top:12px;display:block}
+
+/* ── FOOTER ── */
+.site-footer{background:var(--bg-surface);border-top:1px solid var(--border);padding:24px 40px}
+.footer-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.footer-logo{display:flex;align-items:center;gap:8px}
+.footer-nc-icon{width:26px;height:26px;background:var(--primary-gradient);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:var(--font-heading);font-weight:800;font-size:.7rem;color:#fff}
+.footer-text{font-size:.78rem;color:var(--text-muted)}
+.note-box{background:var(--warning-light);border:1px solid #fde68a;border-radius:10px;padding:12px 16px;font-size:.8rem;color:#92400e;margin-top:16px;line-height:1.6;display:flex;gap:8px;align-items:flex-start}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  .tiers-grid,.conn-grid,.compare-grid,.faq-grid{grid-template-columns:1fr}
+  .calc-grid{grid-template-columns:1fr 1fr}
+  .calc-checkboxes{grid-template-columns:1fr}
+  .calc-result{grid-template-columns:1fr}
+  .hero{padding:48px 20px 72px}
+  .main-wrap{padding:32px 20px 48px}
+  .logic-banner{flex-direction:column;text-align:center;padding:28px 24px}
+}
+/* ── PAGE NAV ── */
+.page-nav{
+  background:var(--bg-surface);border-bottom:1px solid var(--border);
+  position:sticky;top:68px;z-index:190;
+  box-shadow:0 2px 8px rgba(0,0,0,.04);
+  overflow-x:auto;white-space:nowrap;
+}
+.page-nav-inner{
+  max-width:1200px;margin:0 auto;
+  display:flex;align-items:center;gap:0;
+  padding:0 40px;
+}
+.page-nav-link{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:13px 18px;font-size:.82rem;font-weight:600;
+  color:var(--text-secondary);border-bottom:3px solid transparent;
+  transition:all .2s;text-decoration:none;white-space:nowrap;
+  cursor:pointer;
+}
+.page-nav-link:hover{color:var(--primary);background:#f8fafc;}
+.page-nav-link.active{color:var(--primary);border-bottom-color:var(--primary);background:var(--primary-light);}
+.page-nav-link .nav-emoji{font-size:.9rem}
+.back-to-top{
+  position:fixed;bottom:28px;right:28px;z-index:500;
+  width:44px;height:44px;background:var(--primary-gradient);
+  color:#fff;border:none;border-radius:50%;font-size:1.1rem;
+  cursor:pointer;box-shadow:0 4px 16px rgba(37,99,235,.35);
+  display:flex;align-items:center;justify-content:center;
+  opacity:0;transform:translateY(12px);
+  transition:opacity .25s,transform .25s;
+  pointer-events:none;
+}
+.back-to-top.visible{opacity:1;transform:translateY(0);pointer-events:auto;}
+.back-to-top:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(37,99,235,.45);}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="nc-logo">
+      <div class="nc-logo-icon">NC</div>
+      <div>
+        <span class="nc-logo-title">NextCare</span>
+        <span class="nc-logo-sub">Digital Health</span>
+      </div>
+    </div>
+    <div class="hdr-badge">
+      <span class="pulse"></span>
+      Nessun modulo — tutto sempre incluso
+    </div>
+  </div>
+</header>
+
+<!-- PAGE NAV -->
+<nav class="page-nav" id="page-nav">
+  <div class="page-nav-inner">
+    <a class="page-nav-link" data-target="sec-piattaforma" onclick="scrollTo('sec-piattaforma')"><span class="nav-emoji">🏥</span> Piattaforma SaaS</a>
+    <a class="page-nav-link" data-target="sec-calcolatore" onclick="scrollTo('sec-calcolatore')"><span class="nav-emoji">🧮</span> Calcolatore</a>
+    <a class="page-nav-link" data-target="sec-connessioni" onclick="scrollTo('sec-connessioni')"><span class="nav-emoji">🔌</span> Strumenti LIS & DICOM</a>
+    <a class="page-nav-link" data-target="sec-confronto" onclick="scrollTo('sec-confronto')"><span class="nav-emoji">⚖️</span> Confronto</a>
+    <a class="page-nav-link" data-target="sec-faq" onclick="scrollTo('sec-faq')"><span class="nav-emoji">❓</span> FAQ</a>
+  </div>
+</nav>
+
+<!-- BACK TO TOP -->
+<button class="back-to-top" id="back-to-top" title="Torna su" onclick="window.scrollTo({top:0,behavior:'smooth'});">↑</button>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-inner">
+    <div class="hero-logo-row">
+      <div class="hero-nc-icon">NC</div>
+    </div>
+    <div class="hero-pretag">💡 Un modello commerciale radicalmente diverso</div>
+    <h1>Non paghi moduli.<br><em>Paghi quello che usi.</em></h1>
+    <p class="hero-sub">
+      La piattaforma completa — LIS, RIS, CUP, Contabilità, BI, Riabilitazione, Magazzino, FSE e molto altro — è sempre <strong>interamente inclusa</strong>. Il canone SaaS si calcola su <strong>medici, utenti e referti emessi</strong>. Prezzo controllato, nessuna sorpresa a fine mese.
+    </p>
+    <div class="hero-pills">
+      <span class="hero-pill"><span class="hero-pill-icon">✅</span> 27 moduli sempre inclusi</span>
+      <span class="hero-pill"><span class="hero-pill-icon">📊</span> Tariffa su medici + utenti + referti</span>
+      <span class="hero-pill"><span class="hero-pill-icon">🔌</span> Strumenti LIS: una tantum per tipo</span>
+      <span class="hero-pill"><span class="hero-pill-icon">🩻</span> DICOM/PACS: una tantum per nodo</span>
+    </div>
+  </div>
+</section>
+
+<div class="wave">
+  <svg viewBox="0 0 1440 54" preserveAspectRatio="none" height="54" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0,54 L0,20 Q360,54 720,28 Q1080,2 1440,22 L1440,54 Z" fill="#f4f6fa"/>
+  </svg>
+</div>
+
+<main class="main-wrap">
+
+<!-- ── LOGIC BANNER ── -->
+<div class="logic-banner">
+  <div class="logic-icon">💡</div>
+  <div class="logic-text">
+    <h2>Come funziona il modello NextCare</h2>
+    <p>
+      <strong>Piattaforma SaaS:</strong> canone mensile fisso per tier, basato su quanti medici lavorano con NextCare, quanti utenti totali e quanti referti vengono emessi ogni mese. Più usi, più le economie di scala ti favoriscono. <br><br>
+      <strong>Connessioni a strumenti fisici</strong> (analizzatori LIS e dispositivi DICOM): si pagano <strong>una volta sola</strong> all'attivazione (una tantum), con una piccola quota inclusa nel canone mensile. Non devi ri-pagare ogni anno.
+    </p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     SEZIONE 1 — PIATTAFORMA SAAS
+═══════════════════════════════════════ -->
+<div id="sec-piattaforma" style="scroll-margin-top:116px"></div>
+<div class="section-eyebrow" style="background:var(--primary-light);color:var(--primary);border-color:#bfdbfe">🏥 Piattaforma</div>
+<h2 class="section-title">Canone SaaS — 27 moduli inclusi</h2>
+<p class="section-sub">Il canone mensile si basa sui tuoi numeri reali: <strong>medici attivi</strong>, <strong>utenti totali</strong> e <strong>referti emessi</strong> nel mese. Tutto il resto — CUP, LIS, RIS, Contabilità, BI AI, Magazzino, Portali — è già compreso. Zero extra.</p>
+
+<div class="tiers-grid">
+
+  <!-- STARTER -->
+  <div class="tier-card">
+    <div class="tier-icon" style="background:#f0fdf9">🌱</div>
+    <div class="tier-name">Starter</div>
+    <div class="tier-desc">Poliambulatorio medio con laboratorio. Include tutte le funzionalità della piattaforma dal giorno 1.</div>
+    <div class="tier-price">
+      <span class="tier-price-label">Da</span>
+      <div><span class="tier-price-currency" style="color:var(--success)">€</span><span class="tier-price-amount" style="color:var(--success)">149</span><span class="tier-price-period"> / mese</span></div>
+    </div>
+    <hr class="tier-divider">
+    <div class="tier-limits">
+      <div class="tier-limit">
+        <div class="tier-limit-icon" style="background:var(--success-light);color:var(--success)">👨‍⚕️</div>
+        <span>Fino a <strong>10 medici</strong> attivi</span>
+      </div>
+      <div class="tier-limit">
+        <div class="tier-limit-icon" style="background:var(--primary-light);color:var(--primary)">👥</div>
+        <span>Fino a <strong>20 utenti</strong> (segreteria, TSRM…)</span>
+      </div>
+      <div class="tier-limit">
+        <div class="tier-limit-icon" style="background:var(--purple-light);color:var(--purple)">📄</div>
+        <span>Fino a <strong>500 referti/mese</strong></span>
+      </div>
+    </div>
+    <hr class="tier-divider">
+    <div class="tier-features">
+      <div class="tier-feature">Tutti i 27 moduli inclusi</div>
+      <div class="tier-feature">CUP + LIS + RIS + Contabilità</div>
+      <div class="tier-feature">BI AI & Dashboard</div>
+      <div class="tier-feature">Portale Paziente</div>
+      <div class="tier-feature">Notifiche email</div>
+      <div class="tier-feature">Supporto AI in-app</div>
+    </div>
+    <button class="tier-cta" style="background:var(--success-light);color:var(--success);border:2px solid #a7f3d0" onclick="alert('Richiedi una demo gratuita su nextcare.tech')">Inizia con Starter →</button>
+  </div>
+
+  <!-- PROFESSIONAL -->
+  <div class="tier-card featured">
+    <div class="tier-badge">⭐ Più scelto</div>
+    <div class="tier-icon" style="background:var(--primary-light)">🏥</div>
+    <div class="tier-name">Professional</div>
+    <div class="tier-desc">Poliambulatorio multibranch con laboratorio, radiologia e volumi medio-alti. Il tier più richiesto.</div>
+    <div class="tier-price">
+      <span class="tier-price-label">Da</span>
+      <div><span class="tier-price-currency" style="color:var(--primary)">€</span><span class="tier-price-amount" style="color:var(--primary)">289</span><span class="tier-price-period"> / mese</span></div>
+    </div>
+    <hr class="tier-divider">
+    <div class="tier-limits">
+      <div class="tier-limit">
+        <div class="tier-limit-icon" style="background:var(--primary-light);color:var(--primary)">👨‍⚕️</div>
+        <span>Fino a <strong>20 medici</strong> attivi</span>
+      </div>
+      <div class="tier-limit">
+        <div class="tier-limit-icon" style="background:var(--primary-light);color:var(--primary)">👥</div>
+        <span>Fino a <strong>40 utenti</strong></span>
+      </div>
+      <div class="tier-limit">
+        <div class="tier-limit-icon" style="background:var(--purple-light);color:var(--purple)">📄</div>
+        <span>Fino a <strong>1.500 referti/mese</strong></span>
+      </div>
+    </div>
+    <hr class="tier-divider">
+    <div class="tier-features">
+      <div class="tier-feature">Tutti i 27 moduli inclusi</div>
+      <div class="tier-feature">LIS multi-analizzatore + RIS DICOM</div>
+      <div class="tier-feature">BI AI + Compensi Medici</div>
+      <div class="tier-feature">FSE 2.0 + Rendicontazione ASL</div>
+      <div class="tier-feature">Magazzino Cold Chain</div>
+      <div class="tier-feature">Portali Paziente & Azienda</div>
+      <div class="tier-feature">Invio STS (730)</div>
+      <div class="tier-feature">Supporto prioritario</div>
+    </div>
+    <button class="tier-cta" style="background:var(--primary-gradient);color:#fff;border:none" onclick="alert('Richiedi una demo gratuita su nextcare.tech')">Scegli Professional →</button>
+  </div>
+
+  <!-- ENTERPRISE -->
+  <div class="tier-card">
+    <div class="tier-icon" style="background:var(--purple-light)">🏛️</div>
+    <div class="tier-name">Enterprise</div>
+    <div class="tier-desc">Clinica o gruppo sanitario con sedi multiple, alto volume e esigenze personalizzate.</div>
+    <div class="tier-price">
+      <span class="tier-price-label">Da</span>
+      <div><span class="tier-price-currency" style="color:var(--purple)">€</span><span class="tier-price-amount" style="color:var(--purple)">499</span><span class="tier-price-period"> / mese</span></div>
+    </div>
+    <hr class="tier-divider">
+    <div class="tier-limits">
+      <div class="tier-limit">
+        <div class="tier-limit-icon" style="background:var(--purple-light);color:var(--purple)">👨‍⚕️</div>
+        <span><strong>Medici illimitati</strong></span>
+      </div>
+      <div class="tier-limit">
+        <div class="tier-limit-icon" style="background:var(--purple-light);color:var(--purple)">👥</div>
+        <span><strong>Utenti illimitati</strong></span>
+      </div>
+      <div class="tier-limit">
+        <div class="tier-limit-icon" style="background:var(--purple-light);color:var(--purple)">📄</div>
+        <span><strong>Referti illimitati</strong></span>
+      </div>
+    </div>
+    <hr class="tier-divider">
+    <div class="tier-features">
+      <div class="tier-feature">Tutto di Professional</div>
+      <div class="tier-feature">SLA dedicato & account manager</div>
+      <div class="tier-feature">Multi-sede & multi-database</div>
+      <div class="tier-feature">On-Premise disponibile</div>
+      <div class="tier-feature">Formazione on-site</div>
+      <div class="tier-feature">API custom & integrazioni ad hoc</div>
+      <div class="tier-feature">Branded su logo clinica</div>
+    </div>
+    <button class="tier-cta" style="background:var(--purple-light);color:var(--purple);border:2px solid #ddd6fe" onclick="alert('Contattaci per un preventivo custom su nextcare.tech')">Contattaci →</button>
+  </div>
+
+</div>
+
+<div class="note-box">
+  <span style="font-size:1rem">ℹ️</span>
+  <div>
+    <strong>Come si calcola il canone esatto?</strong> Il tier si determina dal massimo tra le 3 soglie (medici, utenti, referti). Se superi anche solo una soglia passi al tier successivo — il calcolatore qui sotto ti aiuta a trovare la configurazione giusta per la tua struttura.
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     CALCOLATORE
+═══════════════════════════════════════ -->
+<div style="height:40px"></div>
+<div id="sec-calcolatore" style="scroll-margin-top:116px"></div>
+<div class="section-eyebrow" style="background:var(--warning-light);color:#92400e;border-color:#fde68a">🧮 Calcolatore</div>
+<h2 class="section-title">Calcola il tuo canone mensile</h2>
+<p class="section-sub">Muovi gli slider e seleziona le connessioni che ti servono. Il risultato è immediato.</p>
+
+<div class="calc-card">
+  <h3 class="calc-title">Configuratore NextCare</h3>
+  <div class="calc-sub">Trascina per impostare i valori della tua struttura</div>
+
+  <div class="calc-grid">
+    <div class="calc-field">
+      <label class="calc-label">👨‍⚕️ Medici attivi</label>
+      <input type="range" id="sl-medici" min="1" max="30" value="3" oninput="updateCalc()">
+      <div class="calc-val" id="val-medici">3 medici</div>
+    </div>
+    <div class="calc-field">
+      <label class="calc-label">👥 Utenti totali</label>
+      <input type="range" id="sl-utenti" min="1" max="50" value="8" oninput="updateCalc()">
+      <div class="calc-val" id="val-utenti">8 utenti</div>
+    </div>
+    <div class="calc-field">
+      <label class="calc-label">📄 Referti / mese</label>
+      <input type="range" id="sl-referti" min="50" max="5000" step="50" value="500" oninput="updateCalc()">
+      <div class="calc-val" id="val-referti">500 referti</div>
+    </div>
+  </div>
+
+  <hr class="calc-divider">
+  <div style="font-size:.82rem;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.4px;margin-bottom:12px">🔌 Connessioni strumenti (una tantum + canone)</div>
+
+  <div class="calc-checkboxes">
+    <label class="calc-check">
+      <input type="checkbox" id="cb-hl7" onchange="updateCalc()">
+      <div class="calc-check-lbl">🔵 Strumento LIS — HL7/ASTM</div>
+      <span class="calc-check-fee">€500 una tantum</span>
+    </label>
+    <label class="calc-check">
+      <input type="checkbox" id="cb-file" onchange="updateCalc()">
+      <div class="calc-check-lbl">📁 Strumento LIS — Via File</div>
+      <span class="calc-check-fee">€350 una tantum</span>
+    </label>
+    <label class="calc-check">
+      <input type="checkbox" id="cb-micro" onchange="updateCalc()">
+      <div class="calc-check-lbl">🦠 Strumento LIS — Microbiologia</div>
+      <span class="calc-check-fee">€3.500 una tantum</span>
+    </label>
+    <label class="calc-check">
+      <input type="checkbox" id="cb-dicom" onchange="updateCalc()">
+      <div class="calc-check-lbl">🩻 DICOM Worklist (per strumento)</div>
+      <span class="calc-check-fee">€500 una tantum</span>
+    </label>
+    <label class="calc-check">
+      <input type="checkbox" id="cb-pacs" onchange="updateCalc()">
+      <div class="calc-check-lbl">🗄️ Nodo PACS Storage</div>
+      <span class="calc-check-fee">€500 una tantum</span>
+    </label>
+  </div>
+
+  <div class="calc-result" id="calc-result">
+    <div class="calc-result-breakdown">
+      <div style="font-size:.72rem;color:rgba(255,255,255,.65);font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px">Riepilogo configurazione</div>
+      <div class="calc-result-line"><span>Tier selezionato</span><strong id="r-tier">Professional</strong></div>
+      <div class="calc-result-line"><span>Canone base piattaforma</span><strong id="r-base">€ 349/mese</strong></div>
+      <div class="calc-result-line"><span>Extra connessioni (in canone)</span><strong id="r-conn">€ 0/mese</strong></div>
+    </div>
+    <div style="text-align:right">
+      <div class="calc-result-tantum" id="r-tantum-box" style="display:none;margin-bottom:12px">
+        <div class="calc-result-tantum-lbl">Una Tantum attivazione</div>
+        <div class="calc-result-tantum-val" id="r-tantum">€ 0</div>
+      </div>
+      <div class="calc-result-total-lbl">Canone mensile totale</div>
+      <div class="calc-result-total"><span>€</span><span id="r-total">349</span></div>
+      <div class="calc-result-note">IVA esclusa · prezzi orientativi</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     SEZIONE 2 — CONNESSIONI
+═══════════════════════════════════════ -->
+<div id="sec-connessioni" style="scroll-margin-top:116px"></div>
+<div class="section-eyebrow" style="background:var(--teal-light);color:#0f766e;border-color:#99f6e4">🔌 Connessioni</div>
+<h2 class="section-title">Strumenti LIS & Dispositivi DICOM</h2>
+<p class="section-sub">Le connessioni ai tuoi strumenti fisici (analizzatori di laboratorio, dispositivi RIS, PACS) si pagano una volta sola all'attivazione. Nessun canone annuale di rinnovo sulla connessione — solo una piccola quota inclusa nel canone mensile del tier.</p>
+
+<div class="conn-grid">
+
+  <!-- LIS INSTRUMENTS -->
+  <div class="conn-card">
+    <div class="conn-card-header">
+      <div class="conn-card-icon" style="background:var(--teal-light)">🔬</div>
+      <div>
+        <div class="conn-card-title">Strumenti LIS — Analizzatori di Laboratorio</div>
+        <div class="conn-card-subtitle">Una tantum per tipo di protocollo · Piccola quota mensile nel canone</div>
+      </div>
+    </div>
+    <div class="conn-card-body">
+      <div class="conn-items">
+
+        <!-- HL7 / ASTM -->
+        <div class="conn-item">
+          <div class="conn-item-header">
+            <div class="conn-item-icon" style="background:#eff6ff;font-size:1rem">🔵</div>
+            <div class="conn-item-name">Connessione HL7 / ASTM</div>
+            <div class="conn-item-fee">
+              <div class="conn-item-tantum" style="color:var(--primary)">€ 500</div>
+              <div class="conn-item-tantum-lbl">una tantum</div>
+            </div>
+          </div>
+          <div class="conn-item-desc">
+            Protocollo di comunicazione bidirezionale con gli analizzatori di laboratorio via HL7 v2.x o ASTM E1394. Ideale per strumentazione di medio-alto livello (Siemens, Roche, Abbott, Mindray, ecc.). Comprende mappatura esami, trascodifica codici e log real-time.
+          </div>
+          <div class="conn-item-monthly">
+            <span>+</span> quota mensile inclusa nel canone tier
+          </div>
+        </div>
+
+        <!-- VIA FILE -->
+        <div class="conn-item">
+          <div class="conn-item-header">
+            <div class="conn-item-icon" style="background:#f8fafc;font-size:1rem">📁</div>
+            <div class="conn-item-name">Connessione Via File (XML / CSV / TXT)</div>
+            <div class="conn-item-fee">
+              <div class="conn-item-tantum" style="color:var(--text-secondary)">€ 350</div>
+              <div class="conn-item-tantum-lbl">una tantum</div>
+            </div>
+          </div>
+          <div class="conn-item-desc">
+            Integrazione tramite scambio file in cartelle condivise (hot-folder). NextCare monitora le directory di export/import dello strumento e importa automaticamente i risultati. Compatibile con qualsiasi analizzatore che esporti risultati in formato file (XML, CSV, TXT).
+          </div>
+          <div class="conn-item-monthly">
+            <span>+</span> quota mensile inclusa nel canone tier
+          </div>
+        </div>
+
+        <!-- MICROBIOLOGIA -->
+        <div class="conn-item special">
+          <div class="conn-item-header">
+            <div class="conn-item-icon" style="background:#fff7ed;font-size:1rem">🦠</div>
+            <div class="conn-item-name">Connessione Microbiologia <span style="background:var(--orange);color:#fff;font-size:.6rem;font-weight:800;border-radius:6px;padding:1px 6px;vertical-align:middle;margin-left:4px">Modulo dedicato</span></div>
+            <div class="conn-item-fee">
+              <div class="conn-item-tantum" style="color:var(--orange)">€ 3.500</div>
+              <div class="conn-item-tantum-lbl">una tantum</div>
+            </div>
+          </div>
+          <div class="conn-item-desc">
+            Connessione agli analizzatori di microbiologia (VITEK, BD Phoenix, MALDI-TOF) con modulo dedicato per la gestione dei campioni microbiologici: antibiogrammi, MIC, isolamento germi, colture, sierologie. Comprende refertazione strutturata con antibiogramma tabellare e commento clinico AI-assistito.
+          </div>
+          <div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:7px;padding:7px 10px;font-size:.76rem;color:#92400e;margin-top:6px;line-height:1.5">
+            🦠 Include il <strong>Modulo Microbiologia</strong> con gestione colture, antibiogramma, isolamento e refertazione dedicata — non disponibile nei tier standard.
+          </div>
+          <div class="conn-item-monthly" style="margin-top:6px">
+            <span>+</span> quota mensile inclusa nel canone tier
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- DICOM -->
+  <div class="conn-card">
+    <div class="conn-card-header">
+      <div class="conn-card-icon" style="background:#ecfeff">🩻</div>
+      <div>
+        <div class="conn-card-title">Strumenti DICOM & PACS</div>
+        <div class="conn-card-subtitle">Una tantum per strumento / nodo · Piccola quota mensile nel canone</div>
+      </div>
+    </div>
+    <div class="conn-card-body">
+      <div class="conn-items">
+
+        <!-- DICOM WORKLIST -->
+        <div class="conn-item">
+          <div class="conn-item-header">
+            <div class="conn-item-icon" style="background:#ecfeff;font-size:1rem">🩻</div>
+            <div class="conn-item-name">DICOM Worklist — per strumento collegato</div>
+            <div class="conn-item-fee">
+              <div class="conn-item-tantum" style="color:var(--cyan)">€ 500</div>
+              <div class="conn-item-tantum-lbl">una tantum</div>
+            </div>
+          </div>
+          <div class="conn-item-desc">
+            Integrazione bidirezionale tra NextCare e ogni dispositivo di diagnostica per immagini (RX, ECG, Eco, TC, RM) tramite protocollo DICOM Modality Worklist (MWL). Il dispositivo riceve automaticamente l'agenda CUP prenotata e invia le immagini associate alla scheda del paziente. Tariffa <strong>per ogni singolo strumento fisico</strong> collegato.
+          </div>
+          <div style="background:#ecfeff;border:1px solid #a5f3fc;border-radius:7px;padding:7px 10px;font-size:.76rem;color:#0e7490;margin-top:6px;line-height:1.5">
+            Esempio: 2 RX + 1 ECO = <strong>3 attivazioni DICOM</strong> → € 500 × 3 = <strong>€ 1.500 una tantum totale</strong>
+          </div>
+          <div class="conn-item-monthly" style="margin-top:6px">
+            <span>+</span> quota mensile per strumento nel canone tier
+          </div>
+        </div>
+
+        <!-- PACS -->
+        <div class="conn-item">
+          <div class="conn-item-header">
+            <div class="conn-item-icon" style="background:#f5f3ff;font-size:1rem">🗄️</div>
+            <div class="conn-item-name">PACS — per nodo DICOM Storage</div>
+            <div class="conn-item-fee">
+              <div class="conn-item-tantum" style="color:var(--purple)">€ 500</div>
+              <div class="conn-item-tantum-lbl">una tantum</div>
+            </div>
+          </div>
+          <div class="conn-item-desc">
+            Configurazione della connessione al server PACS (Picture Archiving and Communication System) per ogni nodo di storage DICOM creato all'interno di NextCare. Comprende la configurazione AE Title, storage SCP, query/retrieve e associazione con le accettazioni RIS. Tariffa <strong>per ogni nodo storage DICOM</strong> configurato.
+          </div>
+          <div style="background:#f5f3ff;border:1px solid #ddd6fe;border-radius:7px;padding:7px 10px;font-size:.76rem;color:#6d28d9;margin-top:6px;line-height:1.5">
+            Esempio: 1 PACS primario + 1 PACS backup = <strong>2 nodi</strong> → € 500 × 2 = <strong>€ 1.000 una tantum totale</strong>
+          </div>
+          <div class="conn-item-monthly" style="margin-top:6px">
+            <span>+</span> quota mensile per nodo nel canone tier
+          </div>
+        </div>
+
+        <!-- DICOM NOTE -->
+        <div style="background:linear-gradient(135deg,#f8fafc,#eff6ff);border:1px solid var(--border);border-radius:8px;padding:12px 14px;font-size:.78rem;color:var(--text-secondary);line-height:1.6;margin-top:4px">
+          <strong style="color:var(--text-primary)">Come funziona il viewer DICOM?</strong><br>
+          Il viewer integrato in NextCare (accesso via browser) è <strong>incluso nel canone</strong> senza costi aggiuntivi. Le tariffe una tantum si applicano solo alla <em>connessione</em> tra NextCare e lo strumento/PACS fisico — non alla visualizzazione delle immagini.
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══════════════════════════════════════
+     CONFRONTO
+═══════════════════════════════════════ -->
+<div id="sec-confronto" style="scroll-margin-top:116px"></div>
+<div class="section-eyebrow" style="background:var(--primary-light);color:var(--primary);border-color:#bfdbfe">⚖️ Perché è diverso</div>
+<h2 class="section-title">NextCare vs il mercato</h2>
+<p class="section-sub">Il problema dei software tradizionali non è il prezzo mensile — è che a fine anno il totale è enorme. Vediamo perché.</p>
+
+<div class="compare-grid">
+  <div class="compare-card bad">
+    <div class="compare-card-title" style="color:var(--danger)">❌ Software tradizionali</div>
+    <div class="compare-rows">
+      <div class="compare-row bad"><span class="compare-row-icon">💸</span><div class="compare-row-text"><strong>Prezzo base basso, ma…</strong> ogni funzione è un modulo a parte. LIS costa extra, RIS costa extra, BI costa extra, portale paziente costa extra.</div></div>
+      <div class="compare-row bad"><span class="compare-row-icon">📋</span><div class="compare-row-text"><strong>Costo per postazione:</strong> paghi per ogni PC o workstation installata, anche quelle che usi poco.</div></div>
+      <div class="compare-row bad"><span class="compare-row-icon">🔄</span><div class="compare-row-text"><strong>Canoni annuali ricorrenti</strong> sulle integrazioni: ogni anno ri-paghi la "manutenzione" del collegamento all'analizzatore.</div></div>
+      <div class="compare-row bad"><span class="compare-row-icon">🏢</span><div class="compare-row-text"><strong>IT obbligatorio:</strong> configurazione complessa che richiede tecnici dedicati. Settimane di setup, costi nascosti.</div></div>
+      <div class="compare-row bad"><span class="compare-row-icon">📊</span><div class="compare-row-text"><strong>BI e analytics:</strong> non incluse o disponibili solo a prezzo enterprise separato.</div></div>
+      <div class="compare-row bad"><span class="compare-row-icon">😱</span><div class="compare-row-text"><strong>Fine mese:</strong> canone + moduli + postazioni + integrazioni + supporto = <strong>cifra molto più alta del preventivato</strong>.</div></div>
+    </div>
+  </div>
+  <div class="compare-card good">
+    <div class="compare-card-title" style="color:var(--success)">✅ NextCare</div>
+    <div class="compare-rows">
+      <div class="compare-row good"><span class="compare-row-icon">📦</span><div class="compare-row-text"><strong>27 moduli sempre inclusi</strong> nel canone mensile. LIS, RIS, CUP, Contabilità, BI AI, Magazzino, Portali, FSE, HRIS — tutto, sempre.</div></div>
+      <div class="compare-row good"><span class="compare-row-icon">📊</span><div class="compare-row-text"><strong>Paghi per quello che usi:</strong> medici attivi, utenti, referti emessi. Mese tranquillo? Paghi meno. Non paghi postazioni inutilizzate.</div></div>
+      <div class="compare-row good"><span class="compare-row-icon">🔌</span><div class="compare-row-text"><strong>Una tantum per le connessioni:</strong> attivi lo strumento fisico una volta, non ri-paghi ogni anno. Il canone cresce solo di una piccola quota.</div></div>
+      <div class="compare-row good"><span class="compare-row-icon">🤖</span><div class="compare-row-text"><strong>AI configura tutto:</strong> zero ufficio IT. La piattaforma si auto-configura, riconosce esami e branche, assiste nelle prenotazioni in linguaggio naturale.</div></div>
+      <div class="compare-row good"><span class="compare-row-icon">📈</span><div class="compare-row-text"><strong>Business Intelligence inclusa:</strong> controllo di gestione con AI conversazionale, profit center, breakdown per branca e medico.</div></div>
+      <div class="compare-row good"><span class="compare-row-icon">✅</span><div class="compare-row-text"><strong>Fine mese prevedibile:</strong> canone tier + piccola quota connessioni. La cifra che vedi oggi è quella che pagherai. Nessuna sorpresa.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════
+     FAQ
+═══════════════════════════════════════ -->
+<div id="sec-faq" style="scroll-margin-top:116px"></div>
+<div class="section-eyebrow" style="background:#f1f5f9;color:#475569;border-color:var(--border)">❓ Domande frequenti</div>
+<h2 class="section-title">Domande sul pricing</h2>
+<p class="section-sub" style="margin-bottom:28px">Le domande più frequenti da chi valuta NextCare.</p>
+
+<div class="faq-grid">
+  <div class="faq-item">
+    <div class="faq-q">Se supero i referti mensili del tier, cosa succede?</div>
+    <div class="faq-a">Passi automaticamente al tier successivo a partire dal mese in cui superi la soglia. Non ci sono costi a referto aggiuntivi — il sistema ti avvisa prima di raggiungere il limite così puoi decidere se upgraddare o gestire il volume.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">La quota "una tantum" degli strumenti è veramente una sola volta?</div>
+    <div class="faq-a">Sì. Paghi la quota di attivazione una sola volta quando connetti lo strumento. Nei mesi successivi trovi solo la piccola quota mensile inclusa nel canone tier, non un canone annuale sulla connessione.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">Quanti strumenti LIS posso connettere?</div>
+    <div class="faq-a">Illimitati. Ogni strumento fisico ha la sua quota una tantum in base al protocollo (HL7/ASTM €500, Via File €350, Microbiologia €3.500). Puoi connettere più analizzatori dello stesso tipo pagando la quota per ciascuno.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">Il modulo Microbiologia è completamente separato?</div>
+    <div class="faq-a">Il modulo Microbiologia con gestione antibiogrammi, colture e isolamento viene attivato con la connessione (€3.500 una tantum). Non esiste come modulo acquistabile separatamente senza la connessione strumento.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">Se ho già un PACS, devo pagare per collegarlo?</div>
+    <div class="faq-a">Sì, €500 una tantum per ogni nodo DICOM Storage configurato su NextCare. Se hai un PACS primario e uno di backup, sono 2 nodi = €1.000 totali una tantum. Nessun costo annuale di rinnovo sulla connessione.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">È disponibile la versione On-Premise?</div>
+    <div class="faq-a">Sì, per il tier Enterprise. Il modello On-Premise prevede una licenza illimitata invece del canone mensile SaaS. Le quote una tantum per strumenti e DICOM restano invariate. Contattaci per un preventivo personalizzato.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">Chi conta come "medico attivo" nel calcolo del tier?</div>
+    <div class="faq-a">Un medico è "attivo" se ha effettuato almeno una prestazione refertata nel mese. Medici in ferie per tutto il mese o non operativi non vengono conteggiati. Questo rende il pricing proporzionale all'utilizzo reale.</div>
+  </div>
+  <div class="faq-item">
+    <div class="faq-q">I referti includono sia LIS che RIS e visite?</div>
+    <div class="faq-a">Sì. Il conteggio "referti/mese" include tutti i referti firmati digitalmente — analisi LIS, referti RIS e referti di visita ambulatoriale — indipendentemente dal modulo che li ha generati.</div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-section">
+  <div class="cta-icon-row">
+    <div class="cta-nc-icon">NC</div>
+    <div style="text-align:left">
+      <div style="font-family:var(--font-heading);font-size:1.25rem;font-weight:800;color:#fff">NextCare</div>
+      <div style="font-size:.72rem;color:rgba(255,255,255,.65)">Healthcare Operating System (HOS)</div>
+    </div>
+  </div>
+  <h2>Parliamo dei tuoi numeri reali</h2>
+  <p>Dicci quanti medici, utenti e referti gestisci ogni mese e quanti strumenti vuoi connettere.<br>In 15 minuti ti diciamo esattamente quanto spenderai — senza sorprese, senza moduli nascosti.</p>
+  <span class="cta-url">nextcare.tech — Demo Gratuita & Preventivo Trasparente</span>
+</div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-logo">
+      <div class="footer-nc-icon">NC</div>
+      <span style="font-family:var(--font-heading);font-weight:700;color:var(--text-primary)">NextCare</span>
+      <span style="color:var(--text-muted);font-size:.85rem">Digital Healthcare Platform</span>
+    </div>
+    <div class="footer-text">Pricing aggiornato al Giugno 2026 · Prezzi IVA esclusa · Orientativi — contattaci per preventivo personalizzato</div>
+    <div class="footer-text">nextcare.tech</div>
+  </div>
+</footer>
+
+<script>
+// ── SCROLL SPY & NAV ──
+function scrollTo(id){
+  const el = document.getElementById(id);
+  if(el) el.scrollIntoView({behavior:'smooth'});
+}
+const _sections = ['sec-piattaforma','sec-calcolatore','sec-connessioni','sec-confronto','sec-faq'];
+const _links = document.querySelectorAll('.page-nav-link');
+const _btt = document.getElementById('back-to-top');
+window.addEventListener('scroll', () => {
+  // back-to-top
+  _btt.classList.toggle('visible', window.scrollY > 400);
+  // spy
+  let current = '';
+  for(const id of _sections){
+    const el = document.getElementById(id);
+    if(el && el.getBoundingClientRect().top <= 140) current = id;
+  }
+  _links.forEach(l => l.classList.toggle('active', l.dataset.target === current));
+}, {passive:true});
+</script>
+
+<script>
+const TIERS = [
+  { name:'Starter',      base:149,  medici:10,  utenti:20, referti:500,  extra:15 },
+  { name:'Professional', base:289,  medici:20,  utenti:40, referti:1500, extra:35 },
+  { name:'Enterprise',   base:499,  medici:999, utenti:999,referti:999999,extra:60 }
+];
+const CONN = {
+  hl7:   { tantum:500,  monthly:25 },
+  file:  { tantum:350,  monthly:18 },
+  micro: { tantum:3500, monthly:55 },
+  dicom: { tantum:500,  monthly:20 },
+  pacs:  { tantum:500,  monthly:20 }
+};
+
+function updateCalc() {
+  const medici  = +document.getElementById('sl-medici').value;
+  const utenti  = +document.getElementById('sl-utenti').value;
+  const referti = +document.getElementById('sl-referti').value;
+
+  document.getElementById('val-medici').textContent  = medici  + (medici  === 1 ? ' medico' : ' medici');
+  document.getElementById('val-utenti').textContent  = utenti  + (utenti  === 1 ? ' utente' : ' utenti');
+  document.getElementById('val-referti').textContent = referti.toLocaleString('it-IT') + ' referti';
+
+  // Determine tier
+  let tier = TIERS[0];
+  for (const t of TIERS) {
+    if (medici <= t.medici && utenti <= t.utenti && referti <= t.referti) {
+      tier = t; break;
+    }
+    tier = t;
+  }
+
+  // Connections
+  const checks = ['hl7','file','micro','dicom','pacs'];
+  let connMonthly = 0, connTantum = 0;
+  for (const k of checks) {
+    if (document.getElementById('cb-'+k).checked) {
+      connMonthly += CONN[k].monthly;
+      connTantum  += CONN[k].tantum;
+    }
+  }
+
+  const total = tier.base + connMonthly;
+
+  document.getElementById('r-tier').textContent  = tier.name;
+  // Highlight tier card
+  document.querySelectorAll('.tier-card').forEach((c,i) => {
+    const names = ['Starter','Professional','Enterprise'];
+    c.style.outline = (names[i] === tier.name) ? '3px solid var(--primary)' : 'none';
+  });
+  document.getElementById('r-base').textContent  = '€ ' + tier.base.toLocaleString('it-IT') + '/mese';
+  document.getElementById('r-conn').textContent  = connMonthly > 0 ? '€ ' + connMonthly.toLocaleString('it-IT') + '/mese' : '€ 0/mese';
+  document.getElementById('r-total').textContent = total.toLocaleString('it-IT');
+
+  const tantumBox = document.getElementById('r-tantum-box');
+  if (connTantum > 0) {
+    tantumBox.style.display = 'block';
+    document.getElementById('r-tantum').textContent = '€ ' + connTantum.toLocaleString('it-IT');
+  } else {
+    tantumBox.style.display = 'none';
+  }
+}
+
+// Init
+updateCalc();
+</script>
+</body>
+</html>

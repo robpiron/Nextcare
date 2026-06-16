@@ -1,0 +1,8 @@
+with open('app.js', 'r', encoding='utf-8') as f:
+    content = f.read()
+
+idx = content.find('function populateDropdownsRIS(')
+if idx != -1:
+    print(content[idx+1000:idx+2500])
+else:
+    print("populateDropdownsRIS definition not found")

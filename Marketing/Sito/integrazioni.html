@@ -1,0 +1,696 @@
+﻿<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Integrazioni & Architettura Enterprise — NextCare · nextcare.tech</title>
+<meta name="description" content="NextCare si integra con ERP (Arca, Zucchetti, TeamSystem, SAP), analizzatori LIS, DICOM/PACS, fondi sanitari. Multi-sede, multi-tenant, portali aziendali e punti prelievo.">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --p:#2563eb;--g:linear-gradient(135deg,#2563eb,#3b82f6);
+  --bg:#f4f6fa;--sf:#fff;--t1:#1e293b;--t2:#64748b;--t3:#94a3b8;--br:#e2e8f0;
+  --fh:'Outfit',sans-serif;--fb:'Inter',sans-serif;--nav-h:84px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--fb);background:var(--bg);color:var(--t1);padding-top:var(--nav-h)}
+
+/* NAV */
+.topnav{position:fixed;top:0;left:0;right:0;z-index:1000;height:var(--nav-h);
+  background:rgba(255,255,255,.96);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--br);box-shadow:0 2px 12px rgba(37,99,235,.07)}
+.nav-inner{width:100%;height:100%;padding:0 60px;display:flex;align-items:center;gap:20px}
+.nav-logo{display:flex;align-items:center;gap:14px;text-decoration:none}
+.nc-icon{width:60px;height:60px;background:var(--g);border-radius:15px;color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--fh);font-weight:900;font-size:1.35rem;
+  box-shadow:0 6px 20px rgba(37,99,235,.45);flex-shrink:0;letter-spacing:-.5px}
+.nc-name{font-family:var(--fh);font-weight:900;font-size:1.35rem;color:var(--t1);letter-spacing:-.4px;line-height:1.1}
+.nc-sub{font-size:.68rem;color:var(--t2);letter-spacing:1px;text-transform:uppercase;font-weight:600}
+.nav-menu{display:flex;align-items:center;gap:4px;margin-left:auto}
+.nav-link{text-decoration:none;padding:9px 16px;border-radius:9px;font-size:.95rem;font-weight:600;color:var(--t2);transition:all .18s}
+.nav-link:hover,.nav-link.active{background:#eff6ff;color:var(--p)}
+.nav-cta{text-decoration:none;background:var(--g);color:#fff;padding:10px 22px;border-radius:10px;
+  font-family:var(--fh);font-weight:700;font-size:.92rem;margin-left:14px;transition:opacity .18s;white-space:nowrap;cursor:pointer}
+
+/* HERO */
+.hero-int{background:linear-gradient(150deg,#0f172a 0%,#1e3a8a 55%,#2563eb 100%);
+  padding:64px 60px 56px;position:relative;overflow:hidden}
+.hero-int::before{content:'';position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+.hero-int-inner{max-width:1400px;margin:0 auto;position:relative;z-index:1}
+.pill-label{display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);
+  border-radius:20px;padding:6px 14px;margin-bottom:18px}
+.pill-label span{width:7px;height:7px;background:#86efac;border-radius:50%}
+.pill-label p{font-size:.78rem;font-weight:700;color:rgba(255,255,255,.9);letter-spacing:.4px;text-transform:uppercase}
+.hero-int h1{font-family:var(--fh);font-weight:900;font-size:clamp(2rem,4vw,3rem);
+  color:#fff;letter-spacing:-1px;line-height:1.1;margin-bottom:14px}
+.hero-int h1 em{background:linear-gradient(90deg,#93c5fd,#86efac);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-style:normal}
+.hero-int .sub{font-size:1rem;color:rgba(255,255,255,.7);max-width:660px;line-height:1.7;margin-bottom:28px}
+.hero-badges{display:flex;flex-wrap:wrap;gap:10px}
+.hbadge{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);
+  border-radius:8px;padding:7px 14px;font-size:.78rem;font-weight:700;color:rgba(255,255,255,.85)}
+
+/* SUBMENU */
+.page-submenu{background:#fff;border-bottom:1px solid var(--br);
+  position:sticky;top:var(--nav-h);z-index:500;
+  box-shadow:0 2px 8px rgba(37,99,235,.05);overflow-x:auto}
+.page-submenu-inner{max-width:1400px;margin:0 auto;padding:0 60px;
+  display:flex;gap:2px;white-space:nowrap}
+.psm-link{display:inline-flex;align-items:center;gap:6px;padding:12px 16px;
+  font-family:var(--fh);font-size:.8rem;font-weight:700;color:var(--t2);
+  text-decoration:none;border-bottom:2px solid transparent;transition:all .15s}
+.psm-link:hover,.psm-link.active{color:var(--p);border-bottom-color:var(--p)}
+
+/* CONTENT */
+.int-wrap{max-width:1400px;margin:0 auto;padding:52px 60px 80px}
+
+/* SECTION DIVIDER */
+.sec-block{margin-bottom:60px;scroll-margin-top:160px}
+.sec-header{display:flex;align-items:baseline;gap:14px;margin-bottom:24px;flex-wrap:wrap}
+.sec-title{font-family:var(--fh);font-weight:900;font-size:1.4rem;color:var(--t1);letter-spacing:-.4px}
+.sec-line{flex:1;height:1px;background:var(--br);min-width:40px}
+.sec-desc{font-size:.88rem;color:var(--t2);margin-bottom:20px;line-height:1.7;max-width:820px}
+
+/* PARTNER GRID */
+.int-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.int-card{background:var(--sf);border:1px solid var(--br);border-radius:14px;
+  overflow:hidden;transition:all .2s;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.int-card:hover{transform:translateY(-3px);box-shadow:0 8px 24px rgba(37,99,235,.1);border-color:#bfdbfe}
+.int-logo{padding:16px 18px 10px}
+.int-name{font-family:var(--fh);font-weight:800;font-size:.95rem;display:block}
+.int-desc{padding:6px 18px 14px;font-size:.75rem;color:var(--t2);line-height:1.6}
+
+/* ENTERPRISE SECTION */
+.ent-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px}
+.ent-card{background:var(--sf);border:1px solid var(--br);border-radius:18px;
+  padding:28px;transition:all .2s;box-shadow:0 2px 8px rgba(0,0,0,.04)}
+.ent-card:hover{transform:translateY(-3px);box-shadow:0 12px 32px rgba(37,99,235,.1);border-color:#bfdbfe}
+.ent-icon{font-size:2rem;margin-bottom:14px;line-height:1}
+.ent-title{font-family:var(--fh);font-weight:900;font-size:1.05rem;color:var(--t1);
+  margin-bottom:8px;letter-spacing:-.3px}
+.ent-body{font-size:.82rem;color:var(--t2);line-height:1.75}
+.ent-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.ent-tag{background:#eff6ff;border:1px solid #bfdbfe;border-radius:6px;
+  padding:3px 10px;font-size:.7rem;font-weight:700;color:var(--p)}
+.ent-tag.green{background:#f0fdf4;border-color:#bbf7d0;color:#059669}
+.ent-tag.purple{background:#f5f3ff;border-color:#ddd6fe;color:#7c3aed}
+.ent-tag.amber{background:#fffbeb;border-color:#fde68a;color:#d97706}
+
+/* ERP HIGHLIGHT */
+.erp-highlight{background:linear-gradient(135deg,#f0f7ff,#fff);
+  border:1.5px solid #bfdbfe;border-radius:16px;padding:20px 24px;
+  display:flex;align-items:center;gap:16px;margin-bottom:12px;transition:all .2s}
+.erp-highlight:hover{border-color:var(--p);box-shadow:0 6px 20px rgba(37,99,235,.1)}
+.erp-logo-box{width:52px;height:52px;border-radius:12px;display:flex;
+  align-items:center;justify-content:center;flex-shrink:0;
+  font-family:var(--fh);font-weight:900;font-size:.85rem;color:#fff;letter-spacing:-.5px}
+.erp-name{font-family:var(--fh);font-weight:800;font-size:1rem;color:var(--t1);margin-bottom:3px}
+.erp-detail{font-size:.78rem;color:var(--t2);line-height:1.6}
+.erp-badge{margin-left:auto;flex-shrink:0;background:#eff6ff;border:1px solid #bfdbfe;
+  border-radius:8px;padding:5px 12px;font-size:.72rem;font-weight:700;color:var(--p);white-space:nowrap}
+
+/* NETWORK SCHEMA */
+.network-schema{background:linear-gradient(135deg,#0f172a,#1e3a8a);
+  border-radius:20px;padding:40px;color:#fff;margin-bottom:20px}
+.network-schema h3{font-family:var(--fh);font-weight:900;font-size:1.2rem;
+  margin-bottom:20px;letter-spacing:-.3px}
+.network-levels{display:flex;flex-direction:column;gap:12px}
+.network-level{display:flex;align-items:center;gap:16px;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
+  border-radius:12px;padding:16px 20px}
+.network-level-icon{font-size:1.5rem;flex-shrink:0;width:40px;text-align:center}
+.network-level-title{font-family:var(--fh);font-weight:800;font-size:.95rem;
+  color:#fff;margin-bottom:3px}
+.network-level-desc{font-size:.78rem;color:rgba(255,255,255,.6);line-height:1.6}
+.network-arrow{text-align:center;color:rgba(255,255,255,.3);font-size:1.2rem;
+  margin:-4px 0}
+
+/* CERTIFIED */
+.certified-bar{background:var(--sf);border:1px solid var(--br);border-radius:16px;
+  padding:28px 36px;margin-top:12px;text-align:center}
+.certified-bar h3{font-family:var(--fh);font-weight:800;font-size:1.1rem;color:var(--t1);margin-bottom:8px}
+.certified-bar p{font-size:.85rem;color:var(--t2);line-height:1.7;max-width:700px;margin:0 auto}
+
+/* CTA */
+.cta-int{background:linear-gradient(150deg,#0f172a,#1e3a8a 55%,#2563eb);
+  border-radius:20px;padding:48px;text-align:center;margin-top:40px}
+.cta-int h2{font-family:var(--fh);font-weight:900;font-size:1.8rem;color:#fff;margin-bottom:12px;letter-spacing:-.5px}
+.cta-int p{color:rgba(255,255,255,.7);margin-bottom:28px;font-size:.95rem}
+.btn-white{background:#fff;color:var(--p);padding:14px 32px;border-radius:10px;
+  font-family:var(--fh);font-weight:800;font-size:.95rem;text-decoration:none;
+  box-shadow:0 8px 24px rgba(0,0,0,.2);display:inline-block;transition:all .2s;border:none;cursor:pointer}
+
+/* FOOTER */
+.site-footer{background:var(--t1);color:var(--t3);padding:32px 60px;text-align:center;font-size:.82rem}
+.site-footer a{color:var(--t3);text-decoration:none;margin:0 8px}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .nav-inner{padding:0 20px}
+  .hero-int{padding:40px 20px 36px}
+  .int-wrap{padding:32px 20px 60px}
+  .page-submenu-inner{padding:0 16px}
+  .ent-grid{grid-template-columns:1fr}
+  .erp-highlight{flex-wrap:wrap}
+  .erp-badge{margin-left:0}
+  .network-schema{padding:24px 16px}
+  .cta-int{padding:32px 20px}
+}
+@media(max-width:480px){
+  .int-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="topnav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nc-icon">NC</div>
+      <div><div class="nc-name">NextCare</div>
+      <div class="nc-sub">nextcare.tech</div></div>
+    </a>
+    <div class="nav-menu" id="navmenu">
+      <a class="nav-link" href="index.html">🏠 Home</a>
+      <a class="nav-link" href="moduli.html">&#129713; Funzionalità</a>
+      <a class="nav-link active" href="integrazioni.html">🔌 Integrazioni</a>
+      <a class="nav-link" href="enterprise.html">🏗️ Enterprise</a>
+      <a class="nav-link" href="pricing.html">💰 Pricing</a>
+      <a class="nav-link" href="articoli.html">📰 Articoli</a>
+      <a class="nav-link" href="chisiamo.html">🏢 Chi Siamo</a>
+      <a href="javascript:void(0)" class="nav-cta" onclick="openDemoModal()">🎯 Demo Gratis</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero-int">
+  <div class="hero-int-inner">
+    <div class="pill-label"><span></span><p>Ecosistema aperto · Standard certificati · Enterprise ready</p></div>
+    <h1>Già integrato con<br><em>i sistemi che usi ogni giorno</em></h1>
+    <p class="sub">NextCare parla HL7, ASTM, DICOM, FHIR e si integra con i principali ERP italiani per il ciclo attivo. Multi-sede, multi-tenant, portali aziendali e reti di punti prelievo: un'unica piattaforma per strutture di qualsiasi dimensione.</p>
+    <div class="hero-badges">
+      <span class="hbadge">✓ ERP · Ciclo attivo</span>
+      <span class="hbadge">✓ HL7 v2.x &amp; FHIR R4</span>
+      <span class="hbadge">✓ DICOM 3.0 · PACS</span>
+      <span class="hbadge">✓ ASTM E1394</span>
+      <span class="hbadge">✓ Multi-sede · Multi-tenant</span>
+      <span class="hbadge">✓ Fondi sanitari diretti</span>
+      <span class="hbadge">✓ FSE 2.0 Gateway</span>
+    </div>
+  </div>
+</div>
+
+<!-- SUBMENU -->
+<nav class="page-submenu">
+  <div class="page-submenu-inner">
+    <a class="psm-link" href="#sec-erp">💼 ERP &amp; Ciclo attivo</a>
+    <a class="psm-link" href="#sec-enterprise">🏗️ Enterprise &amp; Network</a>
+    <a class="psm-link" href="#sec-lis">🔬 Analizzatori LIS</a>
+    <a class="psm-link" href="#sec-dicom">🩻 DICOM &amp; PACS</a>
+    <a class="psm-link" href="#sec-echo">🔊 Ecografi &amp; Imaging</a>
+    <a class="psm-link" href="#sec-fondi">🏥 Fondi &amp; Assicurazioni</a>
+    <a class="psm-link" href="#sec-standard">🔌 Standard &amp; Protocolli</a>
+  </div>
+</nav>
+
+<!-- CONTENT -->
+<div class="int-wrap">
+
+<!-- ══════════════════════════════════════════════
+     ERP & CICLO ATTIVO
+══════════════════════════════════════════════ -->
+<div class="sec-block" id="sec-erp">
+  <div class="sec-header">
+    <div class="sec-title">💼 ERP &amp; Ciclo attivo</div>
+    <div class="sec-line"></div>
+  </div>
+  <p class="sec-desc">
+    NextCare si integra bidirezionalmente con i principali ERP italiani ed internazionali per la gestione del <strong>ciclo attivo</strong>: fatture elettroniche, note di credito, corrispettivi e trasmissione SDI avvengono automaticamente senza doppia digitazione.
+    Il modulo contabilità di NextCare può operare in <strong>modalità autonoma</strong> oppure come <strong>satellite</strong> di un ERP già in uso, inviando i movimenti contabili tramite API o file di scambio strutturati.
+  </p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+
+    <div class="erp-highlight">
+      <div class="erp-logo-box" style="background:linear-gradient(135deg,#e84393,#c026d3)"><img src="https://www.google.com/s2/favicons?domain=arcanet.it&sz=64" alt="Arca Evolution / Arca.NET" width="30" height="30" style="object-fit:contain;border-radius:2px" onerror="this.style.display='none'"></div>
+      <div style="flex:1">
+        <div class="erp-name">Arca Evolution / Arca.NET</div>
+        <div class="erp-detail">Export movimenti contabili · Prima nota · Fatture elettroniche SDI · Anagrafiche clienti sincronizzate</div>
+      </div>
+      <div class="erp-badge">API + File CSV/XML</div>
+    </div>
+
+    <div class="erp-highlight">
+      <div class="erp-logo-box" style="background:linear-gradient(135deg,#0ea5e9,#0284c7)"><img src="https://www.google.com/s2/favicons?domain=zucchetti.it&sz=64" alt="Zucchetti Ad Hoc / Infinity" width="30" height="30" style="object-fit:contain;border-radius:2px" onerror="this.style.display='none'"></div>
+      <div style="flex:1">
+        <div class="erp-name">Zucchetti Ad Hoc / Infinity</div>
+        <div class="erp-detail">Integrazione fatturazione · Ciclo attivo · Pagamenti · Scadenziario · Primanota automatica</div>
+      </div>
+      <div class="erp-badge">API REST + WebService</div>
+    </div>
+
+    <div class="erp-highlight">
+      <div class="erp-logo-box" style="background:linear-gradient(135deg,#f59e0b,#d97706)"><img src="https://www.google.com/s2/favicons?domain=teamsystem.com&sz=64" alt="TeamSystem Enterprise / Alyante" width="30" height="30" style="object-fit:contain;border-radius:2px" onerror="this.style.display='none'"></div>
+      <div style="flex:1">
+        <div class="erp-name">TeamSystem Enterprise / Alyante</div>
+        <div class="erp-detail">Movimenti contabili · Clienti · Fatture elettroniche · Nota di credito · Corrispettivi giornalieri</div>
+      </div>
+      <div class="erp-badge">File XML + API</div>
+    </div>
+
+    <div class="erp-highlight">
+      <div class="erp-logo-box" style="background:linear-gradient(135deg,#2563eb,#1d4ed8)"><img src="https://www.google.com/s2/favicons?domain=sap.com&sz=64" alt="SAP Business One / S/4HANA" width="30" height="30" style="object-fit:contain;border-radius:2px" onerror="this.style.display='none'"></div>
+      <div style="flex:1">
+        <div class="erp-name">SAP Business One / S/4HANA</div>
+        <div class="erp-detail">BAPI/RFC · Ordini di vendita · Documenti ciclo attivo · Connettore standard NextCare↔SAP</div>
+      </div>
+      <div class="erp-badge">BAPI / iDoc</div>
+    </div>
+
+    <div class="erp-highlight">
+      <div class="erp-logo-box" style="background:linear-gradient(135deg,#7c3aed,#6d28d9)"><img src="https://www.google.com/s2/favicons?domain=microsoft.com&sz=64" alt="Microsoft Business Central / Navision" width="30" height="30" style="object-fit:contain;border-radius:2px" onerror="this.style.display='none'"></div>
+      <div style="flex:1">
+        <div class="erp-name">Microsoft Business Central / Navision</div>
+        <div class="erp-detail">API OData v4 · Contabilità · Clienti · Fatture · Pagamenti · Aggiornamento real-time</div>
+      </div>
+      <div class="erp-badge">OData REST API</div>
+    </div>
+
+    <div class="erp-highlight">
+      <div class="erp-logo-box" style="background:linear-gradient(135deg,#059669,#047857)"><img src="https://www.google.com/s2/favicons?domain=passepartout.net&sz=64" alt="Passepartout Mexal / Carico" width="30" height="30" style="object-fit:contain;border-radius:2px" onerror="this.style.display='none'"></div>
+      <div style="flex:1">
+        <div class="erp-name">Passepartout Mexal / Carico</div>
+        <div class="erp-detail">Prima nota · Fatture clienti · Saldi partitari · Scadenziari · Stampe contabili</div>
+      </div>
+      <div class="erp-badge">File tracciato fisso</div>
+    </div>
+
+  </div>
+
+  <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:18px 22px;display:flex;align-items:flex-start;gap:14px;margin-top:4px">
+    <span style="font-size:1.3rem;flex-shrink:0">✅</span>
+    <div>
+      <div style="font-family:Outfit,sans-serif;font-weight:800;font-size:.9rem;color:#065f46;margin-bottom:4px">Fatturazione Elettronica SDI nativa</div>
+      <div style="font-size:.8rem;color:#047857;line-height:1.7">
+        NextCare genera e invia fatture B2B e B2C direttamente allo <strong>SDI (Sistema di Interscambio)</strong> tramite intermediario abilitato.
+        Supporta: Fattura PA, Fattura B2B, Corrispettivi telematici RT (registratori di cassa), Note di credito, Autofatture.
+        Archivio conservazione sostitutiva integrato 10 anni.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     ENTERPRISE & NETWORK
+══════════════════════════════════════════════ -->
+<div class="sec-block" id="sec-enterprise">
+  <div class="sec-header">
+    <div class="sec-title">🏗️ Architettura Enterprise &amp; Network</div>
+    <div class="sec-line"></div>
+  </div>
+  <p class="sec-desc">
+    NextCare è progettato per crescere con la struttura. Da un singolo poliambulatorio fino a una rete regionale di laboratori e punti prelievo: l'architettura multi-tenant e multi-sede garantisce isolamento dei dati, configurazioni indipendenti e un pannello di controllo centralizzato.
+  </p>
+
+  <!-- Schema network -->
+  <div class="network-schema" style="margin-bottom:28px">
+    <h3>🌐 Modello di rete NextCare</h3>
+    <div class="network-levels">
+      <div class="network-level">
+        <div class="network-level-icon">🏢</div>
+        <div>
+          <div class="network-level-title">Livello 1 — Sede Principale / Casa Madre</div>
+          <div class="network-level-desc">Gestisce la configurazione globale: listini, medici, nomenclatore, reporting consolidato, fatturazione centralizzata, dashboard di gruppo. Può imporre regole a tutte le sedi figlie.</div>
+        </div>
+      </div>
+      <div class="network-arrow">↓</div>
+      <div class="network-level">
+        <div class="network-level-icon">🏥</div>
+        <div>
+          <div class="network-level-title">Livello 2 — Sedi Operative</div>
+          <div class="network-level-desc">Ogni sede ha la sua agenda, i suoi medici, i suoi analizzatori e i suoi referti. I dati restano isolati ma il reporting fluisce verso la sede principale. Configurazioni locali sovrascrivibili selettivamente.</div>
+        </div>
+      </div>
+      <div class="network-arrow">↓</div>
+      <div class="network-level">
+        <div class="network-level-icon">🩸</div>
+        <div>
+          <div class="network-level-title">Livello 3 — Punti Prelievo Satellite</div>
+          <div class="network-level-desc">Stazioni leggere (anche un tablet) per registrazione campioni con barcode, stampa etichette, accettazione CUP. I campioni vengono tracciati fino all'analizzatore del laboratorio principale. Attivabili in minuti.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Enterprise feature cards -->
+  <div class="ent-grid">
+
+    <div class="ent-card">
+      <div class="ent-icon">🏗️</div>
+      <div class="ent-title">Multi-tenant</div>
+      <div class="ent-body">
+        Ogni cliente (tenant) opera in un ambiente completamente isolato: database separato, configurazioni indipendenti, accessi segregati. Un singolo server può ospitare decine di strutture senza che i dati si mescolino mai.
+        Ideale per <strong>gruppi sanitari</strong>, <strong>franchising</strong> e <strong>network di laboratori</strong>.
+      </div>
+      <div class="ent-tags">
+        <span class="ent-tag">DB isolato per tenant</span>
+        <span class="ent-tag purple">GDPR by design</span>
+        <span class="ent-tag green">Zero data leak</span>
+      </div>
+    </div>
+
+    <div class="ent-card">
+      <div class="ent-icon">🗺️</div>
+      <div class="ent-title">Multi-sede</div>
+      <div class="ent-body">
+        Gestisci più sedi dalla stessa console. Ogni sede ha agenda, medici, listini e reporting propri. Dal pannello centrale vedi tutto: prenotazioni di gruppo, ricavi per sede, occupazione medici.
+        I medici possono lavorare su più sedi con un unico login e agenda unificata.
+      </div>
+      <div class="ent-tags">
+        <span class="ent-tag">Agenda unificata</span>
+        <span class="ent-tag green">Report consolidato</span>
+        <span class="ent-tag amber">Medici itineranti</span>
+      </div>
+    </div>
+
+    <div class="ent-card">
+      <div class="ent-icon">🩸</div>
+      <div class="ent-title">Punti Prelievo Aggiungibili</div>
+      <div class="ent-body">
+        Espandi la rete aggiungendo punti prelievo satellite in pochi minuti: farmacia, ambulatorio convenzionato, sede aziendale. Ogni punto ha la sua postazione di accettazione, stampa barcode ed etichette, e invia i campioni tracciati al laboratorio centrale.
+        Nessun IT on-site richiesto — funziona anche con un tablet.
+      </div>
+      <div class="ent-tags">
+        <span class="ent-tag">Barcode + etichette</span>
+        <span class="ent-tag green">Tracciabilità completa</span>
+        <span class="ent-tag amber">Solo tablet</span>
+      </div>
+    </div>
+
+    <div class="ent-card">
+      <div class="ent-icon">🏭</div>
+      <div class="ent-title">Portale Aziendale (Medicina del Lavoro)</div>
+      <div class="ent-body">
+        Le aziende clienti accedono a un portale dedicato per: prenotare visite dei propri dipendenti, visualizzare referti (con firma del medico competente), scaricare documentazione di legge (D.Lgs. 81/08), gestire cartelle sanitarie di rischio.
+        Ogni azienda vede solo i propri dipendenti.
+      </div>
+      <div class="ent-tags">
+        <span class="ent-tag purple">D.Lgs. 81/08</span>
+        <span class="ent-tag">Accesso RBAC</span>
+        <span class="ent-tag green">Referto firmato</span>
+      </div>
+    </div>
+
+    <div class="ent-card">
+      <div class="ent-icon">👤</div>
+      <div class="ent-title">Portale Pazienti</div>
+      <div class="ent-body">
+        I pazienti accedono ai propri referti online con credenziali sicure (SPID compatibile). Possono: visualizzare e scaricare referti firmati digitalmente, prenotare visite di ritorno, aggiornare i propri dati anagrafici. Il portale è white-label: appare con il brand della struttura.
+      </div>
+      <div class="ent-tags">
+        <span class="ent-tag">SPID compatibile</span>
+        <span class="ent-tag purple">White-label</span>
+        <span class="ent-tag green">Referto digitale</span>
+      </div>
+    </div>
+
+    <div class="ent-card">
+      <div class="ent-icon">🌐</div>
+      <div class="ent-title">Portale Medici di Base / MMG</div>
+      <div class="ent-body">
+        I medici di medicina generale possono accedere ai referti dei propri pazienti direttamente, senza passare per il paziente. Integrazione con la cartella clinica del MMG tramite HL7 FHIR. Notifica automatica quando il referto è disponibile e firmato.
+      </div>
+      <div class="ent-tags">
+        <span class="ent-tag">HL7 FHIR R4</span>
+        <span class="ent-tag purple">Notifiche push</span>
+        <span class="ent-tag green">Accesso diretto</span>
+      </div>
+    </div>
+
+    <div class="ent-card">
+      <div class="ent-icon">🔐</div>
+      <div class="ent-title">RBAC — Ruoli e Permessi Granulari</div>
+      <div class="ent-body">
+        6 profili predefiniti (Amministratore, Medico, Infermiere, Accettazione, Laboratorio, Contabilità) + possibilità di creare ruoli custom con permessi a livello di singola funzione. Audit log completo di ogni azione: chi ha fatto cosa e quando.
+      </div>
+      <div class="ent-tags">
+        <span class="ent-tag purple">6 ruoli base</span>
+        <span class="ent-tag">Ruoli custom</span>
+        <span class="ent-tag green">Audit log GDPR</span>
+      </div>
+    </div>
+
+    <div class="ent-card">
+      <div class="ent-icon">📊</div>
+      <div class="ent-title">Dashboard di Gruppo / Network</div>
+      <div class="ent-body">
+        Vista consolidata di tutte le sedi: ricavi, prestazioni erogate, occupazione medici, referti emessi, tempi di refertazione. KPI comparativi tra sedi. Export Excel/PDF per il board. Alerting automatico su soglie configurabili (es. referto in ritardo, cassa bassa).
+      </div>
+      <div class="ent-tags">
+        <span class="ent-tag">KPI consolidati</span>
+        <span class="ent-tag amber">Alerting</span>
+        <span class="ent-tag green">Export Excel/PDF</span>
+      </div>
+    </div>
+
+    <div class="ent-card">
+      <div class="ent-icon">☁️</div>
+      <div class="ent-title">SaaS Cloud o On-Premise</div>
+      <div class="ent-body">
+        NextCare si deploy in modalità SaaS (cloud Azure/AWS, aggiornamenti automatici, backup incluso) oppure On-Premise su server della struttura. Hybrid possibile: dati clinici on-premise, reporting e portali in cloud. La scelta è reversibile.
+      </div>
+      <div class="ent-tags">
+        <span class="ent-tag">Azure / AWS</span>
+        <span class="ent-tag purple">On-Premise</span>
+        <span class="ent-tag green">Hybrid</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     ANALIZZATORI LIS
+══════════════════════════════════════════════ -->
+<div class="sec-block" id="sec-lis">
+  <div class="sec-header">
+    <div class="sec-title">🔬 Analizzatori LIS</div>
+    <div class="sec-line"></div>
+  </div>
+  <p class="sec-desc">Connessione bidirezionale (download ordini + upload risultati) tramite HL7 v2.x, ASTM E1394 e protocolli proprietari. L'interfaccia viene configurata una tantum e non richiede manutenzione in caso di aggiornamento del firmware dello strumento.</p>
+  <div class="int-grid">
+    <div class="int-card"><div class="int-logo" style="background:#fff0f0;border-left:4px solid #e2001a";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=roche.com&sz=64" alt="Roche COBAS" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#e2001a">Roche COBAS</span></div><div class="int-desc">COBAS 311/411/511/6000 · HL7/ASTM · chimica clinica · immunologia</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#f0f6ff;border-left:4px solid #004b87";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=abbott.com&sz=64" alt="Abbott ALINITY" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#004b87">Abbott ALINITY</span></div><div class="int-desc">ARCHITECT · ALINITY i/c/s · immunochimica · ematologia</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#f0fdfd;border-left:4px solid #009999";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=siemens-healthineers.com&sz=64" alt="Siemens ATELLICA" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#009999">Siemens ATELLICA</span></div><div class="int-desc">ATELLICA · ADVIA · RAPIDPoint · coagulazione</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#fff8f0;border-left:4px solid #e87722";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=beckmancoulter.com&sz=64" alt="Beckman Coulter" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#e87722">Beckman Coulter</span></div><div class="int-desc">AU · DxH · ACCESS · UniCel · ematologia + chimica</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#f0f6ff;border-left:4px solid #00509e";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=sysmex.com&sz=64" alt="Sysmex" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#00509e">Sysmex</span></div><div class="int-desc">XN-Series · CS · CA-Series · ematologia avanzata</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#fff0f2;border-left:4px solid #c8102e";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=bio-rad.com&sz=64" alt="Bio-Rad" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#c8102e">Bio-Rad</span></div><div class="int-desc">D-10 · Variant II · Liquichek · controllo qualità</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#fff0f0;border-left:4px solid #e60012";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=horiba.com&sz=64" alt="Horiba Medical" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#e60012">Horiba Medical</span></div><div class="int-desc">Yumizen H500/H550 · ABX · Pentra · ematologia + urine</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#fff8f0;border-left:4px solid #f7941d";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=diasorin.com&sz=64" alt="DiaSorin" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#f7941d">DiaSorin</span></div><div class="int-desc">LIAISON XL · MAGLUMI · Murex · infettivologia</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#f0f6ff;border-left:4px solid #0066cc";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=tosoh.com&sz=64" alt="Tosoh" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#0066cc">Tosoh</span></div><div class="int-desc">G8 · AIA-900 · immunochimica · HbA1c</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#f0f5ff;border-left:4px solid #003087";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=menarini.it&sz=64" alt="Menarini Diag." width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#003087">Menarini Diag.</span></div><div class="int-desc">HA-8180 · Micros CRP · Clover · glicata + ematologia</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#f0fff4;border-left:4px solid #006633";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=biomerieux.com&sz=64" alt="bioMérieux" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#006633">bioMérieux</span></div><div class="int-desc">VITEK 2/VITEK MS (MALDI-TOF) · BacT/ALERT 3D/VIRTUO · BACT/ALERT VIRTUO · FilmArray · VIDAS · microbiologia + sierologia</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#f5f3ff;border-left:4px solid #7c3aed";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=stago.com&sz=64" alt="Stago" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#7c3aed">Stago</span></div><div class="int-desc">STA-R MAX · STA Compact · coagulazione avanzata</div></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     DICOM / PACS
+══════════════════════════════════════════════ -->
+<div class="sec-block" id="sec-dicom">
+  <div class="sec-header">
+    <div class="sec-title">🩻 Imaging DICOM &amp; PACS</div>
+    <div class="sec-line"></div>
+  </div>
+  <p class="sec-desc">NextCare invia la Worklist DICOM all'apparecchio di imaging e riceve automaticamente le immagini nel PACS. Supporto DICOM 3.0 completo: Modality Worklist, Storage SCU/SCP, Query/Retrieve, DICOM Structured Report.</p>
+  <div class="int-grid">
+    <div class="int-card"><div class="int-logo" style="background:#f0f6ff;border-left:4px solid #1b75bc";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=gehealthcare.com&sz=64" alt="GE Healthcare" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#1b75bc">GE Healthcare</span></div><div class="int-desc">Centricity PACS · Lunar · Revolution CT · Worklist</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#f0f5ff;border-left:4px solid #0b5ed7";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=philips.com&sz=64" alt="Philips" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#0b5ed7">Philips</span></div><div class="int-desc">IntelliSpace PACS · Ingenia MRI · IQS Worklist</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#f0fdfd;border-left:4px solid #009999";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=siemens-healthineers.com&sz=64" alt="Siemens Imaging" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#009999">Siemens Imaging</span></div><div class="int-desc">syngo.via · MAGNETOM · SOMATOM · syngo PACS</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#fff0f0;border-left:4px solid #e60026";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=fujifilm.com&sz=64" alt="Fujifilm" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#e60026">Fujifilm</span></div><div class="int-desc">Synapse PACS · FCR Capsula · FDR D-EVO</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#fffef0;border-left:4px solid #b8860b";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=agfa.com&sz=64" alt="Agfa HealthCare" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#b8860b">Agfa HealthCare</span></div><div class="int-desc">XERO · Enterprise Imaging · NX · DX-D</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#fff8f0;border-left:4px solid #e87722";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=carestreamhealth.com&sz=64" alt="Carestream" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#e87722">Carestream</span></div><div class="int-desc">Vue PACS · DRX · Vue Motion · Point-of-Care</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#f0fff4;border-left:4px solid #006633";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=sectra.com&sz=64" alt="Sectra" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#006633">Sectra</span></div><div class="int-desc">IDS7 PACS · Mammography AI · Orthopaedics</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#fff0f0;border-left:4px solid #cc0000";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=canon.com&sz=64" alt="Canon Medical" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#cc0000">Canon Medical</span></div><div class="int-desc">Vitrea · Vantage MRI · Aplio Ultrasound</div></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     FONDI & ASSICURAZIONI
+══════════════════════════════════════════════ -->
+
+<!-- ══════════════════════════════════════════════
+     ECOGRAFI & IMAGING DIAGNOSTICO
+══════════════════════════════════════════════ -->
+<div class="sec-block" id="sec-echo">
+  <div class="sec-header">
+    <div class="sec-title">🔊 Ecografi &amp; Imaging Diagnostico</div>
+    <div class="sec-line"></div>
+  </div>
+  <p class="sec-desc">NextCare invia la DICOM Worklist a tutti i principali ecografi e sistemi di imaging diagnostico. Le immagini acquisite vengono archiviate automaticamente nel PACS collegato e associate al referto del paziente.</p>
+  <div class="int-grid">
+    <div class="int-card"><div class="int-logo" style="background:#f0f5ff;border-left:4px solid #0b5ed7";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=philips.com&sz=64" alt="Philips EPIQ / Affiniti" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#0b5ed7">Philips EPIQ / Affiniti</span></div><div class="int-desc">EPIQ Elite · Affiniti 70/50 · ClearVue · DICOM Worklist</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#f0f6ff;border-left:4px solid #1b75bc";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=gehealthcare.com&sz=64" alt="GE Voluson / Vivid" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#1b75bc">GE Voluson / Vivid</span></div><div class="int-desc">Voluson E10/E8 · Vivid E95/S70 · Logiq E10 · cardiologia + ostetricia</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#f0fdfd;border-left:4px solid #009999";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=siemens-healthineers.com&sz=64" alt="Siemens ACUSON" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#009999">Siemens ACUSON</span></div><div class="int-desc">ACUSON Sequoia · Juniper · S3000 · NX3 · vascolare + generalista</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#fff0f0;border-left:4px solid #cc0000";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=canon.com&sz=64" alt="Canon Aplio" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#cc0000">Canon Aplio</span></div><div class="int-desc">Aplio i-series · i900/i800/i700 · Shear Wave · elastografia</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#fff0f0;border-left:4px solid #e60026";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=fujifilm.com&sz=64" alt="Fujifilm Arietta" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#e60026">Fujifilm Arietta</span></div><div class="int-desc">Arietta 850/750 · SonoVista Flex · ecografia avanzata</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#f0f5ff;border-left:4px solid #4a0080";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=esaote.com&sz=64" alt="Esaote MyLab" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#4a0080">Esaote MyLab</span></div><div class="int-desc">MyLab X8/X6 · MyLab 9 eXP · Twice · muscoloscheletrico · cardiologia</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#fff8f0;border-left:4px solid #ff6600"><span class="int-name" style="color:#ff6600">Samsung HM70A / HS60</span></div><div class="int-desc">HM70A · HS60 · RS85A Prestige · punto di cura e generalista</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#f0fdf4;border-left:4px solid #059669"><span class="int-name" style="color:#059669">Mindray DC-70/80</span></div><div class="int-desc">DC-80 Pro · DC-70 Pro · M9 · Resona 7S · generalista + ginecologia</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#f5f3ff;border-left:4px solid #7c3aed";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=supersonicimagine.com&sz=64" alt="Supersonic Imagine" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#7c3aed">Supersonic Imagine</span></div><div class="int-desc">Aixplorer MACH 30/20 · UltraFast · elastografia ShearWave</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#fff0f2;border-left:4px solid #c8102e"><span class="int-name" style="color:#c8102e">Hitachi Noblus / Arietta</span></div><div class="int-desc">Noblus · Hi Vision Avius · LISENDO 880 · generalista</div></div>
+    <!-- RX / TAC / RM -->
+    <div class="int-card"><div class="int-logo" style="background:#f0f6ff;border-left:4px solid #1b75bc";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=gehealthcare.com&sz=64" alt="GE Revolution CT" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#1b75bc">GE Revolution CT</span></div><div class="int-desc">Revolution Apex/Frontier · Optima CT · DICOM + Worklist</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#f0f5ff;border-left:4px solid #0b5ed7";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=philips.com&sz=64" alt="Philips Ingenia MRI" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#0b5ed7">Philips Ingenia MRI</span></div><div class="int-desc">Ingenia Elition · Ambition · Marlin · 1.5T / 3T</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#f0fdfd;border-left:4px solid #009999";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=siemens-healthineers.com&sz=64" alt="Siemens MAGNETOM" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#009999">Siemens MAGNETOM</span></div><div class="int-desc">MAGNETOM Sola/Vida/Lumina · SOMATOM TAC · X.cite</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#fff0f0;border-left:4px solid #e60026"><span class="int-name" style="color:#e60026">Fujifilm FDR (RX digitale)</span></div><div class="int-desc">FDR D-EVO III · FDR Smart · Carbon · radiografia digitale flat panel</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#fffef0;border-left:4px solid #b8860b";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=agfa.com&sz=64" alt="Agfa DX-D (RX digitale)" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#b8860b">Agfa DX-D (RX digitale)</span></div><div class="int-desc">DX-D 100/300/600 · NX Workstation · CR + DR</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#fff8f0;border-left:4px solid #e87722";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=carestreamhealth.com&sz=64" alt="Carestream DRX" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#e87722">Carestream DRX</span></div><div class="int-desc">DRX-Evolution Plus · DRX-Ascend · DR Retrofit · RX digitale</div></div>
+  </div>
+</div>
+
+<div class="sec-block" id="sec-fondi">
+  <div class="sec-header">
+    <div class="sec-title">🏥 Fondi Sanitari &amp; Assicurazioni</div>
+    <div class="sec-line"></div>
+  </div>
+  <p class="sec-desc">NextCare gestisce l'accesso diretto ai fondi sanitari: verifica dell'eleggibilità del paziente in tempo reale, preautorizzazione, invio della documentazione di rimborso e riconciliazione dei pagamenti. Nessuna doppia digitazione.</p>
+  <div class="int-grid">
+    <div class="int-card"><div class="int-logo" style="background:#fff0f0;border-left:4px solid #e30613";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=unisalute.it&sz=64" alt="UniSalute" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#e30613">UniSalute</span></div><div class="int-desc">Gruppo Unipol · rimborsi diretti · preauth online</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#f0f5ff;border-left:4px solid #004f9f";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=previmedical.it&sz=64" alt="Previmedical" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#004f9f">Previmedical</span></div><div class="int-desc">Voucher · preautorizzazione · rimborso · rete diretta</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#fff0f2;border-left:4px solid #c8102e";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=generali.com&sz=64" alt="Generali Welion" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#c8102e">Generali Welion</span></div><div class="int-desc">Welfare aziendale · polizze salute · accesso diretto</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#fff8f0;border-left:4px solid #ff6600";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=rbmassistance.it&sz=64" alt="RBM / Wellhunter" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#ff6600">RBM / Wellhunter</span></div><div class="int-desc">Reti sanitarie · liquidazione automatica</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#f0f5ff;border-left:4px solid #003087";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=fondofasi.it&sz=64" alt="FASI" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#003087">FASI</span></div><div class="int-desc">Fondo Assistenza Sanitaria Integrativa dirigenti</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#f0f8ff;border-left:4px solid #006699";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=fasdac.it&sz=64" alt="FASDAC" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#006699">FASDAC</span></div><div class="int-desc">Dirigenti industria · SSN integrativo · rimborsi</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#f0f5ff;border-left:4px solid #004080";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=casagit.it&sz=64" alt="CASAGIT" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#004080">CASAGIT</span></div><div class="int-desc">Giornalisti · prestazioni dirette · fascicolo socio</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#fff0f0;border-left:4px solid #e60012";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=metasalute.it&sz=64" alt="Metasalute" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#e60012">Metasalute</span></div><div class="int-desc">Metalmeccanici · accesso diretto · prenotazione integrata</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#f0f6ff;border-left:4px solid #0066aa";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=emapi.it&sz=64" alt="EMAPI" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#0066aa">EMAPI</span></div><div class="int-desc">Dirigenti PMI · rimborsi · accesso diretto</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#f5f3ff;border-left:4px solid #7c3aed";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=jointly.it&sz=64" alt="Jointly" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#7c3aed">Jointly</span></div><div class="int-desc">Welfare platform · benefit salute · voucher digitali</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#f0fdf4;border-left:4px solid #059669";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=axa.it&sz=64" alt="AXA Health" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#059669">AXA Health</span></div><div class="int-desc">Polizze sanitarie aziendali · rimborso diretto</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#fff8f0;border-left:4px solid #d97706";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=allianz.it&sz=64" alt="Allianz Care" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#d97706">Allianz Care</span></div><div class="int-desc">Internazionale · expat · rimborsi multi-valuta</div></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     STANDARD & PROTOCOLLI
+══════════════════════════════════════════════ -->
+<div class="sec-block" id="sec-standard">
+  <div class="sec-header">
+    <div class="sec-title">🔌 Standard &amp; Protocolli</div>
+    <div class="sec-line"></div>
+  </div>
+  <p class="sec-desc">NextCare implementa nativamente tutti gli standard di interoperabilità sanitaria riconosciuti a livello nazionale e internazionale.</p>
+  <div class="int-grid">
+    <div class="int-card"><div class="int-logo" style="background:#eff6ff;border-left:4px solid #1d4ed8";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=hl7.org&sz=64" alt="HL7 v2.x" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#1d4ed8">HL7 v2.x</span></div><div class="int-desc">ADT · ORU · ORM · OML · MDM — messaggi real-time</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#f0f9ff;border-left:4px solid #0ea5e9";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=hl7.org&sz=64" alt="HL7 FHIR R4" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#0ea5e9">HL7 FHIR R4</span></div><div class="int-desc">REST API · FSE 2.0 · interoperabilità moderna</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#f5f3ff;border-left:4px solid #7c3aed";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=dicomstandard.org&sz=64" alt="DICOM 3.0" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#7c3aed">DICOM 3.0</span></div><div class="int-desc">Worklist · Storage · Query/Retrieve · DICOM SR</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#f0fdf4;border-left:4px solid #059669";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=astm.org&sz=64" alt="ASTM E1394" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#059669">ASTM E1394</span></div><div class="int-desc">Protocollo analizzatori LIS · bidirezionale</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#fef2f2;border-left:4px solid #dc2626";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=ihe-italia.it&sz=64" alt="IHE Italia" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#dc2626">IHE Italia</span></div><div class="int-desc">XDS · PIX · PDQ · RAD · LAB profili certificati</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#f8fafc;border-left:4px solid #0f172a";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=fascicolosanitario.gov.it&sz=64" alt="FSE 2.0" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#0f172a">FSE 2.0</span></div><div class="int-desc">Gateway MEF · INI · ONC — trasmissione automatica</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#f8fafc;border-left:4px solid #1e293b";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=garanteprivacy.it&sz=64" alt="GDPR / D.Lgs 196" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#1e293b">GDPR / D.Lgs 196</span></div><div class="int-desc">Privacy by design · audit trail · data retention</div></div>
+    <div class="int-card"><div class="int-logo" style="background:#f9fafb;border-left:4px solid #374151";display:flex;align-items:center;gap:10px>
+          <div style="width:28px;height:28px;background:transparent;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden;padding:2px"><img src="https://www.google.com/s2/favicons?domain=salute.gov.it&sz=64" alt="D.Lgs. 101/2020" width="22" height="22" style="object-fit:contain" onerror="this.style.display='none'"></div><span class="int-name" style="color:#374151">D.Lgs. 101/2020</span></div><div class="int-desc">Dosi radiazioni ionizzanti · compliance RIS/DICOM</div></div>
+  </div>
+</div>
+
+<!-- BOTTOM NOTE -->
+<div class="certified-bar">
+  <h3>🤝 Non trovi il tuo sistema?</h3>
+  <p>NextCare supporta qualsiasi strumento o software che parli HL7, ASTM, DICOM o REST API.
+  Contattaci con il modello del tuo analizzatore o ERP attuale: valutiamo l'integrazione in tempi rapidi.
+  Molte connessioni vengono attivate in meno di 2 settimane.</p>
+</div>
+
+<div class="cta-int">
+  <h2>Vuoi vedere NextCare integrato con i tuoi sistemi?</h2>
+  <p>Mostraci il tuo stack tecnologico durante la demo — in 30 minuti vedi tutto in azione.</p>
+  <button class="btn-white" onclick="openDemoModal()">🎯 Richiedi Demo Gratuita</button>
+</div>
+
+</div><!-- /int-wrap -->
+
+<!-- FOOTER -->
+<footer class="site-footer">
+  <p>© 2026 NextCare · Healthcare Operating System · nextcare.tech
+  &nbsp;|&nbsp; <a href="privacy.html">Privacy Policy</a>
+  &nbsp;·&nbsp; <a href="cookie.html">Cookie Policy</a></p>
+</footer>
+
+<script>
+function openDemoModal(){ window.location.href='index.html#demo'; }
+/* Submenu active */
+(function(){
+  var links=document.querySelectorAll('.psm-link[href^="#"]');
+  function upd(){
+    var sy=window.scrollY+200;
+    var act=null;
+    links.forEach(function(l){
+      var id=l.getAttribute('href').slice(1);
+      var el=document.getElementById(id);
+      if(el&&el.offsetTop<=sy) act=l;
+    });
+    links.forEach(function(l){l.classList.remove('active');});
+    if(act) act.classList.add('active');
+  }
+  window.addEventListener('scroll',upd,{passive:true});
+  upd();
+})();
+</script>
+</body>
+</html>

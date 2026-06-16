@@ -1,0 +1,39 @@
+"    document.getElementById('form-dicom-report').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const studyId = parseInt(document.getElementById('dicom-study-id').value);
+        const reportHTML = document.getElementById('dicom-report-editor').innerHTML;
+        const radId = parseInt(document.getElementById('dicom-radiologist').value);
+        
+        if (!reportHTML.trim() || reportHTML === '<br>' || reportHTML === 'Scrivi qui il referto radiologico dell\\'esame eseguito...') {
+            alert("Inserire il testo del referto prima di firmare!");
+            return;
+        }
+
+        const updatedStudy = DB.update('radiology_studies', studyId, {
+            report_text: reportHTML,
+            signed_by: radId,
+            signed_at: new Date().toISOString(),
+            status: 'completed'
+        });
+        
+        DB.logAudit(radId, "RIS_REPORT_SIGN", "radiology_studies", studyId, { signed_by: radId });
+        
+        // Trigger Email Notification
+        const patient = DB.get('patients').find(p => p.id === updatedStudy.patient_id);
+        if (patient) {
+            const srv = DB.get('medical_services').find(s => s.id === updatedStudy.service_id);
+            const srvName = srv ? srv.name : updatedStudy.study_type;
+            const docStaff = DB.get('staff').find(s => s.id === radId);
+            const docName = docStaff ? `Firmato digitalmente da Dott. ${docStaff.last_name}` : 'Firmato digitalmente';
+            
+            sendSimulatedEmail(patient.id, 'report_ready', {
+                paziente: `${patient.first_name} ${patient.last_name}`,
+                data: new Date(updatedStudy.signed_at).toLocaleDateString('it-IT'),
+                prestazione: srvName,
+                dettaglio: docName
+            });
+        }
+
+        closeModal('modal-dicom-viewer');
+        renderRisStudies();
+    });"

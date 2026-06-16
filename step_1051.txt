@@ -1,0 +1,51 @@
+"        }
+
+        // Check if slot is already booked for this doctor
+        if (doctorId) {
+            const isBooked = (DB.get('appointments') || []).some(app => 
+                app.doctor_id === doctorId && 
+                app.appointment_datetime === datetime && 
+                app.status === 'scheduled'
+            );
+            if (isBooked) {
+                alert("Errore: Lo slot orario selezionato per questo medico è già occupato.");
+                return;
+            }
+        }
+
+        // Save appointment
+        const appointment = {
+            patient_id: patientId,
+            doctor_id: doctorId,
+            appointment_datetime: datetime,
+            status: 'scheduled',
+            notes: notes
+        };
+        const newApp = DB.insert('appointments', appointment);
+
+        // Save service links in junction table
+        selectedCupServiceIds.forEach(srvId => {
+            const link = {
+                appointment_id: newApp.id,
+                service_id: srvId
+            };
+            DB.insert('appointment_services', link);
+        });
+
+        DB.logAudit(6, "BOOK_APPOINTMENT", "appointments", newApp.id, { doctor_id: doctorId, services_count: selectedCupServiceIds.length });
+
+        // Trigger email notification
+        const p = DB.get('patients').find(pat => pat.id === patientId);
+        const pName = p ? `${p.first_name} ${p.last_name}` : 'Paziente';
+        const srvsList = DB.get('medical_services');
+        const chosenServices = selectedCupServiceIds.map(id => srvsList.find(s => s.id === id));
+        const srvNames = chosenServices.map(s => s.name).join(', ');
+        
+        let docDetails = 'Nessun medico (Laboratorio LIS)';
+        if (doctorId) {
+            const doc = DB.get('doctors').find(d => d.id === doctorId);
+            const st = doc ? DB.get('staff').find(s => s.id === doc.staff_id) : null;
+            docDetails = st ? `Dott. ${st.last_name} (${doc.specialization})` : 'Medico';
+        }
+       
+<truncated 239 bytes>

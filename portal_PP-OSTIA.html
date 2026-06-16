@@ -1,0 +1,2906 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NextCare Portale Light - Ostia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --bg-base: #f8fafc;
+            --bg-surface: #ffffff;
+            --border-color: #e2e8f0;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Login Screen */
+        .login-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            padding: 20px;
+        }
+
+        .login-card {
+            background: var(--bg-surface);
+            padding: 40px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 420px;
+            border: 1px solid var(--border-color);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-header h2 {
+            font-size: 1.6rem;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        .login-header p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 500;
+            font-size: 0.85rem;
+            color: var(--text-primary);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border: 1px solid transparent;
+            border-radius: var(--radius-md);
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-secondary {
+            background-color: var(--bg-base);
+            border-color: var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background-color: #f1f5f9;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            border-radius: 6px;
+        }
+
+        /* Dashboard Layout */
+        .app-container {
+            display: none;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .header {
+            background-color: var(--bg-surface);
+            border-bottom: 1px solid var(--border-color);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-logo h1 {
+            font-size: 1.3rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .header-logo span {
+            font-size: 0.85rem;
+            background: #dbeafe;
+            color: var(--primary);
+            padding: 3px 8px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .main-layout {
+            display: flex;
+            flex: 1;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: var(--bg-surface);
+            border-right: 1px solid var(--border-color);
+            padding: 20px 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 15px;
+            border-radius: var(--radius-md);
+            color: var(--text-secondary);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .nav-item:hover {
+            background-color: #f1f5f9;
+            color: var(--text-primary);
+        }
+
+        .nav-item.active {
+            background-color: #eff6ff;
+            color: var(--primary);
+        }
+
+        .content-area {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .pane {
+            display: none;
+        }
+
+        .pane.active {
+            display: block;
+        }
+
+        .card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1);
+            margin-bottom: 24px;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        th {
+            background-color: var(--bg-base);
+            padding: 12px 16px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-warning { background-color: #fef3c7; color: #d97706; }
+        .badge-success { background-color: #d1fae5; color: #059669; }
+        .badge-info { background-color: #e0f2fe; color: #0284c7; }
+        .badge-danger { background-color: #fee2e2; color: #dc2626; }
+
+        /* Form Grid */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+        }
+
+        /* Autocomplete list */
+        .autocomplete-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 10;
+            box-shadow: var(--shadow);
+            margin-top: 4px;
+        }
+
+        .suggestion-item {
+            padding: 10px 14px;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-size: 0.85rem;
+        }
+
+        .suggestion-item:hover {
+            background-color: #f1f5f9;
+        }
+
+        /* Tags container */
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 12px;
+            min-height: 100px;
+            background: var(--bg-base);
+        }
+
+        .tag-item {
+            background: var(--primary);
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tag-remove {
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(15, 23, 42, 0.4);
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        .modal-box {
+            background: var(--bg-surface);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 600px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            max-height: 85vh;
+        }
+
+        .modal-header {
+            padding: 16px 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        .modal-body {
+            padding: 24px;
+            overflow-y: auto;
+        }
+
+        .modal-footer {
+            padding: 16px 24px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            background: var(--bg-base);
+            border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- LOGIN PANEL -->
+    <div id="login-panel" class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <h2>NextCare Portale Light</h2>
+                <p>Punto Prelievo Convenzionato: <strong>Ostia</strong></p>
+            </div>
+            <div class="form-group">
+                <label for="login-username">Username Portale</label>
+                <input type="text" id="login-username" class="form-control" placeholder="Inserisci username...">
+            </div>
+            <div class="form-group">
+                <label for="login-password">Password Portale</label>
+                <input type="password" id="login-password" class="form-control" placeholder="Inserisci password...">
+            </div>
+            <button class="btn btn-primary" onclick="login()">
+                <i data-lucide="log-in"></i> Accedi al Portale
+            </button>
+        </div>
+    </div>
+
+    <!-- MAIN APP PANEL -->
+    <div id="app-panel" class="app-container">
+        <div class="header">
+            <div class="header-logo">
+                <h1>NextCare Systems <span>Light Portal: Ostia</span></h1>
+            </div>
+            <div class="user-menu">
+                <span id="header-user-display" style="font-weight: 500; font-size: 0.9rem; color: var(--text-secondary);"></span>
+                <button class="btn btn-secondary btn-sm" onclick="logout()">
+                    <i data-lucide="log-out" style="width:14px; height:14px;"></i> Esci
+                </button>
+            </div>
+        </div>
+
+        <div class="main-layout">
+            <div class="sidebar">
+                <div class="nav-item active" id="nav-accettazione" onclick="switchTab('accettazione')">
+                    <i data-lucide="user-plus"></i> Accettazione LIS
+                </div>
+                <div class="nav-item" id="nav-gestione-accettazioni" onclick="switchTab('gestione-accettazioni')">
+                    <i data-lucide="clipboard-list"></i> Gestione Accettazioni
+                </div>
+                <div class="nav-item" id="nav-spedizione" onclick="switchTab('spedizione')">
+                    <i data-lucide="truck"></i> Spedizione Provette
+                </div>
+                <div class="nav-item" id="nav-ddt" onclick="switchTab('ddt')">
+                    <i data-lucide="file-text"></i> Archivio DDT
+                </div>
+                <div class="nav-item" id="nav-tracciabilita" onclick="switchTab('tracciabilita')">
+                    <i data-lucide="map-pin"></i> Stato Pazienti
+                </div>
+                <div class="nav-item" id="nav-referti" onclick="switchTab('referti')">
+                    <i data-lucide="file-check"></i> Referti Pronti
+                </div>
+            </div>
+
+            <div class="content-area">
+                <!-- PANE 1: ACCETTAZIONE -->
+                <div id="pane-accettazione" class="pane active">
+                    <div class="card">
+                        <div class="card-title">Accettazione e Prelievo Paziente</div>
+                        
+                        <div class="form-group">
+                            <label for="sam-patient-search">Cerca Paziente Registrato</label>
+                            <div style="display: flex; gap: 8px;">
+                                <div style="position: relative; flex: 1;">
+                                    <input type="text" id="sam-patient-search" class="form-control" placeholder="Cerca per Nome, Cognome o Codice Fiscale..." autocomplete="off">
+                                    <input type="hidden" id="sam-patient">
+                                    <div id="sam-patient-suggestions" class="autocomplete-suggestions" style="display: none;"></div>
+                                </div>
+                                <button class="btn btn-secondary" onclick="openNewPatientModal()" title="Crea nuovo paziente inline">+</button>
+                                <button class="btn btn-secondary" id="btn-edit-patient" onclick="openEditPatientModal()" title="Modifica anagrafica paziente" style="display: none; align-items: center; justify-content: center;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pencil"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="position: relative;">
+                            <label for="sam-search-test">Cerca e Aggiungi Prestazioni LIS / Microbiologia</label>
+                            <input type="text" id="sam-search-test" class="form-control" placeholder="Cerca esami (es. Urinocoltura, Glicemia, Emocromo)..." autocomplete="off">
+                            <div id="sam-search-results" class="autocomplete-suggestions" style="display: none;"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Esami Selezionati:</label>
+                            <div class="tags-container" id="sam-selected-tests">
+                                <span style="color: var(--text-secondary); font-size: 0.85rem; padding: 5px;">Nessuna prestazione selezionata. Cerca sopra per aggiungerle.</span>
+                            </div>
+                        </div>
+
+                        <div class="form-grid" style="margin-bottom: 20px;">
+                            <div class="form-group">
+                                <label for="sam-payment-method">Metodo di Pagamento</label>
+                                <select id="sam-payment-method" class="form-control">
+                                    <option value="Contanti">Contanti</option>
+                                    <option value="Carta di Credito">Carta di Credito</option>
+                                    <option value="Bancomat">Bancomat</option>
+                                    <option value="Bonifico Bancario">Bonifico Bancario</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="sam-price-list">Listino Applicato</label>
+                                <select id="sam-price-list" class="form-control">
+                                    <option value="1">Listino Privato</option>
+                                    <option value="4">Listino Convenzionato SSN</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div style="text-align: right;">
+                            <button class="btn btn-primary" style="width: auto;" onclick="salvaAccettazione()">
+                                <i data-lucide="check"></i> Conferma Accettazione & Stampa Etichette
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PANE: GESTIONE ACCETTAZIONI -->
+                <div id="pane-gestione-accettazioni" class="pane">
+                    <div class="card">
+                        <div class="card-title">Gestione Accettazioni Presenti e Passate</div>
+                        
+                        <!-- Filtri di Ricerca -->
+                        <div class="form-grid" style="margin-bottom: 20px;">
+                            <div class="form-group">
+                                <label for="filter-mgt-search">Cerca Paziente o Barcode</label>
+                                <input type="text" id="filter-mgt-search" class="form-control" placeholder="Cognome, Nome, CF o Barcode..." oninput="renderGestioneAccettazioni()">
+                            </div>
+                            <div class="form-group">
+                                <label for="filter-mgt-date">Data Accettazione</label>
+                                <input type="date" id="filter-mgt-date" class="form-control" onchange="renderGestioneAccettazioni()">
+                            </div>
+                            <div class="form-group">
+                                <label for="filter-mgt-status">Stato Accettazione</label>
+                                <select id="filter-mgt-status" class="form-control" onchange="renderGestioneAccettazioni()">
+                                    <option value="all">Tutti gli stati</option>
+                                    <option value="collected">Prelevato (Pronto/Spedito)</option>
+                                    <option value="non_prelevato">Non Prelevato</option>
+                                    <option value="non_pervenuto">Non Pervenuto</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Data/Ora</th>
+                                        <th>Paziente</th>
+                                        <th>Provette (Barcode - Tipo)</th>
+                                        <th>Esami Richiesti</th>
+                                        <th>Stato</th>
+                                        <th style="width:250px; text-align:right;">Azioni / Stampe</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="mgt-acceptances-tbody">
+                                    <!-- Dynamic content -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PANE 2: SPEDIZIONE PROVETTE -->
+                <div id="pane-spedizione" class="pane">
+                    <div class="card">
+                        <div class="card-title">
+                            Checkout Provette e Spedizione al Laboratorio
+                            <button class="btn btn-primary btn-sm" onclick="creaDdtSpedizione()">
+                                <i data-lucide="send"></i> Effettua Checkout & Genera DDT
+                            </button>
+                        </div>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th style="width: 40px; text-align: center;"><input type="checkbox" id="select-all-samples" onclick="toggleAllSamples(this)"></th>
+                                        <th>Codice a Barre</th>
+                                        <th>Data Prelievo</th>
+                                        <th>Paziente</th>
+                                        <th>Tipo Campione</th>
+                                        <th>Esami Richiesti</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="shipping-samples-tbody">
+                                    <!-- Dynamic -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PANE 3: ARCHIVIO DDT -->
+                <div id="pane-ddt" class="pane">
+                    <div class="card">
+                        <div class="card-title">Documenti di Trasporto Elaborati</div>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Codice DDT</th>
+                                        <th>Data Spedizione</th>
+                                        <th>Stato</th>
+                                        <th>Provette Spedite</th>
+                                        <th>Data Consegna</th>
+                                        <th>Azioni</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ddt-archive-tbody">
+                                    <!-- Dynamic -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PANE 4: TRACCIABILITÀ -->
+                <div id="pane-tracciabilita" class="pane">
+                    <div class="card">
+                        <div class="card-title">Stato di Avanzamento dei Prelievi</div>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Data Accettazione</th>
+                                        <th>Paziente / CF</th>
+                                        <th>Barcode Provette</th>
+                                        <th>Tipo Analisi</th>
+                                        <th>Stato Elaborazione</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tracciabilita-tbody">
+                                    <!-- Dynamic -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PANE 5: REFERTI PRONTI -->
+                <div id="pane-referti" class="pane">
+                    <div class="card">
+                        <div class="card-title">Referti Ufficiali Firmati</div>
+                        <div class="table-container">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Data Referto</th>
+                                        <th>Paziente</th>
+                                        <th>Esami Contenuti</th>
+                                        <th>Rilasciato Da</th>
+                                        <th>Azione</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="referti-tbody">
+                                    <!-- Dynamic -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <!-- MODAL: STAMPA ACCETTAZIONE -->
+    <div class="modal-overlay" id="modal-lis-print-prompt" style="display: none;">
+        <div class="modal-box" style="max-width: 480px;">
+            <div class="modal-header">
+                <h2>Accettazione LIS - Stampa Documenti</h2>
+                <button type="button" class="modal-close" onclick="closeModal('modal-lis-print-prompt')">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 20px; text-align: center;">
+                <i data-lucide="printer" style="width: 48px; height: 48px; color: var(--primary); margin-bottom: 15px; display: inline-block;"></i>
+                <h3 style="margin-bottom:8px;">Accettazione LIS Registrata con Successo!</h3>
+                <p class="text-muted" style="font-size: 0.85rem; margin-bottom: 20px;">
+                    Campione Barcode: <strong id="print-prompt-barcode-label" style="font-family:monospace; font-size:1.1rem; color:var(--text-primary);">000000000000</strong>
+                </p>
+                <input type="hidden" id="print-prompt-sample-id">
+                <input type="hidden" id="print-prompt-invoice-id">
+                <div style="display:flex; flex-direction:column; gap:12px; max-width: 320px; margin: 0 auto;">
+                    <button type="button" class="btn btn-primary" onclick="printLisAcceptanceReceiptFromPrompt()"><i data-lucide="file-text" style="width:14px;height:14px;vertical-align:middle;margin-right:6px;"></i> Stampa Distinta Accettazione</button>
+                    <button type="button" class="btn btn-success" onclick="printLisBarcodeLabelFromPrompt()"><i data-lucide="barcode" style="width:14px;height:14px;vertical-align:middle;margin-right:6px;"></i> Stampa Etichetta Barcode</button>
+                    <button type="button" class="btn" style="background: #f97316; border-color: #f97316; color: white;" onclick="printLisConsentFromPrompt()"><i data-lucide="file-signature" style="width:14px;height:14px;vertical-align:middle;margin-right:6px;"></i> Stampa Consenso Informato</button>
+                    <button type="button" class="btn btn-info" onclick="printInvoicePortalFromPrompt()"><i data-lucide="printer" style="width:14px;height:14px;vertical-align:middle;margin-right:6px;"></i> Stampa Fattura / Ricevuta</button>
+                </div>
+            </div>
+            <div class="modal-footer" style="justify-content:center;">
+                <button type="button" class="btn btn-secondary" onclick="closeModal('modal-lis-print-prompt')">Chiudi e Prosegui</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: REGISTRA PAZIENTE INLINE -->
+    <div class="modal-overlay" id="modal-add-patient">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="modal-patient-title">Nuovo Paziente</h3>
+                <button class="modal-close" onclick="closeModal('modal-add-patient')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-grid" style="margin-bottom: 15px;">
+                    <div class="form-group">
+                        <label for="pat-lastname">Cognome *</label>
+                        <input type="text" id="pat-lastname" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="pat-firstname">Nome *</label>
+                        <input type="text" id="pat-firstname" class="form-control" required>
+                    </div>
+                </div>
+                <div class="form-grid" style="margin-bottom: 15px;">
+                    <div class="form-group">
+                        <label for="pat-taxcode">Codice Fiscale *</label>
+                        <input type="text" id="pat-taxcode" class="form-control" maxlength="16" placeholder="Codice Fiscale (16 car.)..." required style="text-transform: uppercase;">
+                    </div>
+                    <div class="form-group">
+                        <label for="pat-birthdate">Data di Nascita *</label>
+                        <input type="date" id="pat-birthdate" class="form-control" required>
+                    </div>
+                </div>
+                <div class="form-grid" style="margin-bottom: 15px;">
+                    <div class="form-group">
+                        <label for="pat-gender">Sesso *</label>
+                        <select id="pat-gender" class="form-control" required>
+                            <option value="M">Maschio</option>
+                            <option value="F">Femmina</option>
+                            <option value="OTHER">Altro</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="pat-phone">Telefono</label>
+                        <input type="text" id="pat-phone" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="pat-email">Email</label>
+                    <input type="email" id="pat-email" class="form-control">
+                </div>
+                <div class="form-group" style="margin-top: 10px;">
+                    <label for="pat-address">Indirizzo di Residenza</label>
+                    <input type="text" id="pat-address" class="form-control" placeholder="Via, Città, CAP...">
+                </div>
+                <div class="form-group" style="margin-top: 15px;">
+                    <label style="font-weight: 600; display: block; margin-bottom: 8px;">Consensi GDPR Privacy</label>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <label style="display: inline-flex; align-items: center; gap: 8px; font-size: 0.9rem; font-weight: normal; cursor: pointer;">
+                            <input type="checkbox" id="pat-consent-treatment" checked disabled>
+                            Consenso al Trattamento Clinico (Obbligatorio)
+                        </label>
+                        <label style="display: inline-flex; align-items: center; gap: 8px; font-size: 0.9rem; font-weight: normal; cursor: pointer;">
+                            <input type="checkbox" id="pat-consent-marketing">
+                            Consenso a comunicazioni informative e Marketing
+                        </label>
+                        <label style="display: inline-flex; align-items: center; gap: 8px; font-size: 0.9rem; font-weight: normal; cursor: pointer;">
+                            <input type="checkbox" id="pat-consent-profiling">
+                            Consenso a profilazione clinica e promozionale
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('modal-add-patient')">Annulla</button>
+                <button class="btn btn-primary" style="width:auto;" onclick="salvaNuovoPaziente()">Salva Paziente</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: GESTIONE / MODIFICA ACCETTAZIONE -->
+    <div class="modal-overlay" id="modal-edit-lis-acceptance-portal">
+        <div class="modal-box" style="max-width: 750px;">
+            <div class="modal-header">
+                <h3>Modifica Accettazione LIS</h3>
+                <button class="modal-close" onclick="closeModal('modal-edit-lis-acceptance-portal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div style="background: var(--bg-base); padding: 12px; border-radius: var(--radius-md); margin-bottom: 20px; font-size: 0.9rem; line-height: 1.6;">
+                    <div><strong>Paziente:</strong> <span id="mgt-edit-patient-name"></span></div>
+                    <div><strong>ID Sessione:</strong> <span id="mgt-edit-session-uid"></span></div>
+                </div>
+
+                <!-- Aggiungi Prestazione -->
+                <div class="form-group" style="position: relative; margin-bottom: 20px;">
+                    <label for="mgt-edit-search-service" style="font-weight: 600;">Aggiungi Esame all'Accettazione</label>
+                    <input type="text" id="mgt-edit-search-service" class="form-control" placeholder="Cerca esame da aggiungere..." autocomplete="off">
+                    <div id="mgt-edit-search-results" class="autocomplete-suggestions" style="display: none;"></div>
+                </div>
+
+                <!-- Elenco Esami Attuali -->
+                <label style="font-weight: 600; display: block; margin-bottom: 10px;">Esami Presenti nell'Accettazione</label>
+                <div class="table-container">
+                    <table style="font-size: 0.85rem;">
+                        <thead>
+                            <tr>
+                                <th>Codice</th>
+                                <th>Esame</th>
+                                <th>Provette / Barcode</th>
+                                <th>Stato</th>
+                                <th style="text-align: right;">Azioni</th>
+                            </tr>
+                        </thead>
+                        <tbody id="mgt-edit-tests-tbody">
+                            <!-- Dynamic rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('modal-edit-lis-acceptance-portal')">Annulla</button>
+                <button class="btn btn-primary" style="width:auto;" onclick="salvaModificheAccettazione()">Conferma Modifiche & Sincronizza</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        const CP_CODE = "PP-OSTIA";
+        const CP_NAME = "Ostia";
+        const CP_ID = parseInt("1");
+
+        function getBaseUrl() {
+            return window.location.protocol + '//' + window.location.hostname + ':8000';
+        }
+
+        let allPatients = [];
+        let allServices = [];
+        let selectedServices = [];
+        let allSamples = [];
+        let allTests = [];
+        let allDdt = [];
+        let allReports = [];
+        let allCollectionPoints = [];
+        let allConsents = [];
+        let allTubeTypes = [];
+        let allTemplates = [];
+
+        window.onload = function() {
+            lucide.createIcons();
+            checkLoginState();
+        };
+
+        function apiCall(url, payload, callback) {
+            fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success || data.rows || data.status) {
+                    callback(data);
+                } else {
+                    alert("Errore API: " + (data.error || "Operazione non riuscita"));
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Errore di rete o server non raggiungibile");
+            });
+        }
+
+        function fetchPost(url, payload) {
+            return fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            }).then(res => res.json());
+        }
+
+        function checkLoginState() {
+            const loggedIn = sessionStorage.getItem('cp_logged_in');
+            if (loggedIn === CP_CODE) {
+                const userObj = JSON.parse(sessionStorage.getItem('current_collection_point'));
+                document.getElementById('login-panel').style.display = 'none';
+                document.getElementById('app-panel').style.display = 'flex';
+                document.getElementById('header-user-display').innerText = "Operatore: " + (userObj.name || userObj.username || 'Utente');
+                loadData();
+            } else {
+                document.getElementById('login-panel').style.display = 'flex';
+                document.getElementById('app-panel').style.display = 'none';
+            }
+        }
+
+        function login() {
+            const user = document.getElementById('login-username').value;
+            const pass = document.getElementById('login-password').value;
+
+            fetch(getBaseUrl() + '/api/portals-login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    username: user,
+                    password: pass,
+                    portal_type: 'collection_point',
+                    cp_code: CP_CODE
+                })
+            })
+            .then(res => res.json())
+            .then(res => {
+                if (res.success && res.data) {
+                    sessionStorage.setItem('cp_logged_in', CP_CODE);
+                    sessionStorage.setItem('current_collection_point', JSON.stringify(res.data.user));
+                    checkLoginState();
+                } else {
+                    alert("Credenziali non valide per il punto prelievo " + CP_NAME);
+                }
+            })
+            .catch(err => {
+                alert("Errore di connessione al server");
+            });
+        }
+
+        function logout() {
+            sessionStorage.removeItem('cp_logged_in');
+            sessionStorage.removeItem('current_collection_point');
+            checkLoginState();
+        }
+
+        function loadData() {
+            fetch(getBaseUrl() + '/api/portal-cp-data', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ collection_point_id: CP_ID })
+            })
+            .then(res => res.json())
+            .then(res => {
+                if (res.success && res.data) {
+                    const data = res.data;
+                    allPatients = data.patients || [];
+                    allServices = data.services || [];
+                    allSamples = data.samples || [];
+                    allTests = data.tests || [];
+                    invoices = data.invoices || [];
+                    allDdt = data.lis_ddt || [];
+                    allReports = data.lab_reports || [];
+                    allCollectionPoints = data.collection_points || [];
+                    allConsents = data.patient_consents || [];
+                    allTubeTypes = data.tube_types || [];
+                    allTemplates = data.consent_templates || [];
+                    window.allMicrobiologyResults = data.lis_microbiology_results || [];
+
+                    // Setup and render views
+                    setupPatientAutocomplete();
+                    setupServiceSearch();
+                    renderShippingSamples();
+                    renderTracciabilita();
+                    renderDdtArchive();
+                    renderReferti();
+                    if (typeof renderGestioneAccettazioni === 'function') renderGestioneAccettazioni();
+                } else {
+                    console.error("Errore caricamento dati portale:", res.error);
+                }
+            })
+            .catch(err => {
+                console.error("Errore connessione caricamento dati:", err);
+            });
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            document.querySelectorAll('.pane').forEach(pane => pane.classList.remove('active'));
+
+            document.getElementById('nav-' + tabName).classList.add('active');
+            document.getElementById('pane-' + tabName).classList.add('active');
+            loadData();
+        }
+
+        // AUTOCOMPLETE PAZIENTI
+        function setupPatientAutocomplete() {
+            const input = document.getElementById('sam-patient-search');
+            const hidden = document.getElementById('sam-patient');
+            const suggest = document.getElementById('sam-patient-suggestions');
+
+            input.addEventListener('input', () => {
+                const val = input.value.toLowerCase();
+                hidden.value = '';
+                document.getElementById('btn-edit-patient').style.display = 'none';
+                if (!val) {
+                    suggest.style.display = 'none';
+                    return;
+                }
+                const filtered = allPatients.filter(p => 
+                    (p.last_name + ' ' + p.first_name).toLowerCase().includes(val) || 
+                    p.tax_code.toLowerCase().includes(val)
+                );
+                if (filtered.length === 0) {
+                    suggest.innerHTML = '<div style="padding: 10px; color:#888; font-size:0.85rem;">Nessun paziente trovato. Premi \"+\" per aggiungerlo.</div>';
+                } else {
+                    suggest.innerHTML = filtered.slice(0, 10).map(p => `
+                        <div class="suggestion-item" onclick="selectPatient(${p.id}, '${p.last_name} ${p.first_name} (${p.tax_code})')">
+                            <strong>${p.last_name} ${p.first_name}</strong> - ${p.tax_code}
+                        </div>
+                    `).join('');
+                }
+                suggest.style.display = 'block';
+            });
+
+            document.addEventListener('click', (e) => {
+                if (e.target !== input && e.target !== suggest) {
+                    suggest.style.display = 'none';
+                }
+            });
+        }
+
+        function selectPatient(id, displayText) {
+            document.getElementById('sam-patient').value = id;
+            document.getElementById('sam-patient-search').value = displayText;
+            document.getElementById('sam-patient-suggestions').style.display = 'none';
+            document.getElementById('btn-edit-patient').style.display = 'inline-flex';
+        }
+
+        // RICERCA E AGGIUNTA PRESTAZIONI
+        function setupServiceSearch() {
+            const input = document.getElementById('sam-search-test');
+            const results = document.getElementById('sam-search-results');
+
+            input.addEventListener('input', () => {
+                const val = input.value.toLowerCase();
+                if (!val) {
+                    results.style.display = 'none';
+                    return;
+                }
+                const filtered = allServices.filter(s => s.name.toLowerCase().includes(val) || (s.code && s.code.toLowerCase().includes(val)));
+                if (filtered.length === 0) {
+                    results.innerHTML = '<div style="padding:10px; color:#888; font-size:0.85rem;">Nessuna prestazione trovata.</div>';
+                } else {
+                    results.innerHTML = filtered.slice(0, 10).map(s => `
+                        <div class="suggestion-item" onclick="addService(${s.id}, '${s.name}', '${s.code || ''}', '${s.sample_type || 'Siero'}')">
+                            <strong>${s.name}</strong> ${s.code ? `<small style="color:var(--primary); font-family:monospace;">[${s.code}]</small>` : ''}
+                        </div>
+                    `).join('');
+                }
+                results.style.display = 'block';
+            });
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const val = input.value.toLowerCase().trim();
+                    if (!val) return;
+                    const filtered = allServices.filter(s => s.name.toLowerCase().includes(val) || (s.code && s.code.toLowerCase().includes(val)));
+                    if (filtered.length > 0) {
+                        const s = filtered[0];
+                        addService(s.id, s.name, s.code || '', s.sample_type || 'Siero');
+                    }
+                }
+            });
+
+            document.addEventListener('click', (e) => {
+                if (e.target !== input && e.target !== results) {
+                    results.style.display = 'none';
+                }
+            });
+        }
+
+        function addService(id, name, code, sampleType) {
+            if (selectedServices.some(s => s.id === id)) {
+                alert("Prestazione già selezionata!");
+                return;
+            }
+            selectedServices.push({ id, name, code, sampleType });
+            const input = document.getElementById('sam-search-test');
+            input.value = '';
+            document.getElementById('sam-search-results').style.display = 'none';
+            renderSelectedTags();
+            input.focus();
+        }
+
+        function removeService(id) {
+            selectedServices = selectedServices.filter(s => s.id !== id);
+            renderSelectedTags();
+        }
+
+        function renderSelectedTags() {
+            const container = document.getElementById('sam-selected-tests');
+            if (selectedServices.length === 0) {
+                container.innerHTML = '<span style="color: var(--text-secondary); font-size: 0.85rem; padding: 5px;">Nessuna prestazione selezionata. Cerca sopra per aggiungerle.</span>';
+                return;
+            }
+            container.innerHTML = selectedServices.map(s => `
+                <span class="tag-item">
+                    ${s.name}
+                    <span class="tag-remove" onclick="removeService(${s.id})">&times;</span>
+                </span>
+            `).join('');
+        }
+
+        function openNewPatientModal() {
+            window.editingPatientId = null;
+            document.getElementById('modal-patient-title').innerText = "Nuovo Paziente";
+            document.getElementById('pat-lastname').value = '';
+            document.getElementById('pat-firstname').value = '';
+            document.getElementById('pat-taxcode').value = '';
+            document.getElementById('pat-birthdate').value = '';
+            document.getElementById('pat-gender').value = 'M';
+            document.getElementById('pat-phone').value = '';
+            document.getElementById('pat-email').value = '';
+            document.getElementById('pat-address').value = '';
+            document.getElementById('pat-consent-marketing').checked = false;
+            document.getElementById('pat-consent-profiling').checked = false;
+            document.getElementById('modal-add-patient').style.display = 'flex';
+        }
+
+        function openEditPatientModal() {
+            const patId = parseInt(document.getElementById('sam-patient').value);
+            if (!patId) return;
+            const p = allPatients.find(x => x.id === patId);
+            if (!p) return;
+            
+            window.editingPatientId = patId;
+            document.getElementById('modal-patient-title').innerText = "Modifica Anagrafica Paziente";
+            
+            document.getElementById('pat-lastname').value = p.last_name || '';
+            document.getElementById('pat-firstname').value = p.first_name || '';
+            document.getElementById('pat-taxcode').value = p.tax_code || '';
+            document.getElementById('pat-birthdate').value = p.birth_date || '';
+            document.getElementById('pat-gender').value = p.gender || 'M';
+            document.getElementById('pat-phone').value = p.phone || '';
+            document.getElementById('pat-email').value = p.email || '';
+            document.getElementById('pat-address').value = p.address || '';
+            
+            const c = allConsents.find(con => con.patient_id === patId);
+            document.getElementById('pat-consent-marketing').checked = c && c.marketing_consent ? true : false;
+            document.getElementById('pat-consent-profiling').checked = c && c.profiling_consent ? true : false;
+            
+            document.getElementById('modal-add-patient').style.display = 'flex';
+        }
+
+        function openModal(id) {
+            document.getElementById(id).style.display = 'flex';
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        function salvaNuovoPaziente() {
+            const ln = document.getElementById('pat-lastname').value;
+            const fn = document.getElementById('pat-firstname').value;
+            const tc = document.getElementById('pat-taxcode').value.toUpperCase();
+            const bd = document.getElementById('pat-birthdate').value;
+            const gd = document.getElementById('pat-gender').value;
+            const ph = document.getElementById('pat-phone').value;
+            const em = document.getElementById('pat-email').value;
+            const ad = document.getElementById('pat-address').value;
+            
+            const mc = document.getElementById('pat-consent-marketing').checked ? 1 : 0;
+            const pc = document.getElementById('pat-consent-profiling').checked ? 1 : 0;
+
+            if (!ln || !fn || !tc || !bd) {
+                alert("Per favore, compila tutti i campi obbligatori.");
+                return;
+            }
+
+            if (window.editingPatientId) {
+                // Modifica paziente esistente
+                const p = allPatients.find(x => x.id === window.editingPatientId);
+                if (p) {
+                    p.last_name = ln;
+                    p.first_name = fn;
+                    p.tax_code = tc;
+                    p.birth_date = bd;
+                    p.gender = gd;
+                    p.phone = ph;
+                    p.email = em;
+                    p.address = ad;
+                }
+                apiCall('/api/portal-upsert-records', { table_name: 'patients', rows: allPatients }, (res) => {
+                    // Save consents
+                    const consentObj = allConsents.find(con => con.patient_id === window.editingPatientId);
+                    if (consentObj) {
+                        consentObj.marketing_consent = mc;
+                        consentObj.profiling_consent = pc;
+                        consentObj.signed_at = new Date().toISOString();
+                    } else {
+                        allConsents.push({
+                            id: Date.now() + Math.floor(Math.random() * 1000),
+                            patient_id: window.editingPatientId,
+                            treatment_consent: 1,
+                            marketing_consent: mc,
+                            profiling_consent: pc,
+                            signed_at: new Date().toISOString()
+                        });
+                    }
+                    apiCall('/api/portal-upsert-records', { table_name: 'patient_consents', rows: allConsents }, (cRes) => {
+                        alert("Anagrafica modificata con successo!");
+                        closeModal('modal-add-patient');
+                        selectPatient(window.editingPatientId, `${ln} ${fn} (${tc})`);
+                        loadData();
+                    });
+                });
+            } else {
+                // Crea nuovo paziente
+                const newId = allPatients.length > 0 ? Math.max(...allPatients.map(p => p.id)) + 1 : 1;
+                const uuid = 'p-' + Math.random().toString(36).substr(2, 9);
+                const patient = {
+                    id: newId,
+                    uuid: uuid,
+                    last_name: ln,
+                    first_name: fn,
+                    tax_code: tc,
+                    birth_date: bd,
+                    gender: gd,
+                    phone: ph,
+                    email: em,
+                    address: ad
+                };
+
+                allPatients.push(patient);
+
+                apiCall('/api/portal-upsert-records', { table_name: 'patients', rows: allPatients }, (res) => {
+                    // Create consents
+                    allConsents.push({
+                        id: Date.now() + Math.floor(Math.random() * 1000),
+                        patient_id: newId,
+                        treatment_consent: 1,
+                        marketing_consent: mc,
+                        profiling_consent: pc,
+                        signed_at: new Date().toISOString()
+                    });
+                    apiCall('/api/portal-upsert-records', { table_name: 'patient_consents', rows: allConsents }, (cRes) => {
+                        alert("Paziente creato con successo!");
+                        closeModal('modal-add-patient');
+                        selectPatient(newId, `${ln} ${fn} (${tc})`);
+                        loadData();
+                        
+                        document.getElementById('pat-lastname').value = '';
+                        document.getElementById('pat-firstname').value = '';
+                        document.getElementById('pat-taxcode').value = '';
+                        document.getElementById('pat-birthdate').value = '';
+                        document.getElementById('pat-phone').value = '';
+                        document.getElementById('pat-email').value = '';
+                        document.getElementById('pat-address').value = '';
+                    });
+                });
+            }
+        }
+
+        // SALVA ACCETTAZIONE & EMETTI FATTURA
+        function salvaAccettazione() {
+            const patientId = parseInt(document.getElementById('sam-patient').value);
+            if (!patientId) {
+                alert("Per favore, seleziona o crea un paziente!");
+                return;
+            }
+            if (selectedServices.length === 0) {
+                alert("Seleziona almeno una prestazione!");
+                return;
+            }
+
+            const pm = document.getElementById('sam-payment-method').value;
+            const priceListId = parseInt(document.getElementById('sam-price-list').value);
+
+            const samplesByTube = {};
+            selectedServices.forEach(srv => {
+                const sType = srv.sampleType || 'Siero';
+                if (!samplesByTube[sType]) {
+                    samplesByTube[sType] = [];
+                }
+                samplesByTube[sType].push(srv);
+            });
+
+            const timestamp = Date.now().toString().slice(-6);
+            const newSamplesList = [];
+            const newTestsList = [];
+            
+            let barcodePromptText = "Stampa etichette barcode provetta:\\n";
+
+            let sampleIdx = allSamples.length > 0 ? Math.max(...allSamples.map(s => s.id)) + 1 : 1;
+            let testIdx = allTests.length > 0 ? Math.max(...allTests.map(t => t.id)) + 1 : 1;
+            
+            const sessionUid = 'CP-ACC-' + timestamp;
+            const collectedAt = new Date().toISOString();
+
+            for (const [sType, srvs] of Object.entries(samplesByTube)) {
+                const suffix = getTubeSuffix(sType);
+                const barcode = getNextBarcodePortal(suffix);
+                const newSample = {
+                    id: sampleIdx,
+                    patient_id: patientId,
+                    barcode: barcode,
+                    sample_type: sType,
+                    status: 'collected',
+                    session_uid: sessionUid,
+                    collected_at: collectedAt,
+                    collected_by: 5,
+                    report_notes: 'Accettato presso Punto Prelievo: ' + CP_NAME,
+                    requesting_doctor: 'Dott. Extern',
+                    collection_point_id: CP_ID,
+                    ddt_id: null
+                };
+                newSamplesList.push(newSample);
+                allSamples.push(newSample);
+                barcodePromptText += `Provetta: ${sType} -> Barcode: ${barcode}\\n`;
+
+                srvs.forEach(srv => {
+                    const newTest = {
+                        id: testIdx,
+                        sample_id: sampleIdx,
+                        service_id: srv.id,
+                        test_name: srv.name,
+                        result_value: null,
+                        reference_range: 'Negativo / Sterile',
+                        unit: '',
+                        status: 'pending',
+                        verified_by: null,
+                        verified_at: null
+                    };
+                    newTestsList.push(newTest);
+                    allTests.push(newTest);
+                    testIdx++;
+                });
+
+                sampleIdx++;
+            }
+
+            let subtotal = selectedServices.length * 15.00;
+            let ticket = subtotal;
+            if (priceListId === 4) {
+                ticket = Math.min(36.15, subtotal);
+            }
+
+            let invoiceNum = "";
+            const currentYear = new Date().getFullYear();
+            const cpObj = allCollectionPoints.find(c => c.id === CP_ID);
+
+            if (cpObj && cpObj.invoice_separate) {
+                let nextNum = cpObj.invoice_next_num || 1;
+                const prefix = cpObj.invoice_prefix || `FAT-${CP_CODE}-`;
+                invoiceNum = `${prefix}${String(nextNum).padStart(4, '0')}`;
+                cpObj.invoice_next_num = nextNum + 1;
+            } else {
+                let nextNum = parseInt(localStorage.getItem('nextcare_next_invoice_num') || '1001');
+                invoiceNum = `FAT-${currentYear}-${String(nextNum).padStart(4, '0')}`;
+                localStorage.setItem('nextcare_next_invoice_num', nextNum + 1);
+            }
+
+            apiCall('/api/portal-upsert-records', { table_name: 'lab_samples', rows: allSamples }, (sRes) => {
+                apiCall('/api/portal-upsert-records', { table_name: 'lab_tests', rows: allTests }, (tRes) => {
+                    apiCall('/api/db-get-all', { table: 'invoices' }, (invGetRes) => {
+                        const existingInvoices = invGetRes.rows || [];
+                        const invoiceId = existingInvoices.length > 0 ? Math.max(...existingInvoices.map(inv => inv.id)) + 1 : 1;
+
+                        const invoice = {
+                            id: invoiceId,
+                            admission_id: null,
+                            appointment_id: null,
+                            sample_id: newSamplesList[0].id,
+                            study_id: null,
+                            invoice_number: invoiceNum,
+                            issue_date: collectedAt.split('T')[0],
+                            subtotal: subtotal,
+                            discount_value: 0,
+                            discount_type: 'flat',
+                            discount_amount: 0,
+                            price_list_id: priceListId,
+                            claim_id: null,
+                            insurance_covered_amount: priceListId === 4 ? (subtotal - ticket) : 0,
+                            stamp_duty: 0,
+                            amount_due: ticket,
+                            amount_paid: 0.0,
+                            payment_status: 'unpaid',
+                            payment_method: pm,
+                            paid_at: null,
+                            patient_id: patientId,
+                            collection_point_id: CP_ID
+                        };
+
+                        existingInvoices.push(invoice);
+                        apiCall('/api/portal-upsert-records', { table_name: 'invoices', rows: existingInvoices }, (iRes) => {
+                            apiCall('/api/portal-upsert-records', { table_name: 'lis_collection_points', rows: allCollectionPoints }, (cpRes) => {
+                                alert("Accettazione completata con successo!\\nFattura emessa: " + invoiceNum + "\\n\\n" + barcodePromptText);
+                                
+                                // Stampiamo consensi privacy GDPR e LIS
+                                const patient = allPatients.find(p => p.id === patientId);
+                                const serviceIds = selectedServices.map(s => s.id);
+                                if (patient) {
+                                    stampaPrivacyGdpr(patient);
+                                    stampaConsensiLisObbligatori(patient, serviceIds);
+                                }
+
+                                // Stampiamo etichette provette, ricevuta accettazione e fattura
+                                const firstSampleId = newSamplesList[0].id;
+                                if (typeof printLisBarcodeLabel === 'function') printLisBarcodeLabel(firstSampleId);
+                                if (typeof printLisAcceptanceReceipt === 'function') printLisAcceptanceReceipt(firstSampleId);
+                                if (typeof printInvoicePortal === 'function') printInvoicePortal(invoiceId);
+
+                                document.getElementById('sam-patient-search').value = '';
+                                document.getElementById('sam-patient').value = '';
+                                document.getElementById('btn-edit-patient').style.display = 'none';
+                                selectedServices = [];
+                                renderSelectedTags();
+                                
+                                loadData();
+                            });
+                        });
+                    });
+                });
+            });
+        }
+
+        // PANE 2: SPEDIZIONE & DDT
+        function renderShippingSamples() {
+            const tbody = document.getElementById('shipping-samples-tbody');
+            const filtered = allSamples.filter(s => s.collection_point_id === CP_ID && s.status === 'collected' && !s.ddt_id);
+            
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#888; padding:20px;">Nessuna provetta in attesa di spedizione.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = filtered.map(s => {
+                const pat = allPatients.find(p => p.id === s.patient_id) || {};
+                const testsCount = allTests.filter(t => t.sample_id === s.id).length;
+                const testNames = allTests.filter(t => t.sample_id === s.id).map(t => t.test_name).join(', ');
+                return `
+                    <tr>
+                        <td style="text-align: center;"><input type="checkbox" class="ship-checkbox" value="${s.id}"></td>
+                        <td style="font-family: monospace; font-weight: 600;">${s.barcode}</td>
+                        <td>${new Date(s.collected_at).toLocaleString('it-IT')}</td>
+                        <td><strong>${pat.last_name || ''} ${pat.first_name || ''}</strong><br><small>${pat.tax_code || ''}</small></td>
+                        <td><span class="badge badge-info">${s.sample_type}</span></td>
+                        <td><small style="color:#666;">${testNames} (${testsCount} esami)</small></td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function toggleAllSamples(cb) {
+            document.querySelectorAll('.ship-checkbox').forEach(c => c.checked = cb.checked);
+        }
+
+        function creaDdtSpedizione() {
+            const selectedBoxes = document.querySelectorAll('.ship-checkbox:checked');
+            if (selectedBoxes.length === 0) {
+                alert("Seleziona almeno una provetta da spedire!");
+                return;
+            }
+
+            const sampleIds = Array.from(selectedBoxes).map(cb => parseInt(cb.value));
+            const selectedSamples = allSamples.filter(s => sampleIds.includes(s.id));
+            const barcodes = selectedSamples.map(s => s.barcode);
+
+            const notes = prompt("Inserisci note di spedizione o del corriere (opzionale):") || "Spedizione Standard";
+
+            const timestamp = Date.now().toString().slice(-5);
+            const ddtCode = `DDT-${CP_CODE}-${new Date().toISOString().split('T')[0].replace(/-/g, '')}-${timestamp}`;
+
+            const newDdtId = allDdt.length > 0 ? Math.max(...allDdt.map(d => d.id)) + 1 : 1;
+            const newDdt = {
+                id: newDdtId,
+                ddt_code: ddtCode,
+                collection_point_id: CP_ID,
+                status: 'in viaggio',
+                shipped_at: new Date().toISOString(),
+                received_at: null,
+                received_by: null,
+                samples_json: barcodes
+            };
+
+            allDdt.push(newDdt);
+
+            allSamples.forEach(s => {
+                if (sampleIds.includes(s.id)) {
+                    s.ddt_id = newDdtId;
+                }
+            });
+
+            apiCall('/api/portal-upsert-records', { table_name: 'lis_ddt', rows: allDdt }, (dRes) => {
+                apiCall('/api/portal-upsert-records', { table_name: 'lab_samples', rows: allSamples }, (sRes) => {
+                    alert("Spedizione effettuata con successo! DDT generato: " + ddtCode);
+                    printDdt(newDdt);
+                    loadData();
+                });
+            });
+        }
+
+        function getTubeDescription(sampleType) {
+            if (!sampleType) return 'Provetta Generica';
+            const tubes = allTubeTypes || [];
+            const matched = tubes.find(t => t.name.toLowerCase().includes(sampleType.toLowerCase()) || sampleType.toLowerCase().includes(t.name.toLowerCase()));
+            if (matched) return matched.name;
+            
+            const lower = sampleType.toLowerCase();
+            if (lower.includes('sangue')) return 'Provetta EDTA (Viola)';
+            if (lower.includes('urine')) return 'Contenitore Urine Standard';
+            if (lower.includes('siero')) return 'Provetta Attivatore (Rosso)';
+            return 'Provetta Generica';
+        }
+
+        function getTubeSuffix(sampleType) {
+            if (!sampleType) return '001';
+            const tubes = allTubeTypes || [];
+            const matched = tubes.find(t => t.name.toLowerCase().includes(sampleType.toLowerCase()) || sampleType.toLowerCase().includes(t.name.toLowerCase()));
+            if (matched && matched.suffix) return matched.suffix.toString().padStart(3, '0');
+            
+            const lower = sampleType.toLowerCase();
+            if (lower.includes('sangue')) return '001';
+            if (lower.includes('siero')) return '002';
+            if (lower.includes('urine')) return '005';
+            if (lower.includes('tampone')) return '006';
+            return '001';
+        }
+
+        function getNextBarcodePortal(suffix) {
+            let nextNum = localStorage.getItem('nextcare_next_barcode_num');
+            if (!nextNum || isNaN(parseInt(nextNum))) {
+                nextNum = 10000001;
+            } else {
+                nextNum = parseInt(nextNum);
+            }
+            const progressStr = String(nextNum).padStart(8, '0');
+            const barcode = progressStr + '0' + String(suffix).padStart(3, '0');
+            localStorage.setItem('nextcare_next_barcode_num', nextNum + 1);
+            return barcode;
+        }
+
+        function printDdt(ddt) {
+            const printWindow = window.open('', '_blank', 'width=1000,height=700');
+            const dateStr = new Date(ddt.shipped_at).toLocaleString('it-IT');
+            const itemsHtml = ddt.samples_json.map(b => {
+                const s = allSamples.find(sam => sam.barcode === b) || {};
+                const pat = allPatients.find(p => p.id === s.patient_id) || {};
+                const samTests = allTests.filter(t => t.sample_id === s.id);
+                const testNames = samTests.map(t => t.test_name).join(', ') || 'N/D';
+                const tubeDesc = getTubeDescription(s.sample_type);
+                return `
+                    <tr>
+                        <td style="font-family:monospace; padding:8px; border-bottom:1px solid #ddd; font-weight:bold;">${b}</td>
+                        <td style="padding:8px; border-bottom:1px solid #ddd;">${pat.last_name || ''} ${pat.first_name || ''} (${pat.tax_code || ''})</td>
+                        <td style="padding:8px; border-bottom:1px solid #ddd;">${tubeDesc}</td>
+                        <td style="padding:8px; border-bottom:1px solid #ddd;">${s.sample_type || 'N/D'}</td>
+                        <td style="padding:8px; border-bottom:1px solid #ddd; font-size:0.85rem; color:#444;">${testNames}</td>
+                    </tr>
+                `;
+            }).join('');
+
+            printWindow.document.write(`
+                <html>
+                <head>
+                    <title>DDT - ${ddt.ddt_code}</title>
+                    <style>
+                        body { font-family: sans-serif; color: #333; margin: 30px; line-height:1.4; }
+                        h1 { color: #2563eb; margin-bottom: 5px; }
+                        .meta-box { display: flex; justify-content: space-between; border-bottom: 2px solid #2563eb; padding-bottom: 10px; margin-bottom: 20px; }
+                        table { width:100%; border-collapse:collapse; margin-top:10px; }
+                        th { background:#f1f5f9; text-align:left; padding:8px; border-bottom: 2px solid #ddd; font-weight:600; font-size:0.9rem; }
+                    </style>
+                </head>
+                <body onload="window.print()">
+                    <h1>Documento di Trasporto Campioni</h1>
+                    <p style="margin:0; font-size:0.9rem; color:#666;">Punto Prelievo Speditore: ${CP_NAME}</p>
+                    <br>
+                    <div class="meta-box">
+                        <div>
+                            <strong>Codice DDT:</strong> ${ddt.ddt_code}<br>
+                            <strong>Data Spedizione:</strong> ${dateStr}
+                        </div>
+                        <div>
+                            <strong>Destinazione:</strong> Laboratorio Centrale NextCare
+                        </div>
+                    </div>
+                    
+                    <h3>Elenco Provette in Spedizione</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Codice a Barre (Barcode)</th>
+                                <th>Paziente</th>
+                                <th>Descrizione Provetta</th>
+                                <th>Tipo Prelievo</th>
+                                <th>Esami Richiesti</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${itemsHtml}
+                        </tbody>
+                    </table>
+                    <br><br>
+                    <div style="display:flex; justify-content:space-between; margin-top:50px; font-size:0.9rem;">
+                        <div>Firma Conducente: ____________________</div>
+                        <div>Firma Accettazione Lab Sede: ____________________</div>
+                    </div>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+        }
+
+        function stampaPrivacyGdpr(patient) {
+            const c = allConsents.find(con => con.patient_id === patient.id) || {};
+            const marketing = c.marketing_consent === 1;
+            const profiling = c.profiling_consent === 1;
+            
+            const printWindow = window.open('', '_blank');
+            if (!printWindow) {
+                alert("Errore: pop-up bloccato! Abilita i pop-up per stampare i moduli privacy.");
+                return;
+            }
+            
+            printWindow.document.write(`
+                <html>
+                <head>
+                    <title>Privacy GDPR - ${patient.last_name} ${patient.first_name}</title>
+                    <style>
+                        body { font-family: sans-serif; padding: 40px; color: #333; line-height: 1.5; }
+                        h1, h2 { text-align: center; color: #1e293b; }
+                        .box { border: 1px solid #ccc; padding: 20px; border-radius: 8px; margin-top: 20px; }
+                        .row { margin-bottom: 12px; }
+                        .signature { margin-top: 50px; display: flex; justify-content: space-between; }
+                        .sig-box { width: 45%; border-top: 1px solid #000; text-align: center; padding-top: 5px; }
+                    </style>
+                </head>
+                <body onload=\"window.print()\">
+                    <h1 style=\"font-size: 1.6rem; margin-bottom: 5px;\">NextCare Systems</h1>
+                    <h2 style=\"font-size: 1.2rem; margin-bottom: 20px;\">MODULO DI CONSENSO AL TRATTAMENTO DEI DATI PERSONALI (GDPR)</h2>
+                    <p>Il/La sottoscritto/a:</p>
+                    <div class=\"box\">
+                        <div class=\"row\"><strong>Cognome e Nome:</strong> ${patient.last_name || ''} ${patient.first_name || ''}</div>
+                        <div class=\"row\"><strong>Codice Fiscale:</strong> ${patient.tax_code || ''}</div>
+                        <div class=\"row\"><strong>Data di Nascita:</strong> ${patient.birth_date ? new Date(patient.birth_date).toLocaleDateString('it-IT') : ''}</div>
+                        <div class=\"row\"><strong>Indirizzo:</strong> ${patient.address || 'N/D'}</div>
+                    </div>
+                    <p style=\"margin-top: 20px;\">Dichiara di aver preso visione dell'informativa sul trattamento dei dati personali fornita ai sensi del Regolamento UE 2016/679 (GDPR) ed esprime le proprie preferenze come segue:</p>
+                    <div class=\"box\">
+                        <div class=\"row\"><strong>1. Trattamento dei dati sanitari (Trattamento Clinico):</strong> [X] ACCONSENTE (Obbligatorio per finalità di cura)</div>
+                        <div class=\"row\"><strong>2. Comunicazioni Informative e Marketing:</strong> [ ${marketing ? 'X' : ' ' } ] ACCONSENTE  [ ${!marketing ? 'X' : ' ' } ] NON ACCONSENTE</div>
+                        <div class=\"row\"><strong>3. Profilazione Clinica:</strong> [ ${profiling ? 'X' : ' ' } ] ACCONSENTE  [ ${!profiling ? 'X' : ' ' } ] NON ACCONSENTE</div>
+                    </div>
+                    
+                    <div class=\"signature\">
+                        <div class=\"sig-box\">Data e Luogo</div>
+                        <div class=\"sig-box\">Firma del Paziente</div>
+                    </div>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+        }
+
+        function stampaConsensiLisObbligatori(patient, serviceIds) {
+            // Calculate age
+            const pBirth = new Date(patient.birth_date);
+            const ageDiff = Date.now() - pBirth.getTime();
+            const ageDate = new Date(ageDiff);
+            const age = Math.abs(ageDate.getUTCFullYear() - 1970);
+            const gender = patient.gender || 'all';
+
+            const executionServices = allServices.filter(s => serviceIds.includes(s.id));
+            const serviceNames = executionServices.map(s => s.name);
+
+            allTemplates.forEach(tpl => {
+                let matches = false;
+                if (tpl.scope === 'all') {
+                    matches = true;
+                } else if (tpl.scope === 'by_modality') {
+                    const matchesMod = executionServices.filter(s => s.type.toUpperCase() === tpl.modality.toUpperCase() || (tpl.modality === 'VISIT' && s.type === 'visita'));
+                    if (matchesMod.length > 0) {
+                        matches = true;
+                    }
+                } else if (tpl.scope === 'gender_age') {
+                    const genderMatch = (tpl.gender === 'all' || tpl.gender.toUpperCase() === gender.toUpperCase());
+                    const minAge = tpl.min_age !== null ? tpl.min_age : 0;
+                    const maxAge = tpl.max_age !== null ? tpl.max_age : 150;
+                    const ageMatch = (age >= minAge && age <= maxAge);
+                    const matchesMod = executionServices.filter(s => s.type.toUpperCase() === tpl.modality.toUpperCase() || (tpl.modality === 'VISIT' && s.type === 'visita'));
+                    if (genderMatch && ageMatch && matchesMod.length > 0) {
+                        matches = true;
+                    }
+                }
+
+                if (matches) {
+                    let printedContent = tpl.content
+                        .replace(/{paziente}/g, `${patient.first_name} ${patient.last_name}`)
+                        .replace(/{codice_fiscale}/g, patient.tax_code || '')
+                        .replace(/{data_nascita}/g, patient.birth_date ? new Date(patient.birth_date).toLocaleDateString('it-IT') : '')
+                        .replace(/{data}/g, new Date().toLocaleDateString('it-IT'))
+                        .replace(/{prestazioni}/g, serviceNames.join(', '))
+                        .replace(/{medico}/g, 'Specialista Refertatore');
+
+                    const printWindow = window.open('', '_blank');
+                    if (printWindow) {
+                        printWindow.document.write(`
+                            <html>
+                            <head>
+                                <title>Consenso LIS - ${tpl.title}</title>
+                                <style>
+                                    body { font-family: sans-serif; padding: 40px; color: #333; line-height: 1.5; }
+                                    .signature { margin-top: 50px; display: flex; justify-content: space-between; }
+                                    .sig-box { width: 45%; border-top: 1px solid #000; text-align: center; padding-top: 5px; }
+                                </style>
+                            </head>
+                            <body onload=\"window.print()\">
+                                <h2>${tpl.title}</h2>
+                                <div style=\"margin-top:20px; font-size: 0.95rem; text-align: justify;\">
+                                    ${printedContent}
+                                </div>
+                                <div class=\"signature\">
+                                    <div class=\"sig-box\">Data e Luogo</div>
+                                    <div class=\"sig-box\">Firma del Paziente</div>
+                                </div>
+                            </body>
+                            </html>
+                        `);
+                        printWindow.document.close();
+                    }
+                }
+            });
+        }
+
+        // PANE 3: ELENCO DDT ARCHIVIO
+        function renderDdtArchive() {
+            const tbody = document.getElementById('ddt-archive-tbody');
+            const filtered = allDdt.filter(d => d.collection_point_id === CP_ID);
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#888; padding:20px;">Nessun DDT registrato in archivio.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = filtered.map(d => {
+                const count = d.samples_json.length;
+                const statusBadge = d.status === 'in viaggio' 
+                    ? '<span class="badge badge-warning">In viaggio</span>'
+                    : '<span class="badge badge-success">Consegnato in sede</span>';
+                const recDate = d.received_at ? new Date(d.received_at).toLocaleString('it-IT') : '-';
+                return `
+                    <tr>
+                        <td style="font-family: monospace; font-weight: 600;">${d.ddt_code}</td>
+                        <td>${new Date(d.shipped_at).toLocaleString('it-IT')}</td>
+                        <td>${statusBadge}</td>
+                        <td><strong>${count}</strong> campioni</td>
+                        <td>${recDate}</td>
+                        <td>
+                            <button class="btn btn-secondary btn-sm" onclick="printDdt(${JSON.stringify(d).replace(/"/g, '&quot;')})">
+                                <i data-lucide="printer" style="width:12px; height:12px; vertical-align:middle;"></i> Stampa
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // PANE 4: TRACCIABILITÀ PAZIENTI
+        function renderTracciabilita() {
+            const tbody = document.getElementById('tracciabilita-tbody');
+            const filtered = allSamples.filter(s => s.collection_point_id === CP_ID);
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#888; padding:20px;">Nessun paziente accettato.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = filtered.map(s => {
+                const pat = allPatients.find(p => p.id === s.patient_id) || {};
+                const testsCount = allTests.filter(t => t.sample_id === s.id).length;
+                const testNames = allTests.filter(t => t.sample_id === s.id).map(t => t.test_name).join(', ');
+                
+                let badgeClass = 'badge-warning';
+                let label = s.status;
+                if (s.status === 'collected') { label = 'Prelevato / In transito'; badgeClass = 'badge-warning'; }
+                else if (s.status === 'received') { label = 'Arrivato in Sede'; badgeClass = 'badge-info'; }
+                else if (s.status === 'processing') { label = 'In lavorazione'; badgeClass = 'badge-info'; }
+                else if (s.status === 'to_validate') { label = 'Da convalidare'; badgeClass = 'badge-warning'; }
+                else if (s.status === 'validated') { label = 'Convalidato / Pronto'; badgeClass = 'badge-success'; }
+                else if (s.status === 'completed') { label = 'Referto Rilasciato'; badgeClass = 'badge-success'; }
+
+                return `
+                    <tr>
+                        <td>${new Date(s.collected_at).toLocaleDateString('it-IT')}</td>
+                        <td><strong>${pat.last_name || ''} ${pat.first_name || ''}</strong><br><small>${pat.tax_code || ''}</small></td>
+                        <td style="font-family: monospace;">${s.barcode}</td>
+                        <td><small style="color:#666; max-width:300px; display:inline-block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${testNames}</small></td>
+                        <td><span class="badge ${badgeClass}">${label}</span></td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // PANE 5: REFERTI PRONTI
+        function renderReferti() {
+            const tbody = document.getElementById('referti-tbody');
+
+            const cpSamples = allSamples.filter(s => s.collection_point_id === CP_ID);
+            const cpSessionUids = Array.from(new Set(cpSamples.map(s => s.session_uid)));
+
+            const filteredReports = allReports.filter(r => r.status === 'official' && cpSessionUids.includes(r.session_uid));
+
+            if (filteredReports.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#888; padding:20px;">Nessun referto ufficiale rilasciato al momento.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = filteredReports.map(r => {
+                const sessionSamples = cpSamples.filter(s => s.session_uid === r.session_uid);
+                const firstSample = sessionSamples[0] || {};
+                const pat = allPatients.find(p => p.id === firstSample.patient_id) || {};
+                const sampleIds = sessionSamples.map(s => s.id);
+                const sessionTests = allTests.filter(t => sampleIds.includes(t.sample_id));
+                const examNames = sessionTests.map(t => t.test_name).join(', ');
+                const relDate = r.released_at ? new Date(r.released_at).toLocaleDateString('it-IT') : '-';
+
+                return `
+                    <tr>
+                        <td>${relDate}</td>
+                        <td><strong>${pat.last_name || ''} ${pat.first_name || ''}</strong><br><small>${pat.tax_code || ''}</small></td>
+                        <td><small style="color:#666; max-width:300px; display:inline-block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${examNames}</small></td>
+                        <td>Biologo Firmante</td>
+                        <td>
+                            <button class="btn btn-secondary btn-sm" onclick="printReferto('${r.session_uid}')">
+                                <i data-lucide="printer" style="width:12px; height:12px; vertical-align:middle; margin-right:4px;"></i> Stampa Referto
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // PRINT REFERTO
+        async function printReferto(sessionUid) {
+            const samplesRes = await fetchPost('/api/db-get-all', { table: 'lab_samples' });
+            const patientsRes = await fetchPost('/api/db-get-all', { table: 'patients' });
+            const testsRes = await fetchPost('/api/db-get-all', { table: 'lab_tests' });
+            const reportsRes = await fetchPost('/api/db-get-all', { table: 'lab_reports' });
+            const microRes = await fetchPost('/api/db-get-all', { table: 'lis_microbiology_results' });
+            
+            const samples = samplesRes.rows || [];
+            const patients = patientsRes.rows || [];
+            const tests = testsRes.rows || [];
+            const reports = reportsRes.rows || [];
+            const microResults = microRes.rows || [];
+
+            const sessionSamples = samples.filter(s => s.session_uid === sessionUid);
+            if (sessionSamples.length === 0) return;
+            const firstSample = sessionSamples[0];
+            const pat = patients.find(p => p.id === firstSample.patient_id) || {};
+            const rep = reports.find(r => r.session_uid === sessionUid) || {};
+            
+            const collectedDate = new Date(firstSample.collected_at).toLocaleString('it-IT');
+            const printedDate = new Date().toLocaleString('it-IT');
+
+            let testsHtml = "";
+            const sampleIds = sessionSamples.map(s => s.id);
+            const sessionTests = tests.filter(t => sampleIds.includes(t.sample_id));
+
+            const hasRegularTable = sessionTests.some(t => !microResults.some(m => m.test_id === t.id));
+            let regularTableHtml = "";
+            if (hasRegularTable) {
+                regularTableHtml = `
+                    <h3 style="color:#1e3a8a; border-bottom:1px solid #ddd; padding-bottom:5px; margin-top:25px; margin-bottom:15px;">Risultati Analisi Chimico-Cliniche</h3>
+                    <table style="width:100%; border-collapse:collapse; margin-bottom:30px;">
+                        <thead>
+                            <tr style="background:#f1f5f9;">
+                                <th style="padding:10px; border-bottom:2px solid #cbd5e1; text-align:left;">Analisi / Parametro</th>
+                                <th style="padding:10px; border-bottom:2px solid #cbd5e1; text-align:center; width:120px;">Risultato</th>
+                                <th style="padding:10px; border-bottom:2px solid #cbd5e1; text-align:left; width:100px;">Unità</th>
+                                <th style="padding:10px; border-bottom:2px solid #cbd5e1; text-align:left; width:150px;">Range Riferimento</th>
+                                <th style="padding:10px; border-bottom:2px solid #cbd5e1; text-align:center; width:100px;">Stato</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${sessionTests.filter(t => !microResults.some(m => m.test_id === t.id)).map(t => `
+                                <tr style="font-size:0.9rem;">
+                                    <td style="padding:10px; border-bottom:1px solid #ddd; font-weight:600;">${t.test_name}</td>
+                                    <td style="padding:10px; border-bottom:1px solid #ddd; text-align:center; font-weight:bold;">${t.result_value || 'In attesa'}</td>
+                                    <td style="padding:10px; border-bottom:1px solid #ddd;">${t.unit || ''}</td>
+                                    <td style="padding:10px; border-bottom:1px solid #ddd;">${t.reference_range || ''}</td>
+                                    <td style="padding:10px; border-bottom:1px solid #ddd; text-align:center; font-weight:bold; color:#16a34a;">NORMALE</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                `;
+            }
+
+            const hasMicroCard = sessionTests.some(t => microResults.some(m => m.test_id === t.id));
+            let microCardsHtml = "";
+            if (hasMicroCard) {
+                microCardsHtml = `
+                    <h3 style="color:#1e3a8a; border-bottom:1px solid #ddd; padding-bottom:5px; margin-top:25px; margin-bottom:15px;">Risultati Analisi Microbiologiche</h3>
+                    ${sessionTests.filter(t => microResults.some(m => m.test_id === t.id)).map(t => {
+                        const microRow = microResults.find(m => m.test_id === t.id);
+                        let microContent = "";
+                        if (microRow.is_negative === 1 || microRow.is_negative === true) {
+                            microContent = `
+                                <div style="padding:12px; background:#f0fdf4; border:1px solid #bbf7d0; border-radius:6px; color:#15803d; font-weight:600;">
+                                    Esito: COLTURA NEGATIVA (Sviluppo batterico assente)
+                                </div>
+                            `;
+                        } else {
+                            let organismsHtml = "";
+                            try {
+                                const findings = JSON.parse(microRow.antibiotics_json || '[]');
+                                findings.forEach(org => {
+                                    let antiRows = "";
+                                    if (org.antibiotics && org.antibiotics.length > 0) {
+                                        antiRows = org.antibiotics.map(a => {
+                                            let badgeColor = "#16a34a";
+                                            if (a.susceptibility === 'I') badgeColor = "#ea580c";
+                                            else if (a.susceptibility === 'R') badgeColor = "#dc2626";
+                                            
+                                            return `
+                                                <tr style="font-size:0.85rem;">
+                                                    <td style="padding:6px; border-bottom:1px dashed #eee;">${a.name} <small style="color:#888;">[${a.code}]</small></td>
+                                                    <td style="padding:6px; border-bottom:1px dashed #eee; text-align:center;"><span style="display:inline-block; padding:2px 6px; border-radius:4px; color:white; background:${badgeColor}; font-weight:bold; font-size:0.75rem;">${a.susceptibility}</span></td>
+                                                    <td style="padding:6px; border-bottom:1px dashed #eee; text-align:center; font-family:monospace;">${a.mic || '-'}</td>
+                                                </tr>
+                                            `;
+                                        }).join('');
+                                    } else {
+                                        antiRows = `<tr><td colspan="3" style="text-align:center; color:#888; padding:8px;">Nessun antibiotico testato.</td></tr>`;
+                                    }
+
+                                    organismsHtml += `
+                                        <div style="margin-top:10px; border:1px solid #cbd5e1; border-radius:6px; overflow:hidden; background:#f8fafc;">
+                                            <div style="background:#e2e8f0; padding:8px 12px; font-weight:700; color:#1e293b;">
+                                                Germe Isolato: <span style="color:#ef4444; font-style:italic;">${org.organism_name}</span>
+                                            </div>
+                                            <table style="width:100%; border-collapse:collapse; margin:0;">
+                                                <thead>
+                                                    <tr style="background:#f1f5f9; font-size:0.8rem;">
+                                                        <th style="padding:6px; border-bottom:1px solid #ddd; text-align:left;">Antibiotico</th>
+                                                        <th style="padding:6px; border-bottom:1px solid #ddd; text-align:center; width:120px;">Sensibilità (S/I/R)</th>
+                                                        <th style="padding:6px; border-bottom:1px solid #ddd; text-align:center; width:100px;">Valore MIC</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    ${antiRows}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    `;
+                                });
+                                microContent = organismsHtml;
+                            } catch(e) {
+                                microContent = `<div style="color:red; padding:10px;">Errore parsing esiti microbiologia.</div>`;
+                            }
+                        }
+                        return `
+                            <div style="margin-bottom:20px; padding:15px; border:1px solid #e2e8f0; border-radius:8px; background:white;">
+                                <div style="font-weight:700; font-size:1rem; color:#1e3a8a; margin-bottom:8px; border-bottom:1px solid #e2e8f0; padding-bottom:4px;">
+                                    Esame: ${t.test_name}
+                                </div>
+                                ${microContent}
+                            </div>
+                        `;
+                    }).join('')}
+                `;
+            }
+
+            const printWindow = window.open('', '_blank', 'width=850,height=600');
+            printWindow.document.write(`
+                <html>
+                <head>
+                    <title>Referto Clinico - ${pat.last_name} ${pat.first_name}</title>
+                    <style>
+                        body { font-family: sans-serif; color: #333; margin: 30px; line-height:1.4; background:#fff; }
+                        .header-table { width:100%; border-bottom:2px solid #2563eb; padding-bottom:10px; margin-bottom:20px; }
+                        .pat-box { background:#f8fafc; border:1px solid #e2e8f0; padding:15px; border-radius:6px; display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:25px; }
+                        th { background:#f1f5f9; text-align:left; padding:10px; border-bottom:2px solid #cbd5e1; }
+                    </style>
+                </head>
+                <body onload="window.print()">
+                    <table class="header-table">
+                        <tr>
+                            <td>
+                                <h1 style="color:#2563eb; margin:0; font-size:1.5rem;">${CP_NAME}</h1>
+                                <p style="margin:2px 0 0 0; font-size:0.8rem; color:#666;">Laboratorio e Punto Prelievo Convenzionato - ${firstSample.report_notes || ''}</p>
+                            </td>
+                            <td style="text-align:right; font-size:0.8rem; color:#444;">
+                                <strong>Data Prelievo:</strong> ${collectedDate}<br>
+                                <strong>Sessione ID:</strong> ${sessionUid}<br>
+                                <strong>Stampa:</strong> ${printedDate}
+                            </td>
+                        </tr>
+                    </table>
+                    
+                    <div class="pat-box">
+                        <div><strong>Cognome e Nome:</strong> ${pat.last_name} ${pat.first_name}</div>
+                        <div><strong>Codice Fiscale:</strong> ${pat.tax_code}</div>
+                        <div><strong>Data di Nascita:</strong> ${pat.birth_date}</div>
+                        <div><strong>Genere:</strong> ${pat.gender}</div>
+                    </div>
+
+                    ${regularTableHtml}
+                    ${microCardsHtml}
+
+                    <div style="border-top:1px solid #ddd; padding-top:10px; font-size:0.85rem; color:#666; margin-top:40px;">
+                        <strong>Note Cliniche:</strong> ${rep.notes || 'Nessuna nota aggiuntiva.'}
+                    </div>
+                    
+                    <div style="text-align:right; margin-top:50px; font-size:0.9rem;">
+                        <strong>Firma del Medico Direttore</strong><br>
+                        <span style="font-family:cursive; font-size:1.2rem; color:#444;">Biologo Firmante</span>
+                    </div>
+                </body>
+                </html>
+            `);
+        }
+
+        function printLisBarcodeLabel(sampleId) {
+            const sample = allSamples.find(s => s.id === parseInt(sampleId));
+            if (!sample) return;
+            const patient = allPatients.find(p => p.id === sample.patient_id);
+            if (!patient) return;
+            const tests = allTests.filter(t => t.sample_id === sample.id);
+            const testNames = tests.map(t => t.test_name).join(', ');
+            
+            const patientName = `${patient.last_name.toUpperCase()} ${patient.first_name}`;
+            const patientBirth = new Date(patient.birth_date).toLocaleDateString('it-IT');
+            const collectDate = new Date(sample.collected_at || sample.created_at).toLocaleString('it-IT');
+            
+            const printWindow = window.open('', '_blank');
+            if (!printWindow) {
+                alert("Abilita i pop-up per procedere alla stampa delle etichette.");
+                return;
+            }
+            
+            printWindow.document.write(`
+                <html>
+                <head>
+                    <title>Stampa Etichette LIS - ${sample.barcode}</title>
+                    <style>
+                        @import url('https://fonts.googleapis.com/css2?family=Libre+Barcode+2of5+Interleaved&family=Inter:wght@400;700&display=swap');
+                        @page { size: 60mm 35mm; margin: 0; }
+                        body { margin: 0; padding: 0; background: #fff; font-family: 'Inter', sans-serif; }
+                        .label { width: 60mm; height: 35mm; box-sizing: border-box; padding: 3mm; display: flex; flex-direction: column; justify-content: space-between; }
+                        .patient { font-size: 9pt; font-weight: bold; text-transform: uppercase; }
+                        .birth { font-size: 7.5pt; color: #555; }
+                        .barcode-container { display: flex; flex-direction: column; align-items: center; }
+                        .barcode-font { font-family: 'Libre Barcode 2of5 Interleaved', sans-serif; font-size: 28pt; line-height: 1; }
+                        .barcode-text { font-size: 8pt; font-family: monospace; font-weight: bold; }
+                        .tests { font-size: 7.5pt; font-weight: bold; }
+                        .footer { font-size: 6.5pt; color: #888; display: flex; justify-content: space-between; }
+                    </style>
+                </head>
+                <body onload="window.print(); setTimeout(function(){ window.close(); }, 500);">
+                    <div class="label">
+                        <div>
+                            <div class="patient">${patientName}</div>
+                            <div class="birth">Nato il: ${patientBirth} (${patient.gender}) - CF: ${patient.tax_code}</div>
+                        </div>
+                        <div class="barcode-container">
+                            <div class="barcode-font">*${sample.barcode}*</div>
+                            <div class="barcode-text">${sample.barcode}</div>
+                        </div>
+                        <div>
+                            <div class="tests">Esami: ${testNames}</div>
+                            <div class="footer">
+                                <span>Punto: ${CP_NAME}</span>
+                                <span>Data: ${collectDate}</span>
+                            </div>
+                        </div>
+                    </div>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+        }
+
+        function printLisAcceptanceReceipt(sampleId) {
+            const sample = allSamples.find(s => s.id === parseInt(sampleId));
+            if (!sample) return;
+            const patient = allPatients.find(p => p.id === sample.patient_id);
+            if (!patient) return;
+            
+            let sessionSamples = [sample];
+            if (sample.session_uid) {
+                sessionSamples = allSamples.filter(s => s.session_uid === sample.session_uid);
+            }
+            
+            const patientName = `${patient.last_name.toUpperCase()} ${patient.first_name}`;
+            const patientBirth = new Date(patient.birth_date).toLocaleDateString('it-IT');
+            const patientTax = patient.tax_code;
+            const collectDate = new Date(sample.collected_at || sample.created_at).toLocaleString('it-IT');
+            const barcodesStr = sessionSamples.map(s => s.barcode).join(', ');
+            
+            let testRows = '';
+            let globalIdx = 1;
+            sessionSamples.forEach(s => {
+                const samTests = allTests.filter(t => t.sample_id === s.id);
+                samTests.forEach(t => {
+                    const srv = allServices.find(sv => sv.id === t.service_id);
+                    const code = srv ? srv.code || 'N/A' : 'N/A';
+                    testRows += `
+                        <tr>
+                            <td style="border-bottom: 1px solid #e2e8f0; padding: 8px;">${globalIdx++}</td>
+                            <td style="border-bottom: 1px solid #e2e8f0; padding: 8px;"><code>${code}</code></td>
+                            <td style="border-bottom: 1px solid #e2e8f0; padding: 8px;"><strong>${t.test_name}</strong></td>
+                            <td style="border-bottom: 1px solid #e2e8f0; padding: 8px;">${s.sample_type}</td>
+                            <td style="border-bottom: 1px solid #e2e8f0; padding: 8px; font-family: monospace; font-weight: bold;">${s.barcode}</td>
+                        </tr>
+                    `;
+                });
+            });
+            
+            const printWindow = window.open('', '_blank');
+            if (!printWindow) {
+                alert("Abilita i pop-up per stampare la ricevuta di accettazione.");
+                return;
+            }
+            
+            printWindow.document.write(`
+                <html>
+                <head>
+                    <title>Ricevuta Accettazione LIS - ${barcodesStr}</title>
+                    <style>
+                        body { font-family: sans-serif; padding: 40px; color: #1e293b; line-height: 1.5; }
+                        .header { border-bottom: 2px solid #2563eb; padding-bottom: 15px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
+                        .header h1 { color: #2563eb; margin: 0; font-size: 1.8rem; }
+                        .header p { margin: 5px 0 0 0; color: #64748b; font-size: 0.9rem; }
+                        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
+                        .info-box { background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 8px; }
+                        .info-box h3 { margin: 0 0 10px 0; color: #1e293b; font-size: 1rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 5px; }
+                        .info-row { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 5px; }
+                        .info-row span { color: #64748b; }
+                        .info-row strong { color: #1e293b; }
+                        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.9rem; }
+                        th { background-color: #f1f5f9; font-weight: 700; color: #475569; text-align: left; padding: 10px 8px; border-bottom: 2px solid #cbd5e1; }
+                        .footer { margin-top: 50px; border-top: 1px solid #e2e8f0; padding-top: 15px; font-size: 0.8rem; color: #94a3b8; text-align: center; }
+                    </style>
+                </head>
+                <body onload="window.print()">
+                    <div class="header">
+                        <div>
+                            <h1>NEXTCARE LAB</h1>
+                            <p>Accettazione e Prelievo presso: ${CP_NAME}</p>
+                        </div>
+                        <div style="text-align: right;">
+                            <div style="font-family: monospace; font-size: 1.05rem; font-weight: 700; letter-spacing: 1px;">${barcodesStr}</div>
+                            <div style="font-size: 0.8rem; color: #64748b;">ID Sessione: ${sample.session_uid || 'Legacy'}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid">
+                        <div class="info-box">
+                            <h3>Dettagli Paziente</h3>
+                            <div class="info-row"><span>Cognome e Nome:</span><strong>${patientName}</strong></div>
+                            <div class="info-row"><span>Codice Fiscale:</span><strong>${patientTax}</strong></div>
+                            <div class="info-row"><span>Data Nascita:</span><strong>${patientBirth}</strong></div>
+                        </div>
+                        <div class="info-box">
+                            <h3>Dettagli Accettazione</h3>
+                            <div class="info-row"><span>Data/Ora Prelievo:</span><strong>${collectDate}</strong></div>
+                            <div class="info-row"><span>Stato Campione:</span><strong>Accettato / Prelievo eseguito</strong></div>
+                            <div class="info-row"><span>Operatore:</span><strong>Infermiere Accettazione</strong></div>
+                        </div>
+                    </div>
+                    
+                    <h3 style="border-bottom: 1px solid #e2e8f0; padding-bottom: 5px; margin-bottom: 15px;">Elenco Analisi Richieste</h3>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width: 50px;">#</th>
+                                <th style="width: 120px;">Codice CUR</th>
+                                <th>Esame</th>
+                                <th>Tipo Contenitore</th>
+                                <th>Barcode Provetta</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${testRows}
+                        </tbody>
+                    </table>
+                    
+                    <div class="footer">
+                        NextCare App - Soluzioni Software per la Sanità. Pagina stampata il ${new Date().toLocaleString('it-IT')}.
+                    </div>
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+        }
+
+        function printInvoicePortal(invoiceId) {
+            let invoices = [];
+            apiCall('/api/db-get-all', { table: 'invoices' }, (res) => {
+                invoices = res.rows || [];
+                const inv = invoices.find(i => i.id === parseInt(invoiceId));
+                if (!inv) return;
+                
+                const patient = allPatients.find(p => p.id === inv.patient_id);
+                if (!patient) return;
+                
+                const sam = allSamples.find(s => s.id === inv.sample_id || (s.session_uid && s.session_uid === (allSamples.find(x => x.id === inv.sample_id) || {}).session_uid));
+                let sessionSamples = [sam];
+                if (sam && sam.session_uid) {
+                    sessionSamples = allSamples.filter(s => s.session_uid === sam.session_uid);
+                }
+                const sessionSampleIds = sessionSamples.map(s => s.id);
+                const samTests = allTests.filter(t => sessionSampleIds.includes(t.sample_id));
+                
+                let servicesListHtml = '';
+                let idx = 1;
+                samTests.forEach(t => {
+                    const srv = allServices.find(sv => sv.id === t.service_id);
+                    const price = 15.00;
+                    servicesListHtml += `
+                        <tr>
+                            <td style="padding:10px; border-bottom:1px solid #eee;">${idx++}</td>
+                            <td style="padding:10px; border-bottom:1px solid #eee;"><strong>${t.test_name}</strong> ${srv && srv.code ? `<small style="font-family:monospace; color:#888;">[${srv.code}]</small>` : ''}</td>
+                            <td style="padding:10px; border-bottom:1px solid #eee; text-align:right;">&euro; ${price.toFixed(2)}</td>
+                        </tr>
+                    `;
+                });
+                
+                if (inv.price_list_id === 4) {
+                    const diff = inv.subtotal - inv.amount_due;
+                    if (diff > 0) {
+                        servicesListHtml += `
+                            <tr style="color:var(--text-secondary); font-style:italic;">
+                                <td style="padding:10px; border-bottom:1px solid #eee;">-</td>
+                                <td style="padding:10px; border-bottom:1px solid #eee;">Quota a carico SSN (Convenzionamento / Abbattimento ticket)</td>
+                                <td style="padding:10px; border-bottom:1px solid #eee; text-align:right;">- &euro; ${diff.toFixed(2)}</td>
+                            </tr>
+                        `;
+                    }
+                }
+                
+                const printWindow = window.open('', '_blank');
+                if (!printWindow) {
+                    alert("Abilita i pop-up per stampare la fattura.");
+                    return;
+                }
+                
+                printWindow.document.write(`
+                    <html>
+                    <head>
+                        <title>Fattura - ${inv.invoice_number}</title>
+                        <style>
+                            body { font-family: sans-serif; padding: 45px; color: #1e293b; line-height: 1.5; }
+                            .header { border-bottom: 2px solid #2563eb; padding-bottom: 15px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
+                            .header h1 { color: #2563eb; margin: 0; font-size: 1.8rem; }
+                            .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; }
+                            .info-box { background: #f8fafc; border: 1px solid #e2e8f0; padding: 15px; border-radius: 8px; }
+                            .info-box h3 { margin: 0 0 10px 0; color: #1e293b; font-size: 1rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 5px; }
+                            .info-row { display: flex; justify-content: space-between; font-size: 0.85rem; margin-bottom: 5px; }
+                            .info-row span { color: #64748b; }
+                            .info-row strong { color: #1e293b; }
+                            table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.9rem; }
+                            th { background-color: #f1f5f9; font-weight: 700; color: #475569; text-align: left; padding: 10px 8px; border-bottom: 2px solid #cbd5e1; }
+                            .totals-box { margin-top: 30px; border-top: 2px solid #cbd5e1; padding-top: 15px; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+                            .total-row { display: flex; justify-content: space-between; width: 300px; font-size: 0.9rem; }
+                            .total-row.grand { font-size: 1.1rem; font-weight: bold; border-top: 1px solid #ddd; padding-top: 8px; margin-top: 5px; }
+                            .footer { margin-top: 60px; border-top: 1px solid #e2e8f0; padding-top: 15px; font-size: 0.8rem; color: #94a3b8; text-align: center; }
+                        </style>
+                    </head>
+                    <body onload="window.print()">
+                        <div class="header">
+                            <div>
+                                <h1>NEXTCARE SYSTEMS</h1>
+                                <p style="margin:5px 0 0 0; color:#64748b; font-size:0.9rem;">Fattura Prestazioni Sanitarie</p>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-size: 1.1rem; font-weight: bold; color: #2563eb;">${inv.invoice_number}</div>
+                                <div style="font-size: 0.85rem; color: #64748b;">Data di Emissione: ${new Date(inv.issue_date).toLocaleDateString('it-IT')}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid">
+                            <div class="info-box">
+                                <h3>Emittente</h3>
+                                <div class="info-row"><span>Struttura:</span><strong>${CP_NAME}</strong></div>
+                                <div class="info-row"><span>Punto Prelievo:</span><strong>${CP_CODE}</strong></div>
+                                <div class="info-row"><span>Sede Operativa:</span><strong>Ostia (RM)</strong></div>
+                            </div>
+                            <div class="info-box">
+                                <h3>Intestatario Fattura (Paziente)</h3>
+                                <div class="info-row"><span>Cognome e Nome:</span><strong>${patient.last_name.toUpperCase()} ${patient.first_name.toUpperCase()}</strong></div>
+                                <div class="info-row"><span>Codice Fiscale:</span><strong>${patient.tax_code}</strong></div>
+                                <div class="info-row"><span>Indirizzo:</span><strong>${patient.address || 'N/D'}</strong></div>
+                            </div>
+                        </div>
+                        
+                        <h3>Dettaglio Prestazioni Eseguite</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style="width: 50px;">#</th>
+                                    <th>Prestazione</th>
+                                    <th style="width: 150px; text-align:right;">Importo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${servicesListHtml}
+                            </tbody>
+                        </table>
+                        
+                        <div class="totals-box">
+                            <div class="total-row">
+                                <span>Subtotale Prestazioni:</span>
+                                <strong>&euro; ${inv.subtotal.toFixed(2)}</strong>
+                            </div>
+                            <div class="total-row">
+                                <span>Quota coperta SSN:</span>
+                                <strong>&euro; ${inv.insurance_covered_amount.toFixed(2)}</strong>
+                            </div>
+                            <div class="total-row grand">
+                                <span>Totale Dovuto:</span>
+                                <strong>&euro; ${inv.amount_due.toFixed(2)}</strong>
+                            </div>
+                            <div class="total-row" style="margin-top:10px; font-size:0.85rem; color:#666;">
+                                <span>Metodo di Pagamento:</span>
+                                <strong>${inv.payment_method}</strong>
+                            </div>
+                            <div class="total-row" style="font-size:0.85rem; color:#666;">
+                                <span>Stato Pagamento:</span>
+                                <strong style="color: ${inv.payment_status === 'paid' ? 'green' : 'orange'}">${inv.payment_status === 'paid' ? 'Saldato' : 'Da Saldare'}</strong>
+                            </div>
+                        </div>
+                        
+                        <div class="footer">
+                            Fattura esente IVA ai sensi dell'Art. 10 comma 1 n. 18 del D.P.R. 633/72 e ss.mm.<br>
+                            NextCare Systems. Pagina stampata il ${new Date().toLocaleString('it-IT')}.
+                        </div>
+                    </body>
+                    </html>
+                `);
+                printWindow.document.close();
+            });
+        }
+
+        function printInvoicePortalForSample(sampleId) {
+            const sample = allSamples.find(s => s.id === parseInt(sampleId));
+            if (!sample) return;
+            apiCall('/api/db-get-all', { table: 'invoices' }, (res) => {
+                const invoices = res.rows || [];
+                let matched = invoices.find(i => i.sample_id === sample.id);
+                if (!matched && sample.session_uid) {
+                    const sessionSampleIds = allSamples.filter(s => s.session_uid === sample.session_uid).map(s => s.id);
+                    matched = invoices.find(i => sessionSampleIds.includes(i.sample_id));
+                }
+                if (matched) {
+                    printInvoicePortal(matched.id);
+                } else {
+                    alert("Fattura non trovata per questa accettazione.");
+                }
+            });
+        }
+
+        function getNextCreditNoteNumberPortal() {
+            let nextNum = localStorage.getItem('nextcare_next_credit_note_num_portal') || '1001';
+            let num = parseInt(nextNum);
+            const currentYear = new Date().getFullYear();
+            const ndcNum = `NDC-${CP_CODE}-${currentYear}-${String(num).padStart(4, '0')}`;
+            localStorage.setItem('nextcare_next_credit_note_num_portal', num + 1);
+            return ndcNum;
+        }
+
+        function updateGroupStatus(sessionKey, status) {
+            if (!status) return;
+            
+            let sessionSamples = [];
+            if (sessionKey.startsWith('LEGACY-')) {
+                const parts = sessionKey.split('-');
+                const patId = parseInt(parts[1]);
+                const dateStr = parts.slice(2).join('-');
+                sessionSamples = allSamples.filter(sam => {
+                    if (sam.session_uid) return false;
+                    const samDateStr = (sam.collected_at || sam.created_at || '').substring(0, 13);
+                    return sam.patient_id === patId && samDateStr === dateStr && sam.collection_point_id === CP_ID;
+                });
+            } else {
+                sessionSamples = allSamples.filter(sam => sam.session_uid === sessionKey && sam.collection_point_id === CP_ID);
+            }
+
+            if (sessionSamples.length === 0) return;
+
+            sessionSamples.forEach(sam => {
+                sam.status = status;
+                sam.collected_at = new Date().toISOString();
+            });
+
+            apiCall('/api/portal-upsert-records', { table_name: 'lab_samples', rows: allSamples }, (res) => {
+                alert("Stato dell'accettazione aggiornato con successo!");
+                loadData();
+            });
+        }
+
+        function renderGestioneAccettazioni() {
+            const tbody = document.getElementById('mgt-acceptances-tbody');
+            if (!tbody) return;
+
+            const searchVal = document.getElementById('filter-mgt-search').value.toLowerCase().trim();
+            const dateVal = document.getElementById('filter-mgt-date').value;
+            const statusVal = document.getElementById('filter-mgt-status').value;
+
+            const groups = {};
+            allSamples.forEach(s => {
+                if (s.collection_point_id !== CP_ID) return;
+                const key = s.session_uid || ('LEGACY-' + s.patient_id + '-' + (s.collected_at || s.created_at || '').substring(0, 13));
+                if (!groups[key]) {
+                    groups[key] = {
+                        session_key: key,
+                        patient_id: s.patient_id,
+                        collected_at: s.collected_at || s.created_at,
+                        samples: []
+                    };
+                }
+                groups[key].samples.push(s);
+            });
+
+            const groupList = Object.values(groups);
+            groupList.sort((a, b) => new Date(b.collected_at) - new Date(a.collected_at));
+
+            let htmlRows = '';
+            let matchedCount = 0;
+
+            groupList.forEach(g => {
+                const patient = allPatients.find(p => p.id === g.patient_id) || {};
+                const patientName = `${patient.last_name || ''} ${patient.first_name || ''}`.toLowerCase();
+                const patientCf = (patient.tax_code || '').toLowerCase();
+                const sessionDate = g.collected_at ? g.collected_at.split(' ')[0].split('T')[0] : '';
+
+                if (searchVal) {
+                    const matchesPatient = patientName.includes(searchVal) || patientCf.includes(searchVal);
+                    const matchesBarcode = g.samples.some(s => s.barcode.toLowerCase().includes(searchVal));
+                    if (!matchesPatient && !matchesBarcode) return;
+                }
+
+                if (dateVal && sessionDate !== dateVal) return;
+
+                if (statusVal !== 'all') {
+                    const matchesStatus = g.samples.some(s => s.status === statusVal);
+                    if (!matchesStatus) return;
+                }
+
+                matchedCount++;
+
+                const tubesHtml = g.samples.map(s => {
+                    const STATUS_LABELS = {
+                        'collected': 'Prelevato',
+                        'non_prelevato': 'Non Prelevato',
+                        'non_pervenuto': 'Non Pervenuto',
+                        'received': 'Arrivato in Lab',
+                        'processing': 'In Lavorazione',
+                        'to_validate': 'Da Convalidare',
+                        'validated': 'Convalidato',
+                        'completed': 'Referto Rilasciato',
+                        'pending': 'In Attesa'
+                    };
+                    let badgeClass = 'badge-info';
+                    if (s.status === 'non_prelevato') badgeClass = 'badge-danger';
+                    else if (s.status === 'non_pervenuto') badgeClass = 'badge-warning';
+                    const statusLabel = STATUS_LABELS[s.status] || s.status;
+                    return `
+                        <div style="margin-bottom: 4px;">
+                            <code style="font-weight:bold; font-size:0.85rem;">${s.barcode}</code> 
+                            <span style="font-size:0.8rem; color:#666;">(${s.sample_type})</span> 
+                            <span class="badge ${badgeClass}">${statusLabel}</span>
+                        </div>
+                    `;
+                }).join('');
+
+                const sessionSampleIds = g.samples.map(s => s.id);
+                const groupTests = allTests.filter(t => sessionSampleIds.includes(t.sample_id));
+                const testNames = groupTests.map(t => t.test_name).join(', ') || 'Nessuno';
+
+                const firstSampleId = g.samples[0].id;
+                
+                const statuses = g.samples.map(s => s.status);
+                let overallStatus = 'collected';
+                if (statuses.every(st => st === 'non_prelevato')) overallStatus = 'non_prelevato';
+                else if (statuses.every(st => st === 'non_pervenuto')) overallStatus = 'non_pervenuto';
+                else if (statuses.includes('collected')) overallStatus = 'collected';
+
+                htmlRows += `
+                    <tr>
+                        <td>${new Date(g.collected_at).toLocaleString('it-IT')}</td>
+                        <td><strong>${patient.last_name || ''} ${patient.first_name || ''}</strong><br><small>${patient.tax_code || ''}</small></td>
+                        <td>${tubesHtml}</td>
+                        <td><small style="color:#444;">${testNames}</small></td>
+                        <td>
+                            <select class="form-control" style="width:140px; font-size:0.8rem; padding:4px;" onchange="updateGroupStatus('${g.session_key}', this.value)">
+                                <option value="collected" ${overallStatus === 'collected' ? 'selected' : ''}>Prelevato</option>
+                                <option value="non_prelevato" ${overallStatus === 'non_prelevato' ? 'selected' : ''}>Non Prelevato</option>
+                                <option value="non_pervenuto" ${overallStatus === 'non_pervenuto' ? 'selected' : ''}>Non Pervenuto</option>
+                            </select>
+                        </td>
+                        <td style="text-align:right;">
+                            <div style="display:flex; justify-content:flex-end; gap:6px;">
+                                <button class="btn btn-primary btn-sm" onclick="openEditLisAcceptanceModalPortal('${g.session_key}')" title="Modifica Esami">
+                                    <i data-lucide="edit" style="width:12px; height:12px; vertical-align: middle; margin-right: 4px;"></i> Modifica
+                                </button>
+                                <button class="btn btn-secondary btn-sm" onclick="printLisBarcodeLabel(${firstSampleId})" title="Ristampa Etichette">
+                                    <i data-lucide="barcode" style="width:12px; height:12px; vertical-align: middle; margin-right: 4px;"></i>
+                                </button>
+                                <button class="btn btn-secondary btn-sm" onclick="printLisAcceptanceReceipt(${firstSampleId})" title="Ristampa Ricevuta LIS">
+                                    <i data-lucide="file-text" style="width:12px; height:12px; vertical-align: middle; margin-right: 4px;"></i>
+                                </button>
+                                <button class="btn btn-secondary btn-sm" onclick="printInvoicePortalForSample(${firstSampleId})" title="Ristampa Fattura">
+                                    <i data-lucide="printer" style="width:12px; height:12px; vertical-align: middle; margin-right: 4px;"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            if (matchedCount === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; color:#888; padding:20px;">Nessuna accettazione trovata.</td></tr>';
+            } else {
+                tbody.innerHTML = htmlRows;
+            }
+            
+            if (window.lucide) window.lucide.createIcons();
+        }
+
+        function openEditLisAcceptanceModalPortal(sessionKey) {
+            window.currentEditingSessionKey = sessionKey;
+            
+            let sessionSamples = [];
+            if (sessionKey.startsWith('LEGACY-')) {
+                const parts = sessionKey.split('-');
+                const patId = parseInt(parts[1]);
+                const dateStr = parts.slice(2).join('-');
+                sessionSamples = allSamples.filter(sam => {
+                    if (sam.session_uid) return false;
+                    const samDateStr = (sam.collected_at || sam.created_at || '').substring(0, 13);
+                    return sam.patient_id === patId && samDateStr === dateStr && sam.collection_point_id === CP_ID;
+                });
+            } else {
+                sessionSamples = allSamples.filter(sam => sam.session_uid === sessionKey && sam.collection_point_id === CP_ID);
+            }
+
+            if (sessionSamples.length === 0) return;
+
+            const patient = allPatients.find(p => p.id === sessionSamples[0].patient_id);
+            const pName = patient ? `${patient.last_name.toUpperCase()} ${patient.first_name}` : 'Sconosciuto';
+            const pBirth = patient ? new Date(patient.birth_date).toLocaleDateString('it-IT') : '';
+            
+            document.getElementById('mgt-edit-patient-name').innerText = `${pName} (nato il ${pBirth})`;
+            document.getElementById('mgt-edit-session-uid').innerText = sessionSamples[0].session_uid || 'N/A (Legacy)';
+
+            const sessionSampleIds = sessionSamples.map(s => s.id);
+            window.editingAcceptanceActiveTests = allTests.filter(t => sessionSampleIds.includes(t.sample_id)).map(t => ({...t}));
+            window.editingAcceptanceOriginalTestIds = window.editingAcceptanceActiveTests.map(t => t.id);
+            window.editingAcceptanceRemovedTests = [];
+            window.editingAcceptanceAddedSamples = [];
+            
+            document.getElementById('mgt-edit-search-service').value = '';
+            document.getElementById('mgt-edit-search-results').style.display = 'none';
+
+            setupEditServiceSearch(sessionSamples[0].patient_id, sessionSamples);
+
+            renderEditAcceptanceTestsTable();
+            openModal('modal-edit-lis-acceptance-portal');
+        }
+
+        function setupEditServiceSearch(patientId, sessionSamples) {
+            const input = document.getElementById('mgt-edit-search-service');
+            const results = document.getElementById('mgt-edit-search-results');
+
+            input.oninput = () => {
+                const val = input.value.toLowerCase().trim();
+                if (!val) {
+                    results.style.display = 'none';
+                    return;
+                }
+                const filtered = allServices.filter(s => s.name.toLowerCase().includes(val) || (s.code && s.code.toLowerCase().includes(val)));
+                if (filtered.length === 0) {
+                    results.innerHTML = '<div style="padding:10px; color:#888; font-size:0.85rem;">Nessun esame trovato.</div>';
+                } else {
+                    results.innerHTML = filtered.slice(0, 10).map(s => `
+                        <div class="suggestion-item" onclick="addTestToEditAcceptance(${s.id}, '${s.name}', '${s.code || ''}', '${s.sample_type || 'Siero'}')">
+                            <strong>${s.name}</strong> ${s.code ? `<small style="color:var(--primary); font-family:monospace;">[${s.code}]</small>` : ''}
+                        </div>
+                    `).join('');
+                }
+                results.style.display = 'block';
+            };
+
+            input.onkeydown = (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const val = input.value.toLowerCase().trim();
+                    if (!val) return;
+                    const filtered = allServices.filter(s => s.name.toLowerCase().includes(val) || (s.code && s.code.toLowerCase().includes(val)));
+                    if (filtered.length > 0) {
+                        const s = filtered[0];
+                        addTestToEditAcceptance(s.id, s.name, s.code || '', s.sample_type || 'Siero');
+                    }
+                }
+            };
+        }
+
+        function addTestToEditAcceptance(serviceId, testName, code, sampleType) {
+            if (window.editingAcceptanceActiveTests.some(t => t.service_id === serviceId)) {
+                alert("Questo esame è già presente nell'accettazione!");
+                return;
+            }
+
+            const newTestId = window.editingAcceptanceActiveTests.length > 0 ? Math.max(...window.editingAcceptanceActiveTests.map(t => t.id), ...allTests.map(t => t.id)) + 1 : 1;
+            
+            let sessionSamples = [];
+            const sessionKey = window.currentEditingSessionKey;
+            if (sessionKey.startsWith('LEGACY-')) {
+                const parts = sessionKey.split('-');
+                const patId = parseInt(parts[1]);
+                const dateStr = parts.slice(2).join('-');
+                sessionSamples = allSamples.filter(sam => {
+                    if (sam.session_uid) return false;
+                    const samDateStr = (sam.collected_at || sam.created_at || '').substring(0, 13);
+                    return sam.patient_id === patId && samDateStr === dateStr && sam.collection_point_id === CP_ID;
+                });
+            } else {
+                sessionSamples = allSamples.filter(sam => sam.session_uid === sessionKey && sam.collection_point_id === CP_ID);
+            }
+
+            let matchedSample = sessionSamples.find(s => s.sample_type.toLowerCase() === sampleType.toLowerCase() && s.status !== 'suspended');
+            let sampleId;
+            if (matchedSample) {
+                sampleId = matchedSample.id;
+            } else {
+                const newSampleId = allSamples.length > 0 ? Math.max(...allSamples.map(s => s.id)) + 1 : 1;
+                const suffix = getTubeSuffix(sampleType);
+                const newBarcode = getNextBarcodePortal(suffix);
+                const sessionUid = sessionSamples[0].session_uid || 'CP-ACC-' + Date.now().toString().slice(-6);
+                
+                const newSampleObj = {
+                    id: newSampleId,
+                    patient_id: sessionSamples[0].patient_id,
+                    barcode: newBarcode,
+                    sample_type: sampleType,
+                    status: 'collected',
+                    session_uid: sessionUid,
+                    collected_at: sessionSamples[0].collected_at || new Date().toISOString(),
+                    collected_by: 5,
+                    report_notes: 'Aggiunto provetta in modifica accettazione',
+                    requesting_doctor: 'Dott. Extern',
+                    collection_point_id: CP_ID,
+                    ddt_id: null
+                };
+                
+                allSamples.push(newSampleObj);
+                window.editingAcceptanceAddedSamples = window.editingAcceptanceAddedSamples || [];
+                window.editingAcceptanceAddedSamples.push(newSampleObj);
+                
+                sampleId = newSampleId;
+                sessionSamples.push(newSampleObj);
+            }
+
+            const newTestObj = {
+                id: newTestId,
+                sample_id: sampleId,
+                service_id: serviceId,
+                test_name: testName,
+                result_value: null,
+                reference_range: 'Negativo / Sterile',
+                unit: '',
+                status: 'pending',
+                verified_by: null,
+                verified_at: null,
+                is_new: true
+            };
+
+            window.editingAcceptanceActiveTests.push(newTestObj);
+            
+            const input = document.getElementById('mgt-edit-search-service');
+            input.value = '';
+            document.getElementById('mgt-edit-search-results').style.display = 'none';
+            renderEditAcceptanceTestsTable();
+            input.focus();
+        }
+
+        function removeTestFromEditAcceptance(testId) {
+            const idx = window.editingAcceptanceActiveTests.findIndex(t => t.id === testId);
+            if (idx === -1) return;
+            
+            const removed = window.editingAcceptanceActiveTests.splice(idx, 1)[0];
+            if (!removed.is_new) {
+                window.editingAcceptanceRemovedTests.push(removed);
+            }
+            renderEditAcceptanceTestsTable();
+        }
+
+        function renderEditAcceptanceTestsTable() {
+            const tbody = document.getElementById('mgt-edit-tests-tbody');
+            if (window.editingAcceptanceActiveTests.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#888; padding:15px;">Nessun esame presente. Aggiungine uno sopra.</td></tr>';
+                return;
+            }
+            tbody.innerHTML = window.editingAcceptanceActiveTests.map(t => {
+                const sam = allSamples.find(s => s.id === t.sample_id) || {};
+                const srv = allServices.find(sv => sv.id === t.service_id) || {};
+                const code = srv.code || 'N/A';
+                return `
+                    <tr>
+                        <td><code>${code}</code></td>
+                        <td><strong>${t.test_name}</strong></td>
+                        <td><span class="badge badge-info">${sam.sample_type || 'N/D'}</span> <code style="font-weight:bold;">${sam.barcode || ''}</code></td>
+                        <td><span class="badge badge-warning">${t.status}</span></td>
+                        <td style="text-align:right;">
+                            <button class="btn btn-secondary btn-sm" style="color:var(--danger); border-color:var(--danger);" onclick="removeTestFromEditAcceptance(${t.id})" title="Rimuovi Esame">
+                                &times; Rimuovi
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function salvaModificheAccettazione() {
+            if (window.editingAcceptanceActiveTests.length === 0) {
+                alert("L'accettazione deve contenere almeno un esame!");
+                return;
+            }
+
+            apiCall('/api/db-get-all', { table: 'invoices' }, (invRes) => {
+                const invoices = invRes.rows || [];
+                
+                let sessionSamples = [];
+                const sessionKey = window.currentEditingSessionKey;
+                if (sessionKey.startsWith('LEGACY-')) {
+                    const parts = sessionKey.split('-');
+                    const patId = parseInt(parts[1]);
+                    const dateStr = parts.slice(2).join('-');
+                    sessionSamples = allSamples.filter(sam => {
+                        if (sam.session_uid) return false;
+                        const samDateStr = (sam.collected_at || sam.created_at || '').substring(0, 13);
+                        return sam.patient_id === patId && samDateStr === dateStr && sam.collection_point_id === CP_ID;
+                    });
+                } else {
+                    sessionSamples = allSamples.filter(sam => sam.session_uid === sessionKey && sam.collection_point_id === CP_ID);
+                }
+                
+                const sessionSampleIds = sessionSamples.map(s => s.id);
+                const parentInvoice = invoices.find(inv => sessionSampleIds.includes(inv.sample_id));
+                
+                let priceListId = parentInvoice ? parentInvoice.price_list_id : 1;
+                
+                let oldSubtotal = window.editingAcceptanceOriginalTestIds.length * 15.00;
+                let newSubtotal = window.editingAcceptanceActiveTests.length * 15.00;
+                
+                let oldDue = oldSubtotal;
+                if (priceListId === 4) oldDue = Math.min(36.15, oldSubtotal);
+                
+                let newDue = newSubtotal;
+                if (priceListId === 4) newDue = Math.min(36.15, newSubtotal);
+                
+                let diff = newDue - oldDue;
+                
+                const removedIds = window.editingAcceptanceRemovedTests.map(t => t.id);
+                allTests = allTests.filter(t => !removedIds.includes(t.id));
+                
+                const addedTests = window.editingAcceptanceActiveTests.filter(t => t.is_new);
+                addedTests.forEach(t => {
+                    delete t.is_new;
+                    allTests.push(t);
+                });
+                
+                const activeSampleIds = [...new Set(window.editingAcceptanceActiveTests.map(t => t.sample_id))];
+                allSamples.forEach(sam => {
+                    if (sessionSampleIds.includes(sam.id) && !activeSampleIds.includes(sam.id)) {
+                        sam.status = 'suspended';
+                    }
+                });
+                
+                if (parentInvoice) {
+                    if (parentInvoice.payment_status !== 'paid') {
+                        const invObj = invoices.find(i => i.id === parentInvoice.id);
+                        if (invObj) {
+                            invObj.subtotal = newSubtotal;
+                            invObj.amount_due = newDue;
+                            invObj.insurance_covered_amount = priceListId === 4 ? (newSubtotal - newDue) : 0;
+                        }
+                    } else {
+                        if (diff > 0) {
+                            const nextNum = parentInvoice.invoice_number + "-INTEG";
+                            const newInvId = invoices.length > 0 ? Math.max(...invoices.map(i => i.id)) + 1 : 1;
+                            const newInv = {
+                                id: newInvId,
+                                admission_id: null,
+                                appointment_id: null,
+                                sample_id: parentInvoice.sample_id,
+                                study_id: null,
+                                invoice_number: nextNum,
+                                issue_date: new Date().toISOString().split('T')[0],
+                                subtotal: newSubtotal - oldSubtotal,
+                                discount_value: 0,
+                                discount_type: 'flat',
+                                discount_amount: 0,
+                                price_list_id: priceListId,
+                                claim_id: null,
+                                insurance_covered_amount: priceListId === 4 ? ((newSubtotal - oldSubtotal) - diff) : 0,
+                                stamp_duty: 0,
+                                amount_due: diff,
+                                amount_paid: 0.0,
+                                payment_status: 'unpaid',
+                                payment_method: null,
+                                paid_at: null,
+                                patient_id: parentInvoice.patient_id,
+                                collection_point_id: CP_ID
+                            };
+                            invoices.push(newInv);
+                        } else if (diff < 0) {
+                            const ndcNum = getNextCreditNoteNumberPortal();
+                            const absDiff = Math.abs(diff);
+                            
+                            const stornatiServices = [];
+                            window.editingAcceptanceRemovedTests.forEach(t => {
+                                stornatiServices.push({
+                                    id: t.service_id,
+                                    name: t.test_name,
+                                    price: 15.00,
+                                    type: 'lis'
+                                });
+                            });
+                            
+                            const newInvId = invoices.length > 0 ? Math.max(...invoices.map(i => i.id)) + 1 : 1;
+                            const newInv = {
+                                id: newInvId,
+                                admission_id: null,
+                                appointment_id: null,
+                                sample_id: parentInvoice.sample_id,
+                                study_id: null,
+                                invoice_number: ndcNum,
+                                issue_date: new Date().toISOString().split('T')[0],
+                                subtotal: -Math.abs(newSubtotal - oldSubtotal),
+                                discount_value: 0,
+                                discount_type: 'flat',
+                                discount_amount: 0,
+                                price_list_id: priceListId,
+                                claim_id: null,
+                                stamp_duty: 0.00,
+                                amount_due: -absDiff,
+                                amount_paid: -absDiff,
+                                payment_status: 'paid',
+                                payment_method: 'Contanti',
+                                paid_at: new Date().toISOString().split('T')[0],
+                                is_insurance_invoice: false,
+                                is_credit_note: 1,
+                                custom_rates: JSON.stringify({
+                                    stornati_services: stornatiServices
+                                }),
+                                patient_id: parentInvoice.patient_id,
+                                collection_point_id: CP_ID
+                            };
+                            invoices.push(newInv);
+                        }
+                    }
+                }
+                
+                apiCall('/api/portal-upsert-records', { table_name: 'lab_samples', rows: allSamples }, (sRes) => {
+                    apiCall('/api/portal-upsert-records', { table_name: 'lab_tests', rows: allTests }, (tRes) => {
+                        apiCall('/api/portal-upsert-records', { table_name: 'invoices', rows: invoices }, (iRes) => {
+                            alert("Accettazione LIS modificata con successo!");
+                            closeModal('modal-edit-lis-acceptance-portal');
+                            loadData();
+                        });
+                    });
+                });
+            });
+        }
+
+            function printLisBarcodeLabelFromPrompt() {
+            const sampleId = parseInt(document.getElementById('print-prompt-sample-id').value);
+            if (sampleId) printLisBarcodeLabel(sampleId);
+        }
+
+        function printLisAcceptanceReceiptFromPrompt() {
+            const sampleId = parseInt(document.getElementById('print-prompt-sample-id').value);
+            if (sampleId) printLisAcceptanceReceipt(sampleId);
+        }
+
+        function printLisConsentFromPrompt() {
+            const sampleId = parseInt(document.getElementById('print-prompt-sample-id').value);
+            if (!sampleId) return;
+            const sample = allSamples.find(s => s.id === sampleId);
+            if (!sample) return;
+            const patient = allPatients.find(p => p.id === sample.patient_id);
+            if (!patient) return;
+            
+            const sampleTests = allTests.filter(t => t.sample_id === sampleId);
+            const serviceIds = sampleTests.map(t => t.service_id);
+            
+            stampaPrivacyGdpr(patient);
+            stampaConsensiLisObbligatori(patient, serviceIds);
+        }
+
+        function printInvoicePortalFromPrompt() {
+            const invoiceId = parseInt(document.getElementById('print-prompt-invoice-id').value);
+            if (invoiceId) printInvoicePortal(invoiceId);
+        }
+</script>
+</body>
+</html>

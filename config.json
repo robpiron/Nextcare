@@ -1,0 +1,9 @@
+{
+    "db_host": "localhost",
+    "db_port": 3306,
+    "db_user": "root",
+    "db_pass": "RobLeti2024",
+    "db_name": "nextcare_db",
+    "lis_export_path": "C:\\NextCare_LIS_Exchange\\export",
+    "lis_import_path": "C:\\NextCare_LIS_Exchange\\import"
+}

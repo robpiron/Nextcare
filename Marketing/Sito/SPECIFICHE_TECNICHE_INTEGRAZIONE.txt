@@ -1,0 +1,1048 @@
+================================================================================
+  NEXTCARE — SPECIFICHE TECNICHE DI INTEGRAZIONE
+  Documento per il Team di Sviluppo
+  Versione 1.0 — Giugno 2026
+  Confidenziale — Uso Interno
+================================================================================
+
+INDICE
+------
+  1. ARCHITETTURA ENTERPRISE — MULTI-TENANT & MULTI-SEDE
+  2. ERP & CICLO ATTIVO — INTEGRAZIONI BIDIREZIONALI
+  3. STANDARD SANITARI — HL7 / FHIR / ASTM / DICOM
+  4. ANALIZZATORI LIS — CONNESSIONI BIDIREZIONALI
+  5. IMAGING DICOM & PACS
+  6. ECOGRAFI & IMAGING DIAGNOSTICO
+  7. FONDI SANITARI & ASSICURAZIONI
+  8. PORTALI WEB — PAZIENTI, MMG, AZIENDE
+  9. RBAC — RUOLI E PERMESSI
+ 10. BUSINESS INTELLIGENCE DI GRUPPO
+ 11. DEPLOY — SAAS / ON-PREMISE / HYBRID
+ 12. FATTURAZIONE ELETTRONICA SDI
+ 13. SPID — IDENTITÀ DIGITALE
+ 14. STAMPA BARCODE & ETICHETTE
+ 15. RIFERIMENTI DOCUMENTAZIONE UFFICIALE
+
+
+================================================================================
+  1. ARCHITETTURA ENTERPRISE — MULTI-TENANT & MULTI-SEDE
+================================================================================
+
+MODELLO A 3 LIVELLI
+-------------------
+Il sistema deve implementare una topologia gerarchica a 3 livelli:
+
+  LIVELLO 0 — GRUPPO (Console centrale)
+  ├── Dashboard consolidata inter-sede
+  ├── Configurazione globale (nomenclatore, listini master, medici)
+  ├── Reportistica aggregata su tutte le sedi
+  ├── Fatturazione centralizzata e prima nota di gruppo
+  └── Gestione utenti globale + propagazione regole ai livelli inferiori
+
+  LIVELLO 1 — SEDI OPERATIVE
+  ├── Ogni sede ha: agenda, medici, analizzatori, PACS, CUP, contabilità locale
+  ├── Dati clinici isolati per sede (GDPR)
+  ├── KPI e reportistica fluiscono verso il Livello 0
+  └── Configurazioni locali sovrascrivono selettivamente quelle globali
+
+  LIVELLO 2 — PUNTI PRELIEVO SATELLITE
+  ├── Stazioni leggere browser-based (tablet + stampante barcode)
+  ├── Accettazione campioni, stampa etichette, CUP locale
+  ├── Campioni tracciati fino all'analizzatore del laboratorio principale
+  └── Attivazione nuovo punto: < 15 minuti, zero IT on-site
+
+
+MULTI-TENANT
+------------
+  - Ogni tenant (cliente) ha DATABASE FISICAMENTE SEPARATO (schema isolation o
+    DB separato in modalità high-security)
+  - Nessuna query cross-tenant possibile a livello architetturale
+  - Il provider gestisce un template base; ogni tenant sovrascrive localmente
+  - Aggiornamenti: deploy rolling, zero downtime, tutti i tenant aggiornati
+    simultaneamente
+  - Nomenclatore 2025: distribuzione automatica a tutti i tenant alla data di
+    entrata in vigore
+  - Console reseller: visibilità su tutti i tenant, sconti volume progressivi
+
+MULTI-SEDE (dentro lo stesso tenant)
+-------------------------------------
+  - Medici itineranti: agenda unificata con anti-double-booking inter-sede
+  - Listini differenziati per sede (privato / SSN / fondi / aziendale)
+  - Report consolidato con KPI comparativi drill-down per sede
+  - LIS inter-sede: campione prelevato in Sede B → analizzato in Sede A
+    con tracciabilità completa del percorso
+
+PUNTI PRELIEVO SATELLITE — REQUISITI TECNICI
+----------------------------------------------
+  - Interfaccia: browser-based, responsive touch (tablet iOS/Android/Windows)
+  - Stampa etichette: Zebra ZPL/EPL, Brother, Dymo (TCP raw porta 9100)
+  - Barcode campione: code128 (o GS1-128), attributi univoci:
+      paziente + data + esame + sede prelievo + operatore
+  - 7 stati campione:
+      prelievo → trasporto → ricevimento lab → analisi
+      → refertazione → firma → consegna
+  - Aggiornamento stato via scansione barcode
+  - Alert automatici per campione non conforme (emolizzato, insufficiente)
+  - CUP integrato: prenotazione diretta su agenda sede principale
+
+
+================================================================================
+  2. ERP & CICLO ATTIVO — INTEGRAZIONI BIDIREZIONALI
+================================================================================
+
+MODALITÀ DI FUNZIONAMENTO
+--------------------------
+  NextCare può operare in due modalità:
+  a) AUTONOMA: contabilità e fatturazione nativi NextCare con invio SDI
+  b) SATELLITE: NextCare invia movimenti all'ERP esterno via API o file
+
+DATI SCAMBIATI (comuni a tutti gli ERP)
+-----------------------------------------
+  → Fatture clienti (B2B, B2C, PA)
+  → Note di credito
+  → Corrispettivi giornalieri
+  → Prima nota / movimenti contabili
+  → Anagrafiche clienti (sincronizzazione bidirezionale)
+  → Scadenziari e solleciti
+  → Pagamenti incassati (da cassa NextCare verso ERP)
+
+
+------------------------------------------------------------------------
+  2.1 ARCA EVOLUTION / ARCA.NET (Wolters Kluwer)
+------------------------------------------------------------------------
+  Protocollo:    REST over HTTPS + JSON
+                 File di scambio legacy: CSV, XML, Excel
+  Autenticazione: API Key (configurare in Moduli WEB → Anagrafiche Operatori)
+  Modulo richiesto: "Arca Evolution Connect" (deve essere attivo in licenza)
+  Dati:          Prima nota, fatture clienti, anagrafiche, corrispettivi
+  Note:          Documentazione riservata a partner certificati Wolters Kluwer.
+                 Richiedere accesso tramite rivenditore ufficiale.
+  URL provider:  https://www.wolterskluwer.com/it-it (area partner)
+
+
+------------------------------------------------------------------------
+  2.2 ZUCCHETTI AD HOC / INFINITY
+------------------------------------------------------------------------
+  Protocollo:    REST/HTTPS — Infinity Application Framework
+  Formato:       JSON
+  Autenticazione: Credenziali applicative su progetto (portale MyZucchetti)
+  Modulo:        Digital Hub (fatturazione elettronica)
+                 API REST esposte via Infinity Application Framework
+  Dati:          Fatturazione, ciclo attivo, pagamenti, scadenziario,
+                 prima nota automatica
+  Note:          Documentazione NON pubblica. Accesso riservato a partner
+                 certificati Zucchetti. Ogni implementazione richiede accordo
+                 con il referente Zucchetti.
+  URL:           https://help.zucchetti.it (API pubbliche Servizi-IT)
+                 Portale clienti: MyZucchetti
+
+
+------------------------------------------------------------------------
+  2.3 TEAMSYSTEM ENTERPRISE / ALYANTE
+------------------------------------------------------------------------
+  Protocollo:    REST/HTTPS (WebAPI)
+  Formato:       JSON
+  Autenticazione: Web API Key
+                 Generazione in: SETUP → UTENTI → UTENTE
+                 Endpoint esempio: http://alyantenext.teamsystem.com:9080
+  Dati:          Movimenti contabili, clienti, fatture, note di credito,
+                 corrispettivi giornalieri
+  Note:          Docs tecniche solo nel portale MySupport (riservato).
+                 Abilitazione via: Strumenti di Collaborazione → config. WEB.
+                 Supportato da versione Alyante 8 in poi.
+  URL:           https://supporto.teamsystem.com (portale MySupport)
+
+
+------------------------------------------------------------------------
+  2.4 SAP BUSINESS ONE — SERVICE LAYER
+------------------------------------------------------------------------
+  Protocollo:    OData v4 → path: /b1s/v2/
+                 OData v3 legacy → path: /b1s/v1/
+  Formato:       JSON
+  Porta default: 50000 (load balancer Service Layer)
+  Autenticazione: Session-based
+    1. POST https://<server>:50000/b1s/v2/Login
+       Body JSON: { "CompanyDB": "...", "UserName": "...", "Password": "..." }
+    2. Risposta: cookie B1SESSION + ROUTEID → includere in tutte le chiamate
+    Alternativa: OAuth2/OIDC via SLD
+  Metadata:      https://<server>:50000/b1s/v2/$metadata
+  Operazioni:    GET / POST / PUT / PATCH / DELETE
+  ATTENZIONE:    Da FP2502 HF1: strict Host header validation attiva.
+                 Configurare httpd-b1s-lb.conf per IP esterni (evita errori 403)
+  Dati:          Ordini di vendita, documenti ciclo attivo, anagrafiche clienti
+  URL docs:      https://help.sap.com → "Working with SAP Business One Service Layer"
+
+
+------------------------------------------------------------------------
+  2.5 MICROSOFT DYNAMICS 365 BUSINESS CENTRAL
+------------------------------------------------------------------------
+  Protocollo:    REST API v2.0 + OData v4
+  Formato:       JSON
+  Autenticazione: OAuth 2.0 (Microsoft Entra ID / Azure AD)
+    - Token endpoint:
+        https://login.microsoftonline.com/<tenant-id>/oauth2/v2.0/token
+    - Scope: https://api.businesscentral.dynamics.com/.default
+    - Permesso App: Financials.ReadWrite.All
+  Base URI:      https://api.businesscentral.dynamics.com/v2.0/<env>/api/v2.0/
+  OData filtri:  $filter, $select, $top, $skip, $orderby, $expand
+  Setup:         App Registration in Microsoft Entra +
+                 Application ID nella pagina "Microsoft Entra Applications" di BC
+  Note cloud:    API abilitate di default in cloud
+  Note on-prem:  Configurare via Business Central Administration Shell
+  URL docs:      https://learn.microsoft.com/en-us/dynamics365/business-central/
+                 dev-itpro/api-reference/v2.0/
+
+
+------------------------------------------------------------------------
+  2.6 PASSEPARTOUT MEXAL / CARICO
+------------------------------------------------------------------------
+  Protocollo:    REST/HTTPS (RESTful, orientato entità)
+  Formato:       JSON
+  Metodi HTTP:   GET / POST / PUT / DELETE
+  Autenticazione: Utente gestionale nel gruppo "Servizi Web API"
+                 Config. in: Servizi → Configurazioni → Conf. moduli → Web Api
+                 Definire Base Address (server + porta)
+  Dati:          Prima nota, fatture clienti, saldi partitari, scadenziari
+  Note:          Modulo attivo da versione 2024D (suite MDS abilitata).
+                 In cloud: configurazione gestita da Passepartout.
+                 Documentazione tecnica su EduPass (account partner richiesto).
+  URL:           https://www.edupass.it (documentazione tecnica)
+                 https://www.passepartout.net (portale ufficiale)
+
+
+================================================================================
+  3. STANDARD SANITARI — HL7 / FHIR / ASTM / DICOM
+================================================================================
+
+------------------------------------------------------------------------
+  3.1 HL7 v2.x (versioni 2.3 – 2.8)
+------------------------------------------------------------------------
+  Protocollo trasporto: MLLP (Minimal Lower Layer Protocol) su TCP/IP
+  Framing MLLP:
+    Start Block:   0x0B (Vertical Tab)
+    End Block:     0x1C (File Separator) + 0x0D (Carriage Return)
+    Formato:       <0x0B>MSH|...<0x1C><0x0D>
+
+  Delimitatori messaggio:
+    |   separatore campi
+    ^   separatore componenti
+    ~   separatore ripetizioni
+    \   carattere escape
+    &   separatore sub-componenti
+
+  Messaggi utilizzati da NextCare:
+    ADT (Cap.3)  — Ammissioni, Dimissioni, Trasferimenti, Anagrafiche
+    ORM (Cap.4)  — Ordini (laboratorio, radiologia)
+    OML          — Ordini laboratorio (versione moderna)
+    ORU (Cap.7)  — Risultati osservazione (refertazione)
+    MDM          — Documenti clinici
+
+  Versione raccomandata: 2.5.1 (CLIA compliant) — verificare spec del vendor
+  Z-segment: per estensioni custom (non standard)
+  Sicurezza: VPN o TLS sul socket MLLP (HL7 non ha auth nativa)
+  URL docs:  https://www.hl7.org
+             https://caristix.com/hl7 (riferimento segmenti, utile in sviluppo)
+
+
+------------------------------------------------------------------------
+  3.2 HL7 FHIR R4 (v4.0.1)
+------------------------------------------------------------------------
+  Protocollo:    REST/HTTPS
+  Formato:       JSON (preferito) o XML o Turtle
+  Autenticazione: OAuth 2.0 (SMART on FHIR)
+  Endpoint metadata: [base]/metadata → restituisce CapabilityStatement
+
+  Operazioni REST standard:
+    read      GET    [base]/[ResourceType]/[id]
+    search    GET    [base]/[ResourceType]?param=val
+    create    POST   [base]/[ResourceType]
+    update    PUT    [base]/[ResourceType]/[id]
+    delete    DELETE [base]/[ResourceType]/[id]
+    transaction POST [base] (Bundle)
+
+  Resource principali usate da NextCare:
+    Patient              — Anagrafica paziente
+    Observation          — Referti LIS (risultati esame)
+    DiagnosticReport     — Referto firmato
+    Encounter            — Accettazione / visita
+    ServiceRequest       — Ordine prestazione (sostituisce ORM)
+    Practitioner         — Medico
+    Organization         — Sede / struttura
+    ImagingStudy         — Studio DICOM collegato
+    Appointment          — Prenotazione CUP
+    Coverage             — Fondo sanitario / assicurazione
+
+  Search parameters utili:
+    _id, _lastUpdated, _count, _include, _revinclude
+
+  FHIR Operations:
+    $validate, $everything (Patient summary), $match (MDM)
+
+  Utilizzo in NextCare:
+    - Portale MMG: accesso referti via FHIR R4
+    - FSE 2.0: trasmissione documenti (in evoluzione da CDA2 a FHIR)
+    - Azure Health Data Services: FHIR server cloud
+
+  URL docs: https://www.hl7.org/fhir/R4/index.html
+            https://www.hl7.org/fhir/R4/http.html
+
+
+------------------------------------------------------------------------
+  3.3 DICOM 3.0 — MODALITY WORKLIST (MWL)
+------------------------------------------------------------------------
+  Protocollo:    DICOM su TCP/IP
+  Operazione:    C-FIND (query worklist)
+  SOP Class MWL: UID 1.2.840.10008.5.1.4.31
+
+  Ruoli:
+    SCU (Service Class User)  → modalità (TC, MRI, US) che interroga
+    SCP (Service Class Provider) → RIS / Worklist Manager che risponde
+
+  Flusso tipico:
+    1. La modalità apre Association DICOM → negozia SOP Class MWL
+    2. Invia C-FIND-RQ con attributi di ricerca (data, modalità, AE Title)
+    3. Il SCP risponde con C-FIND-RSP per ogni worklist item trovato
+    4. La modalità acquisisce e invia immagini → C-STORE verso PACS
+
+  Attributi chiave query MWL:
+    Scheduled Station AE Title
+    Scheduled Procedure Step Start Date (range date)
+    Modality (CT, MR, US, CR, DX, OT...)
+    Accession Number
+    Patient ID / Patient Name
+
+  SOP Class Storage SCU/SCP: per ricevere e archiviare immagini
+  Query/Retrieve: C-MOVE / C-GET per recupero immagini da PACS
+  DICOM SR: Structured Report (per referti radiologici strutturati)
+  TLS: opzionale ma raccomandato (DICOM TLS su porta diversa dalla standard)
+
+  Tool di test/sviluppo:
+    DCMTK (wlmscpfs, storescu, storescp) — https://dicom.offis.de/dcmtk.php.en
+    Orthanc (plugin Worklists) — https://www.orthanc-server.com
+
+  Conformance Statement: ogni apparecchio pubblica il proprio — richiederlo al vendor
+  URL standard: https://www.dicomstandard.org (NEMA)
+                PS3.4 Annex K (MWL SOP Class)
+                PS3.3 IODs (Information Object Definitions)
+
+
+------------------------------------------------------------------------
+  3.4 ASTM E1394 / CLSI LIS2-A2
+------------------------------------------------------------------------
+  Nota: ASTM E1394 è formalmente ritirato (ASTM ~2013).
+        Il successore ufficiale è CLSI LIS2-A2, ma la terminologia
+        "ASTM" rimane prevalente negli analizzatori clinici.
+
+  Protocollo trasporto:
+    Legacy:  RS-232 seriale
+    Moderno: TCP/IP socket (wrapper dei messaggi ASTM)
+
+  Formato messaggi (record-based ASCII):
+    H  — Header (inizio sessione, mittente, destinatario)
+    P  — Patient (dati paziente)
+    O  — Order (ordine esame)
+    R  — Result (risultato)
+    C  — Comment (commento)
+    L  — Terminator (fine sessione)
+    Delimitatori: | \ ^ &
+
+  Flusso bidirezionale:
+    HOST → ANALIZZATORE: Download ordini (O record per ogni test)
+    ANALIZZATORE → HOST: Upload risultati (R record per ogni parametro)
+
+  Note:
+    Ogni analizzatore pubblica la propria Interface Specification.
+    RICHIEDERE SEMPRE la spec dell'interfaccia al vendor dello strumento.
+  URL: https://www.clsi.org (CLSI LIS2-A2 — a pagamento)
+
+
+------------------------------------------------------------------------
+  3.5 FSE 2.0 — FASCICOLO SANITARIO ELETTRONICO
+------------------------------------------------------------------------
+  Formato documenti:   HL7 CDA2 (Clinical Document Architecture v2)
+                       In evoluzione verso HL7 FHIR R4
+  Protocollo:          HTTPS/SOAP (Gateway FSE 2.0)
+                       IHE XDS.b per condivisione documenti
+  Autenticazione:      SAML v2.0 (asserzioni di sicurezza INI)
+                       Certificati digitali per accreditamento
+
+  Profili IHE utilizzati:
+    XDS.b: ITI-41 (Provide & Register), ITI-18 (Registry Stored Query)
+    PIX, PDQ (in contesto Affinity Domain Italia)
+
+  Servizi Gateway NextCare deve supportare:
+    - Validazione documento CDA2
+    - Pubblicazione (invio al FSE regionale)
+    - Sostituzione / aggiornamento metadati
+    - Eliminazione documento
+    - Ricerca e recupero
+
+  OBBLIGATORIO: accreditamento presso AgID prima del go-live in produzione.
+
+  Specifiche INI: versione 2.6.x (aggiornamenti frequenti — monitorare)
+  URL: https://www.fascicolosanitario.gov.it (area tecnica)
+       https://developers.italia.it
+       https://www.agid.gov.it
+
+
+------------------------------------------------------------------------
+  3.6 IHE ITALIA — Profili XDS / PIX / PDQ
+------------------------------------------------------------------------
+  Protocollo:    SOAP/HTTPS
+  Formato:       ebXML (XDS Registry/Repository), HL7 v2 (PIX/PDQ)
+  Autenticazione: SAML v2.0 + ATNA (Audit Trail and Node Authentication)
+                  Certificati digitali
+
+  Profili e transazioni:
+    XDS.b (Cross-Enterprise Document Sharing):
+      ITI-41: Provide and Register Document Set
+      ITI-18: Registry Stored Query
+    PIX (Patient Identifier Cross-referencing):
+      ITI-8:  Patient Identity Feed (HL7 v2 ADT)
+      ITI-9:  PIX Query
+    PDQ (Patient Demographics Query):
+      ITI-21: Patient Demographics Query
+      ITI-22: Patient Demographics and Visit Query
+
+  Nota: MHD (Mobile Health Documents) in evoluzione come alternativa
+        REST-based a XDS per contesti mobile/FHIR.
+
+  URL: https://www.ihe.net (Technical Framework, Volumi 1-2-3)
+       https://www.ihe-europe.net
+       https://www.agid.gov.it (Affinity Domain Italia)
+
+
+================================================================================
+  4. ANALIZZATORI LIS — CONNESSIONI BIDIREZIONALI
+================================================================================
+
+ARCHITETTURA CONNESSIONE
+--------------------------
+  NextCare → Download ordini → Analizzatore  (tramite HL7/ASTM)
+  Analizzatore → Upload risultati → NextCare  (tramite HL7/ASTM)
+
+  Ogni analizzatore richiede configurazione unica (una tantum).
+  Aggiornamenti firmware non richiedono riconfigurazione.
+
+ANALIZZATORI SUPPORTATI E PROTOCOLLO
+--------------------------------------
+
+  ROCHE COBAS (311/411/511/6000 e serie)
+    Protocollo:  HL7 v2.x / ASTM E1394
+    Area:        Chimica clinica, immunologia, ematologia
+    Interfaccia: Data Manager (software Roche) oppure connessione diretta
+    Spec ufficiale: Roche LIS Interface Manual (riservata — richiedere a Roche)
+
+  ABBOTT ALINITY / ARCHITECT (i/c/s)
+    Protocollo:  HL7 v2.x / ASTM
+    Area:        Immunochimica, ematologia, Point-of-Care
+    Spec:        Abbott Connectivity Solutions / LIAISON interface spec
+
+  SIEMENS ATELLICA / ADVIA / RAPIDPoint
+    Protocollo:  HL7 v2.x
+    Area:        Chimica clinica, immunologia, coagulazione, emogasanalisi
+    Middleware:  Siemens Healthineers Atellica Process Manager
+
+  BECKMAN COULTER (AU / DxH / ACCESS / UniCel)
+    Protocollo:  HL7 v2.x / ASTM
+    Area:        Ematologia, chimica clinica
+    Tool:        Beckman Coulter LIS (driver per ciascuna piattaforma)
+
+  SYSMEX (XN-Series / CS / CA-Series)
+    Protocollo:  HL7 v2.x (SYS-ON-FHIR in sviluppo)
+    Area:        Ematologia avanzata, coagulazione
+    Software:    Sysmex WAM (WorkArea Manager)
+
+  BIO-RAD (D-10 / Variant II / Liquichek)
+    Protocollo:  ASTM E1394
+    Area:        HbA1c, controllo qualità interlaboratorio
+    Spec:        Bio-Rad Interface Guide (richiedere a Bio-Rad)
+
+  HORIBA MEDICAL (Yumizen H500/H550 / ABX Pentra)
+    Protocollo:  ASTM / HL7
+    Area:        Ematologia, urine, biochimica
+
+  DIASORIN (LIAISON XL / MAGLUMI / Murex)
+    Protocollo:  HL7 v2.x / ASTM
+    Area:        Infettivologia, autoimmunità, oncologia
+
+  TOSOH (G8 / AIA-900)
+    Protocollo:  ASTM E1394
+    Area:        HbA1c, immunochimica
+
+  MENARINI DIAGNOSTICS (HA-8180 / Micros CRP / Clover)
+    Protocollo:  ASTM E1394
+    Area:        Emoglobina glicata, ematologia
+
+  BIOMERIEUX (VITEK 2 / VITEK MS / BacT/ALERT / FilmArray / VIDAS)
+    Protocollo:  HL7 v2.x / ASTM; per MALDI-TOF: interfaccia proprietaria
+    Area:        Microbiologia, identificazione batterica, emocolture,
+                 biologia molecolare, sierologia
+    Note:        VITEK MS (MALDI-TOF): richiedere spec interfaccia separata
+
+  STAGO (STA-R MAX / STA Compact)
+    Protocollo:  HL7 v2.x / ASTM
+    Area:        Coagulazione avanzata (PT, APTT, fibrinogeno, D-dimero)
+
+GESTIONE RISULTATI (comune a tutti)
+-------------------------------------
+  - Ricezione risultato → validazione tecnica automatica (range di riferimento)
+  - Alert su valori fuori range critico (flag H/L/LL/HH)
+  - Validazione clinica manuale del biologo/medico
+  - Firma digitale referto → pubblicazione portale pazienti + FSE 2.0
+  - Archivio risultati con storico per controllo qualità
+
+
+================================================================================
+  5. IMAGING DICOM & PACS
+================================================================================
+
+FLUSSO DICOM COMPLETO
+----------------------
+  CUP (prenotazione) → genera ordine RIS
+  → RIS invia MWL DICOM all'apparecchio di imaging
+  → Medico esegue l'acquisizione (worklist precompilata sul monitor della macchina)
+  → Immagini inviate automaticamente al PACS (C-STORE)
+  → Referto radio firmato → allegato alla visita nel CUP
+
+PACS INTEGRATI
+--------------
+  GE Healthcare Centricity PACS / Lunar / Revolution CT
+  Philips IntelliSpace PACS / Ingenia MRI / IQS Worklist
+  Siemens syngo.via / MAGNETOM / SOMATOM / syngo PACS
+  Fujifilm Synapse PACS / FCR Capsula / FDR D-EVO
+  Agfa HealthCare XERO / Enterprise Imaging / NX / DX-D
+  Carestream Vue PACS / DRX / Vue Motion
+  Sectra IDS7 / Mammography AI / Orthopaedics
+  Canon Medical Vitrea / Vantage MRI / Aplio
+
+REQUISITI TECNICI
+-----------------
+  - Conformance Statement di ogni PACS: richiederlo al vendor
+  - Negoziazione Association DICOM con AE Title, IP, porta SCP
+  - SOP Classes da negoziare: MWL, CT Image Storage, MR Image Storage,
+    US Image Storage, CR Image Storage, DX Image Storage, SC Image Storage
+  - Query/Retrieve: C-MOVE su Study / Series / Image level
+  - Viewer DICOM web (DICOMweb/WADO): raccomandato per portale web pazienti
+    Standard: WADO-URI, WADO-RS (STOW-RS per upload)
+    URL base esempio: https://pacs.struttura.it/wado?
+
+
+================================================================================
+  6. ECOGRAFI & IMAGING DIAGNOSTICO
+================================================================================
+
+ECOGRAFI INTEGRATI (via DICOM MWL)
+-------------------------------------
+  Philips EPIQ Elite / Affiniti 70/50 / ClearVue
+  GE Voluson E10/E8 / Vivid E95/S70 / Logiq E10
+  Siemens ACUSON Sequoia / Juniper / S3000 / NX3
+  Canon Aplio i900/i800/i700 (Shear Wave, elastografia)
+  Fujifilm Arietta 850/750 / SonoVista Flex
+  Esaote MyLab X8/X6 / MyLab 9 eXP / Twice
+  Samsung HM70A / HS60 / RS85A Prestige
+  Mindray DC-80 Pro / DC-70 Pro / M9 / Resona 7S
+  Supersonic Imagine Aixplorer MACH 30/20 (UltraFast, ShearWave)
+  Hitachi Noblus / Hi Vision Avius / LISENDO 880
+
+RX / TAC / RM
+--------------
+  GE Revolution Apex/Frontier / Optima CT
+  Philips Ingenia Elition / Ambition / Marlin (1.5T / 3T MRI)
+  Siemens MAGNETOM Sola/Vida/Lumina / SOMATOM (TAC)
+  Fujifilm FDR D-EVO III / FDR Smart / Carbon (RX digitale)
+  Agfa DX-D 100/300/600 / NX Workstation (CR + DR)
+  Carestream DRX-Evolution Plus / DRX-Ascend / DR Retrofit
+
+NOTA TECNICA:
+  Per ogni apparecchio richiedere il DICOM Conformance Statement al vendor
+  per verificare: SOP Classes supportate, versione DICOM, TLS disponibile.
+
+
+================================================================================
+  7. FONDI SANITARI & ASSICURAZIONI
+================================================================================
+
+FLUSSO DI INTEGRAZIONE
+-----------------------
+  1. Accettazione paziente → NextCare identifica la copertura (fondo/assicurazione)
+  2. Verifica eleggibilità in tempo reale (API del fondo → risposta < 2 sec)
+  3. Preautorizzazione automatica (per prestazioni previste dal piano)
+  4. Erogazione prestazione
+  5. Invio automatico documentazione di rimborso al fondo
+  6. Riconciliazione pagamenti e aggiornamento scadenziari
+
+FONDI INTEGRATI
+---------------
+  UniSalute (Gruppo Unipol)      — rimborsi diretti, preauth online
+  Previmedical                   — voucher, preautorizzazione, rete diretta
+  Generali Welion                — welfare aziendale, polizze salute
+  RBM / Wellhunter               — reti sanitarie, liquidazione automatica
+  FASI                           — dirigenti industria
+  FASDAC                         — dirigenti industria (integrativo SSN)
+  CASAGIT                        — giornalisti, prestazioni dirette
+  Metasalute                     — metalmeccanici, accesso diretto
+  EMAPI                          — dirigenti PMI
+  Jointly                        — welfare platform, voucher digitali
+  AXA Health                     — polizze sanitarie aziendali
+  Allianz Care                   — internazionale, expat, multi-valuta
+
+NOTE TECNICHE
+-------------
+  - Ogni fondo ha il proprio protocollo API (REST o SOAP + XML)
+  - Contattare il fondo per ottenere le credenziali e la documentazione tecnica
+  - Previmedical: portale web dedicato con API voucher
+  - UniSalute: webservice SOAP (richiedere spec a UniSalute Convenzioni)
+  - Jointly: API REST (https://www.jointly.pro — area partner)
+  - Nessuna doppia digitazione: tutto automatico lato segreteria
+
+
+================================================================================
+  8. PORTALI WEB — PAZIENTI, MMG, AZIENDE, FONDI
+================================================================================
+
+CARATTERISTICHE COMUNI
+-----------------------
+  - White-label: appaiono con il brand della struttura (non NextCare)
+  - Responsive: mobile-first (iOS / Android / desktop)
+  - HTTPS obbligatorio, certificati TLS (Let's Encrypt o commerciale)
+  - SSO possibile tra portali dello stesso tenant
+
+------------------------------------------------------------------------
+  8.1 PORTALE PAZIENTI
+------------------------------------------------------------------------
+  Autenticazione: credenziali proprie (email + password) OPPURE SPID
+                  (SAML 2.0 o OpenID Connect — vedi sezione 13)
+  Funzionalità:
+    - Visualizzazione referti firmati digitalmente (PDF/A)
+    - Download referti (firma CAdES-BES o PAdES)
+    - Prenotazione visite follow-up (integrata con CUP)
+    - Aggiornamento anagrafiche e consensi GDPR
+    - Notifiche SMS/email quando il referto è disponibile e firmato
+    - Storico accessi alla struttura
+  Sicurezza:
+    - Autenticazione 2FA opzionale
+    - Accesso limitato ai soli propri dati (patient-scoped)
+
+
+------------------------------------------------------------------------
+  8.2 PORTALE MEDICI DI BASE (MMG / Specialisti)
+------------------------------------------------------------------------
+  Autenticazione: credenziali medico (SPID o credenziali struttura)
+  Autorizzazione:  basata su lista assistiti (CF paziente) o accesso diretto
+  Funzionalità:
+    - Accesso referti per paziente (filtro per CF/tessera sanitaria)
+    - Notifica push (web push o email) quando referto disponibile
+    - Invio richieste prestazione direttamente al CUP
+    - Integrazione HL7 FHIR R4 con cartella clinica MMG
+  Interoperabilità:
+    FHIR Endpoint: GET [base]/DiagnosticReport?patient=CF-PAZIENTE
+    Notifica: webhook POST verso URL del sistema MMG (referto pronto)
+
+
+------------------------------------------------------------------------
+  8.3 PORTALE AZIENDALE (Medicina del Lavoro — D.Lgs. 81/08)
+------------------------------------------------------------------------
+  Autenticazione: credenziali azienda (admin aziendale HR)
+  Segregazione:   ogni azienda vede SOLO i propri dipendenti
+  Funzionalità:
+    - Prenotazione visite periodiche per i dipendenti
+    - Visualizzazione referti (firma medico competente)
+    - Gestione cartelle sanitarie di rischio
+    - Download certificati idoneità (idoneo / idoneo con prescrizioni /
+      inidoneo temporaneo / inidoneo permanente)
+    - Documentazione D.Lgs. 81/08 (DVR, elenco visite periodiche)
+  Firma:   Il medico competente firma digitalmente ogni certificato
+  Privacy: segregazione dati totale per azienda (RBAC tenant-level)
+
+
+------------------------------------------------------------------------
+  8.4 PORTALE FONDI SANITARI & ASSICURAZIONI
+------------------------------------------------------------------------
+  Accesso:    API standard (REST/SOAP) o portale web dedicato per operatore fondo
+  Funzionalità:
+    - Verifica eleggibilità paziente in tempo reale
+    - Preautorizzazione automatica
+    - Invio documentazione di rimborso
+    - Riconciliazione pagamenti
+    - Scadenziari e report di liquidazione
+  Sicurezza:  credenziali API per fondo + HTTPS
+
+
+================================================================================
+  9. RBAC — RUOLI E PERMESSI GRANULARI
+================================================================================
+
+ARCHITETTURA
+------------
+  6 profili predefiniti + ruoli custom con permessi a livello di singola funzione
+  Audit log immutabile (GDPR art. 30): chi ha fatto cosa, quando, da quale IP
+
+RUOLI PREDEFINITI
+-----------------
+
+  AMMINISTRATORE
+    Accesso: completo (configurazioni, utenti, reportistica finanziaria)
+    Figure: titolare, direttore sanitario
+    Operazioni permesse: tutte
+
+  MEDICO
+    Accesso: refertazione, agenda propria, cartelle cliniche propri pazienti
+    Non vede: dati finanziari, cassa, contabilità
+    Limitazione: visibilità agenda inter-sede configurabile
+
+  LABORATORISTA (BIOLOGO / TECNICO)
+    Accesso: LIS completo (accettazione campioni, analisi, validazione, refertazione)
+    Non vede: agenda visite, fatturazione
+
+  ACCETTAZIONE (SEGRETARIA / FRONT-DESK)
+    Accesso: CUP, prenotazioni, accettazione, cassa
+    Non vede: referti clinici completi, dati laboratorio
+
+  CONTABILITÀ
+    Accesso: fatturazione, pagamenti, corrispettivi, prima nota
+    Non vede: dati clinici
+
+  MAGAZZINO
+    Accesso: gestione reagenti, consumabili, ordini fornitori, cold chain
+    Non vede: dati clinici, fatturazione
+
+  RUOLO CUSTOM
+    Combinazione libera di permessi per modulo/funzione
+    Configurabile dall'Amministratore
+
+AUDIT LOG
+---------
+  Campi registrati per ogni operazione:
+    - Utente (ID + nome)
+    - Timestamp (UTC)
+    - IP sorgente
+    - Azione eseguita
+    - Entità modificata (ID + tipo)
+    - Valore prima della modifica
+    - Valore dopo la modifica
+
+  Il log è in SOLA LETTURA anche per l'Amministratore.
+  Non può essere alterato né eliminato.
+  Retention: configurabile (default 10 anni)
+  Export: CSV per ispezioni Garante Privacy
+
+
+================================================================================
+ 10. BUSINESS INTELLIGENCE DI GRUPPO
+================================================================================
+
+CARATTERISTICHE
+---------------
+  - Aggregazione dati da tutte le sedi in tempo reale
+  - Dashboard interattive (grafici linee, barre, torta, heatmap)
+  - Query in linguaggio naturale italiano (AI NLP)
+    Esempio: "Quante ecografie nella sede B nel Q1?" → grafico automatico
+  - Drill-down per sede, medico, prestazione, periodo
+
+KPI MONITORATI
+--------------
+  - Ricavi per sede / per medico / per prestazione
+  - Numero prestazioni erogate (trend settimanale/mensile)
+  - Occupazione agenda medici (%)
+  - Tempi di refertazione LIS (ore dalla consegna campione alla firma)
+  - Referti emessi / in attesa di firma
+  - Ticket medio per prestazione
+  - Incasso cassa per sede
+
+ALERTING AUTOMATICO
+--------------------
+  - Soglie configurabili su qualsiasi KPI
+  - Esempio: "avvisa se referto LIS > 4 ore", "cassa < €500"
+  - Canali alert: email / SMS / notifica in-app
+
+REPORT AUTOMATICI
+-----------------
+  - Schedule: settimanale / mensile / trimestrale
+  - Formato: PDF o Excel
+  - Invio automatico via email ai destinatari configurati
+
+PREVISIONI AI
+-------------
+  - Analisi trend storici → proiezione futura
+  - Occupazione agenda: previsione 4 settimane
+  - Andamento ricavi: proiezione trimestrale
+  - Consumo reagenti: utile per ordini magazzino
+
+TECNOLOGIE SUGGERITE
+---------------------
+  - Motore query: Metabase / Apache Superset (open source) oppure
+                  Power BI Embedded (Microsoft) per istanze cloud Azure
+  - AI NLP: integrazione con modelli LLM (es. OpenAI API / Azure OpenAI)
+            con prompt engineering su schema DB NextCare
+
+
+================================================================================
+ 11. DEPLOY — SAAS / ON-PREMISE / HYBRID
+================================================================================
+
+MODALITÀ SAAS (Cloud)
+----------------------
+  Provider cloud: Microsoft Azure (preferito per FSE/FHIR) o Amazon AWS
+  Database:       Azure SQL Managed Instance o PostgreSQL (Azure / RDS)
+  Storage:        Azure Blob Storage (immagini DICOM, referti PDF)
+  CDN:            Azure CDN / CloudFront per portali web
+  SLA:            99.9% uptime garantito
+  Backup:         automatico (daily + point-in-time restore 30 giorni)
+  Aggiornamenti:  automatici (rolling deploy, zero downtime)
+  Compliance:     datacenter EU, NIS2 inclusa, ISO 27001
+  FHIR Server:    Azure Health Data Services (NON Azure API for FHIR — deprecato)
+                  ATTENZIONE: Azure API for FHIR va in retirement 30/09/2026
+
+MODALITÀ ON-PREMISE
+--------------------
+  Server minimo consigliato:
+    CPU: 8 core (Intel Xeon / AMD EPYC)
+    RAM: 32 GB (64 GB per > 10 sedi)
+    Storage: RAID 10, SSD, dimensionare per 10 anni di immagini DICOM
+    OS: Windows Server 2022 o Linux (Ubuntu 22.04 LTS)
+  Database: SQL Server 2022 o PostgreSQL 16
+  Backup: a carico della struttura (raccomandato: Veeam + NAS offsite)
+  Aggiornamenti: manuali o assistiti da NextCare
+  VPN: richiesta per punti prelievo satellite e accesso portali
+
+MODALITÀ HYBRID
+---------------
+  Dati clinici:   on-premise (server struttura)
+  Portali web:    cloud (paziente, MMG, aziende)
+  BI e reporting: cloud
+  DICOM archivio: storage ibrido (hot locale, cold cloud/Azure Blob)
+  SLA cloud:      99.9% per layer cloud
+
+TABELLA COMPARATIVA
+-------------------
+  Caratteristica          | SaaS Cloud     | On-Premise     | Hybrid
+  ----------------------- |--------------- |--------------- |---------------
+  Hardware richiesto      | Nessuno        | Sì             | Parziale
+  Aggiornamenti           | Automatici     | Manuali        | Auto (cloud)
+  Backup                  | Incluso        | A carico       | Misto
+  Dati clinici in sede    | No (EU DC)     | Sì             | Sì
+  Portali esterni         | Immediato      | NAT/VPN        | Immediato
+  SLA disponibilità       | 99.9%          | Hardware-dep.  | 99.9% (cloud)
+  Costo infrastruttura    | Incluso        | A carico       | Ridotto
+  Compliance NIS2         | Inclusa        | A carico       | Parziale
+
+
+================================================================================
+ 12. FATTURAZIONE ELETTRONICA SDI
+================================================================================
+
+FORMATI SUPPORTATI
+------------------
+  Fattura B2B (FatturaPA — formato privati e PA)
+  Fattura B2C (con codice fiscale paziente)
+  Corrispettivi telematici RT (registratori di cassa)
+  Note di credito
+  Autofatture
+
+SCHEMA XML
+----------
+  Schema XSD: versione 1.9.1 (attuale dal 15/05/2026)
+  Firma digitale: XAdES-BES o CAdES-BES (p7m)
+  Scarica XSD: https://www.fatturapa.gov.it (sezione specifiche tecniche)
+
+CANALI DI TRASMISSIONE AL SDI
+-------------------------------
+  Non esiste API REST pubblica diretta con lo SDI.
+  Opzioni:
+  a) ACCREDITAMENTO COME INTERMEDIARIO (per volumi elevati)
+     - SDICoop (HTTPS/WS): certificati mutuali TLS
+     - SDIFTP (SFTP): chiave SSH + accreditamento SdI
+     - Processo lungo: contattare Agenzia delle Entrate
+  b) PROVIDER API INTERMEDIARI (consigliato per time-to-market)
+     - Invoicetronic (https://invoicetronic.com)
+     - OpenAPI.it (https://openapi.it)
+     - TeamSystem Digital Hub
+     - Aruba Fatturazione Elettronica
+     - Questi provider ricevono il file XML e lo trasmettono allo SDI
+
+NOTIFICHE SDI
+--------------
+  RC  — Ricevuta di Consegna (fattura consegnata al destinatario)
+  MC  — Mancata Consegna (problemi di recapito)
+  AT  — Attestazione di Trasmissione (pa non disponibile)
+  NS  — Notifica di Scarto (XML non valido)
+  NE  — Notifica Esito (accettazione/rifiuto da PA)
+  NSO — Notifica ordine di acquisto (per PA)
+
+CONSERVAZIONE SOSTITUTIVA
+--------------------------
+  Obbligo: 10 anni (D.Lgs. 82/2005, art. 43)
+  Integrare con provider di conservazione certificato AgID (es. Aruba, InfoCert)
+
+URL: https://www.fatturapa.gov.it (specifiche, XSD, esempi)
+     https://www.agenziaentrate.gov.it (portale Fatture e Corrispettivi)
+
+
+================================================================================
+ 13. SPID — IDENTITÀ DIGITALE
+================================================================================
+
+PROTOCOLLI
+----------
+  SAML 2.0:      profilo Web Browser SSO (nativo SPID)
+  OpenID Connect: (OIDC — Linee Guida AgID n.616/2021, alternativa moderna)
+
+IMPLEMENTAZIONE SAML 2.0
+-------------------------
+  1. App Registration come Service Provider (SP) presso AgID
+  2. Generare coppia chiavi RSA-2048 + certificato X.509 (RFC-5280)
+  3. Produrre Metadata SP (XML firmato)
+  4. Registrare SP nel Registry SPID: https://registry.spid.gov.it
+  5. Configurare tutti gli Identity Provider (IDP) federati
+     (Aruba, Infocert, Poste, TIM, ecc.)
+  6. Implementare:
+     - AuthnRequest (firmata XML → inviata a IdP)
+     - Response/Assertion (firmata dall'IdP → validata da NextCare)
+  7. Testare con Metadata Validator: https://validator.spid.gov.it
+  8. Tool open source: https://github.com/italia/spid-saml-check
+
+LIVELLI DI SICUREZZA
+---------------------
+  SpidL1 — password semplice
+  SpidL2 — OTP / app autenticazione (raccomandato per dati sanitari)
+  SpidL3 — smart card / firma digitale qualificata
+
+LIBRERIE DISPONIBILI
+---------------------
+  Python:     spid-django, spid-python
+  PHP:        spid-php
+  Node.js:    spid-node
+  Java:       spid-spring-integration
+  Tutte su:   https://developers.italia.it/it/spid
+
+URL: https://www.agid.gov.it/it/piattaforme/spid
+     https://docs.italia.it (Regole Tecniche SPID)
+
+
+================================================================================
+ 14. STAMPA BARCODE & ETICHETTE (ZPL)
+================================================================================
+
+LINGUAGGIO ZPL II (Zebra Programming Language)
+-----------------------------------------------
+  Struttura etichetta base:
+    ^XA                          (Start label)
+    ^FO[x],[y]^FD[testo]^FS     (Field Origin + Field Data + Field Separator)
+    ^BY[largh_barre],[moltipl],[altezza]   (Barcode parameters)
+    ^BC[orient],[altezza],[HRI],[linea_sup],[check]  (Code 128)
+    ^BQ[orient],[model],[errore]  (QR Code)
+    ^XZ                          (End label)
+
+  Comandi principali:
+    ^FO  — Field Origin (posizione x,y in dot)
+    ^FD  — Field Data (contenuto campo)
+    ^FS  — Field Separator (fine campo)
+    ^BY  — Barcode parameters
+    ^BC  — Code 128 barcode
+    ^BQ  — QR Code
+    ^GF  — Graphic Field (immagine raster)
+    ^CF  — Change Font (font, dimensione)
+    ^PQ  — Print Quantity (quante etichette stampare)
+
+  Formato barcode campione (campi obbligatori):
+    ID paziente (CF o ID interno)
+    Data prelievo (YYYYMMDD)
+    Codice esame (codice nomenclatore)
+    ID sede prelievo
+    Numero progressivo campione
+    Operatore (ID utente)
+
+STAMPA NETWORK
+--------------
+  Protocollo: TCP raw porta 9100 (invio diretto stringa ZPL)
+  LPR/LPD:   porta 515 (alternativa legacy)
+  USB:        driver installato su client
+  Compatibilità:
+    Zebra (ZT, ZD, GK series) — ZPL nativo
+    Brother (QL, PT series)   — supporta ZPL o ESC/P
+    Dymo (LabelWriter)        — driver ZPL o applicazione API
+
+SIMULATORE PER SVILUPPO
+-----------------------
+  Labelary (web): https://labelary.com/viewer.html
+  Anteprima ZPL senza stampante fisica.
+
+URL docs: https://www.zebra.com (ZPL II Programming Guide — PDF)
+          Titolo: "ZPL II, ZBI 2, Set-Get-Do, Mirror, WML Programming Guide"
+
+
+================================================================================
+ 15. RIFERIMENTI DOCUMENTAZIONE UFFICIALE
+================================================================================
+
+STANDARD APERTI (pubblici)
+---------------------------
+  HL7 v2.x standard:              https://www.hl7.org
+  HL7 v2.x reference (sviluppo):  https://caristix.com/hl7
+  HL7 FHIR R4 specifica:          https://www.hl7.org/fhir/R4/index.html
+  HL7 FHIR R4 REST:               https://www.hl7.org/fhir/R4/http.html
+  DICOM standard (NEMA):          https://www.dicomstandard.org
+  DICOM PS3.4 Annex K (MWL):      https://www.dicomstandard.org/current
+  CLSI LIS2-A2 (ASTM successor):  https://www.clsi.org
+  IHE Technical Framework:        https://www.ihe.net
+  IHE Europe:                     https://www.ihe-europe.net
+  Zebra ZPL II guide:             https://www.zebra.com/us/en/support-downloads.html
+  Labelary ZPL simulator:         https://labelary.com
+
+NORMATIVA ITALIANA
+------------------
+  FSE 2.0 Gateway:                https://www.fascicolosanitario.gov.it
+  AgID (SPID, IHE, FSE):         https://www.agid.gov.it
+  SPID Regole Tecniche:           https://docs.italia.it
+  SPID developer tools:           https://developers.italia.it
+  SPID Metadata Validator:        https://validator.spid.gov.it
+  SPID Registry:                  https://registry.spid.gov.it
+  SDI Fatturazione Elettronica:   https://www.fatturapa.gov.it
+  Agenzia Entrate (Fatture):      https://www.agenziaentrate.gov.it
+
+ERP (documentazione RISERVATA — accesso tramite partner certificati)
+--------------------------------------------------------------------
+  Arca Evolution / Wolters Kluwer: https://www.wolterskluwer.com/it-it
+  Zucchetti Ad Hoc:                https://help.zucchetti.it
+  TeamSystem Alyante:              https://supporto.teamsystem.com
+  SAP Business One Service Layer:  https://help.sap.com
+  Microsoft Business Central:      https://learn.microsoft.com/en-us/dynamics365/
+                                    business-central/dev-itpro/api-reference/v2.0/
+  Passepartout Mexal (EduPass):    https://www.edupass.it
+
+CLOUD & INFRASTRUTTURA
+-----------------------
+  Azure Health Data Services FHIR: https://learn.microsoft.com/en-us/azure/
+                                    healthcare-apis/fhir/overview-fhir
+  Azure FHIR GitHub (open source): https://github.com/microsoft/fhir-server
+  DCMTK (DICOM toolkit):          https://dicom.offis.de/dcmtk.php.en
+  Orthanc PACS (open source):     https://www.orthanc-server.com
+
+ATTENZIONE — DEPRECAZIONI CRITICHE
+------------------------------------
+  ⚠️ Azure API for FHIR → RETIREMENT 30 SETTEMBRE 2026
+     Migrare subito ad Azure Health Data Services FHIR service.
+
+  ⚠️ ASTM E1394 → Standard ritirato.
+     Successore ufficiale: CLSI LIS2-A2 (a pagamento su www.clsi.org)
+     Nota: gli analizzatori continuano a riferirsi ad "ASTM" — ok usarlo
+     nella comunicazione con i vendor.
+
+  ⚠️ ERP ITALIANI (Arca, Zucchetti, TeamSystem, Mexal) → nessun developer
+     portal pubblico aperto. Richiedere SEMPRE accesso tramite rivenditore
+     ufficiale o ticket di supporto al vendor prima di iniziare lo sviluppo.
+
+  ⚠️ SDI → non esiste REST API pubblica diretta. Usare provider intermediari
+     certificati (Invoicetronic, OpenAPI.it, TeamSystem, Aruba) oppure
+     completare accreditamento come intermediario SdI (processo lungo).
+
+  ⚠️ FSE 2.0 / IHE Italia → specifiche INI aggiornate frequentemente.
+     Monitorare https://www.fascicolosanitario.gov.it regolarmente.
+
+
+================================================================================
+  END OF DOCUMENT
+  NextCare — Healthcare Operating System
+  nextcare.tech | pironrob@gmail.com
+================================================================================

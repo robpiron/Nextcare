@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NextCare - Generatore Licenze Ufficiali</title>
+    <!-- Google Fonts: Inter & Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Source+Code+Pro:wght@500;700&display=swap" rel="stylesheet">
+    
+    <!-- NextCare Design System -->
+    <link rel="stylesheet" href="style.css?v=2.9">
+    
+    <style>
+        :root {
+            /* NextCare design tokens loaded from style.css, defining fallback vars here for robustness */
+            --bg-base: #f4f6fa;
+            --bg-surface: #ffffff;
+            --border-color: rgba(226, 232, 240, 0.8);
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --text-muted: #94a3b8;
+            --primary: #2563eb;
+            --primary-gradient: linear-gradient(135deg, #2563eb, #3b82f6);
+            --primary-hover: #1d4ed8;
+            --success: #10b981;
+            --danger: #ef4444;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+            --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            --shadow-lg: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            --shadow-premium: 0 20px 40px -15px rgba(37, 99, 235, 0.12);
+        }
+
+        body.dark-theme {
+            --bg-base: #0b0f19;
+            --bg-surface: #131a2c;
+            --border-color: rgba(255, 255, 255, 0.08);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --primary: #3b82f6;
+            --primary-gradient: linear-gradient(135deg, #3b82f6, #60a5fa);
+            --primary-hover: #2563eb;
+            --shadow-premium: 0 20px 40px -15px rgba(59, 130, 246, 0.2);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            transition: background-color var(--transition-normal), color var(--transition-normal);
+        }
+
+        /* Password Gate Styling */
+        #password-gate {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 40px;
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            z-index: 100;
+            transform: scale(0.95);
+            opacity: 0;
+            animation: fadeIn 0.4s forwards ease-out;
+        }
+
+        @keyframes fadeIn {
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .logo-container {
+            margin-bottom: 24px;
+        }
+
+        .logo-text {
+            font-family: var(--font-heading);
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .logo-subtext {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            margin-top: 4px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+        }
+
+        .gate-title {
+            font-size: 1.25rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            font-size: 1rem;
+            margin-bottom: 20px;
+            transition: var(--transition-normal);
+            outline: none;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px 18px;
+            border-radius: var(--radius-sm);
+            border: none;
+            background-color: var(--primary);
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: var(--transition-normal);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        /* Main Dashboard (Hidden by default) */
+        #dashboard {
+            display: none;
+            width: 100%;
+            max-width: 1200px;
+            padding: 40px 20px;
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+            margin: auto;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+
+        .dashboard-title {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-theme-toggle {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            border-radius: var(--radius-sm);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition-normal);
+        }
+
+        .btn-theme-toggle:hover {
+            background: var(--bg-surface);
+            color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .btn-logout {
+            width: auto;
+            padding: 10px 20px;
+            background-color: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-color);
+            font-size: 0.9rem;
+            text-transform: none;
+            font-weight: 500;
+        }
+
+        .btn-logout:hover {
+            background-color: rgba(239, 68, 68, 0.08);
+            color: var(--danger);
+            border-color: var(--danger);
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 900px) {
+            .grid-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .dashboard-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 30px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .card-title {
+            font-family: var(--font-heading);
+            font-size: 1.35rem;
+            margin-bottom: 24px;
+            font-weight: 600;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .modules-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 480px) {
+            .modules-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--bg-base);
+            padding: 10px 14px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+            cursor: pointer;
+            transition: var(--transition-normal);
+            font-size: 0.85rem;
+            color: var(--text-primary);
+        }
+
+        .checkbox-container:hover {
+            border-color: var(--primary);
+            background: rgba(37, 99, 235, 0.05);
+        }
+
+        .checkbox-container input {
+            accent-color: var(--primary);
+            cursor: pointer;
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Official Receipt (Distinta) Layout */
+        .distinta-wrapper {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            min-height: 100%;
+        }
+
+        .distinta-preview {
+            background: #ffffff;
+            color: #1e293b;
+            border-radius: var(--radius-md);
+            padding: 40px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            position: relative;
+            background-image: 
+                radial-gradient(circle at 100% 150%, #eff6ff 24%, #ffffff 24%),
+                radial-gradient(circle at 0% 0%, #eff6ff 10%, transparent 10%);
+            border: 6px double #3b82f6;
+            display: none;
+            animation: slideUp 0.5s forwards cubic-bezier(0.19, 1, 0.22, 1);
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .distinta-header {
+            text-align: center;
+            border-bottom: 2px dashed #94a3b8;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+
+        .distinta-badge {
+            display: inline-block;
+            background: #2563eb;
+            color: #ffffff;
+            font-family: var(--font-heading);
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 50px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .distinta-title {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #0f172a;
+        }
+
+        .distinta-subtitle {
+            font-size: 0.8rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 2px;
+        }
+
+        .distinta-body {
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .distinta-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 6px;
+        }
+
+        .distinta-label {
+            font-weight: 600;
+            color: #475569;
+        }
+
+        .distinta-value {
+            font-weight: 500;
+            color: #0f172a;
+            text-align: right;
+        }
+
+        .distinta-serial-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            text-align: center;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .distinta-serial-label {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #64748b;
+            margin-bottom: 6px;
+            font-weight: 700;
+        }
+
+        .distinta-serial-key {
+            font-family: 'Source Code Pro', monospace;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #2563eb;
+            letter-spacing: 0.5px;
+        }
+
+        .distinta-modules-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 4px;
+            justify-content: flex-end;
+            max-width: 280px;
+        }
+
+        .distinta-module-badge {
+            background: #e2e8f0;
+            color: #475569;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 500;
+        }
+
+        .distinta-footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 0.75rem;
+            color: #94a3b8;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 15px;
+        }
+
+        .distinta-stamp {
+            position: absolute;
+            bottom: 45px;
+            left: 35px;
+            width: 80px;
+            height: 80px;
+            border: 3px double rgba(37, 99, 235, 0.4);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: rotate(-15deg);
+            color: rgba(37, 99, 235, 0.6);
+            font-family: var(--font-heading);
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            text-align: center;
+            pointer-events: none;
+        }
+
+        .distinta-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .btn-sec {
+            background-color: transparent;
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-sec:hover {
+            background-color: var(--bg-base);
+            border-color: var(--text-secondary);
+        }
+
+        .placeholder-text {
+            color: var(--text-secondary);
+            text-align: center;
+            font-size: 0.95rem;
+            padding: 40px 20px;
+        }
+
+        /* History Table Card */
+        .history-card {
+            margin-top: 40px;
+            overflow-x: auto;
+        }
+
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            text-align: left;
+        }
+
+        th {
+            background-color: var(--bg-base);
+            color: var(--text-secondary);
+            padding: 12px 16px;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-color);
+            text-transform: uppercase;
+            font-size: 0.75rem;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        tr:hover td {
+            background-color: rgba(255, 255, 255, 0.02);
+        }
+
+        .badge-table {
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            display: inline-block;
+        }
+
+        .badge-creata {
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--primary);
+        }
+
+        .badge-attiva {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+        .badge-scaduta {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--danger);
+        }
+
+        /* Print Media Styles */
+        @media print {
+            body {
+                background: #ffffff;
+                color: #000000;
+            }
+            #dashboard, #password-gate {
+                display: none !important;
+            }
+            .distinta-preview {
+                display: block !important;
+                box-shadow: none !important;
+                border: 4px double #000000 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+            .distinta-actions {
+                display: none !important;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PASSWORD GATE -->
+    <div id="password-gate">
+        <div class="logo" style="justify-content: center; margin-bottom: 24px;">
+            <div class="logo-icon">NC</div>
+            <div class="logo-text" style="text-align: left;">
+                <span class="logo-title">NextCare</span>
+                <span class="logo-subtitle">Licensing Portal</span>
+            </div>
+        </div>
+        <h2 class="gate-title">Accesso Riservato Amministratore</h2>
+        <form id="form-gate" onsubmit="handleLogin(event)">
+            <input type="password" id="gate-password" class="form-control" placeholder="Inserisci Password Speciale" required autofocus>
+            <button type="submit" class="btn">Sblocca Generatore</button>
+        </form>
+    </div>
+
+    <!-- MAIN DASHBOARD -->
+    <div id="dashboard">
+        <div class="dashboard-header">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <div class="logo" style="margin-right: 5px;">
+                    <div class="logo-icon">NC</div>
+                    <div class="logo-text" style="text-align: left;">
+                        <span class="logo-title">NextCare</span>
+                        <span class="logo-subtitle">Licensing Portal</span>
+                    </div>
+                </div>
+                <div style="border-left: 2px solid var(--border-color); padding-left: 15px;">
+                    <h1 class="dashboard-title" style="font-size: 1.6rem; line-height: 1.2; margin: 0;">Generatore Licenze Ufficiali</h1>
+                    <p style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 2px;">Pannello di controllo crittografico per la creazione di seriali</p>
+                </div>
+            </div>
+            <div class="header-actions">
+                <!-- Theme Toggle Button -->
+                <button class="btn-theme-toggle" onclick="toggleTheme()" title="Cambia Tema">
+                    <svg id="theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                    <svg id="theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                </button>
+                <button class="btn btn-logout" onclick="handleLogout()">Disconnetti</button>
+            </div>
+        </div>
+
+        <div class="grid-container">
+            <!-- CONFIGURATOR -->
+            <div class="dashboard-card">
+                <h2 class="card-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                    Configura Nuova Licenza
+                </h2>
+                <form id="form-generate" onsubmit="generateLicense(event)">
+                    <div class="form-group">
+                        <label for="lic-cliente">Nome Cliente / Struttura Medica *</label>
+                        <input type="text" id="lic-cliente" class="form-control" placeholder="es. Clinica San Raffaele" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="lic-data-attivazione">Data di Attivazione *</label>
+                        <input type="date" id="lic-data-attivazione" class="form-control" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="lic-durata">Durata Licenza (Mesi) *</label>
+                        <select id="lic-durata" class="form-control" required>
+                            <option value="1">1 Mese (Trial)</option>
+                            <option value="3">3 Mesi</option>
+                            <option value="6">6 Mesi</option>
+                            <option value="12" selected>12 Mesi (1 Anno)</option>
+                            <option value="24">24 Mesi (2 Anni)</option>
+                            <option value="36">36 Mesi (3 Anni)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="lic-pacchetto">Pacchetto Contratto Licenza *</label>
+                        <select id="lic-pacchetto" class="form-control" required>
+                            <option value="Starter">Starter (Max 10 medici, 20 utenti, 500 ref/mese) - €149/m</option>
+                            <option value="Professional" selected>Professional (Max 20 medici, 40 utenti, 1500 ref/mese) - €289/m</option>
+                            <option value="Enterprise">Enterprise (Medici, utenti e referti illimitati) - €499/m</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" style="background: rgba(37, 99, 235, 0.04); padding: 16px; border-radius: var(--radius-sm); border: 1px dashed var(--border-color); margin-top: 10px;">
+                        <p style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.45; margin: 0;">
+                            <strong style="color: var(--primary); display: block; margin-bottom: 4px;">Moduli della Licenza:</strong>
+                            In conformità con le policy NextCare, tutti i moduli applicativi (CUP/Agende, LIS, RIS, FSE 2.0, STS e Compensi Medici) sono <strong>sempre inclusi ed abilitati</strong> in ogni seriale generato dal giorno 1.
+                        </p>
+                    </div>
+
+                    <button type="submit" class="btn" style="margin-top: 10px;">Genera Licenza Ufficiale</button>
+                </form>
+            </div>
+
+            <!-- DISTINTA PREVIEW -->
+            <div class="dashboard-card" style="display: flex; align-items: center; justify-content: center;">
+                <div class="distinta-wrapper">
+                    <div id="placeholder-distinta" class="placeholder-text">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="color: var(--border-color); margin-bottom: 16px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                        <p>Compila il modulo a sinistra e clicca su "Genera Licenza" per creare e visualizzare la distinta ufficiale.</p>
+                    </div>
+
+                    <!-- CERTIFICATE (DISTINTA) -->
+                    <div id="distinta" class="distinta-preview">
+                        <div class="distinta-stamp">NextCare<br>VALID</div>
+                        <div class="distinta-header" style="display: flex; flex-direction: column; align-items: center; gap: 8px;">
+                            <div class="logo" style="margin-bottom: 5px;">
+                                <div class="logo-icon" style="background: #2563eb; color: #ffffff;">NC</div>
+                                <div class="logo-text" style="text-align: left;">
+                                    <span class="logo-title" style="color: #1e293b;">NextCare</span>
+                                    <span class="logo-subtitle" style="color: #64748b;">Healthcare OS</span>
+                                </div>
+                            </div>
+                            <h3 class="distinta-title" style="margin-top: 10px; color: #0f172a;">DISTINTA DI LICENZA</h3>
+                            <p class="distinta-subtitle" style="color: #64748b; font-weight: 500;">Nextcare Healthcare Operating System (HOS)</p>
+                        </div>
+
+                        <div class="distinta-body">
+                            <div class="distinta-row">
+                                <span class="distinta-label">Intestatario / Cliente:</span>
+                                <span class="distinta-value" id="dist-cliente">-</span>
+                            </div>
+                            <div class="distinta-row">
+                                <span class="distinta-label">Data Attivazione:</span>
+                                <span class="distinta-value" id="dist-attivazione">-</span>
+                            </div>
+                            <div class="distinta-row">
+                                <span class="distinta-label">Data Scadenza:</span>
+                                <span class="distinta-value" id="dist-scadenza">-</span>
+                            </div>
+                            <div class="distinta-row">
+                                <span class="distinta-label">Durata Contrattuale:</span>
+                                <span class="distinta-value" id="dist-durata">-</span>
+                            </div>
+                            <div class="distinta-row" style="border-bottom: none;">
+                                <span class="distinta-label">Pacchetto Licenza:</span>
+                                <span class="distinta-value" style="font-weight: 700; color: var(--success);" id="dist-pacchetto">Enterprise (Tutti i moduli inclusi)</span>
+                            </div>
+
+                            <div class="distinta-serial-box">
+                                <p class="distinta-serial-label">CODICE SERIALE DI ATTIVAZIONE</p>
+                                <span class="distinta-serial-key" id="dist-serial">NC-XXXXX-YYYYY-ZZZZZ</span>
+                            </div>
+                        </div>
+
+                        <div class="distinta-footer">
+                            Documento generato crittograficamente da NextCare Licensing. 
+                            Tutti i diritti riservati. Rob&Leti © 2026.
+                        </div>
+                    </div>
+
+                    <div class="distinta-actions" id="dist-actions" style="display: none;">
+                        <button class="btn btn-sec" onclick="copySerial()">Copia Seriale</button>
+                        <button class="btn" onclick="window.print()">Stampa Distinta</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- HISTORY LIST -->
+        <div class="dashboard-card history-card">
+            <h2 class="card-title">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 8v4l3 3"></path><circle cx="12" cy="12" r="9"></circle></svg>
+                Registro Licenze Generate a Database
+            </h2>
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Cliente / Struttura</th>
+                            <th>Pacchetto</th>
+                            <th>Codice Seriale</th>
+                            <th>Attivazione</th>
+                            <th>Scadenza</th>
+                            <th>Durata</th>
+                            <th>Stato</th>
+                            <th>Azioni</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-tbody">
+                        <tr>
+                            <td colspan="8" style="text-align: center; color: var(--text-secondary); padding: 30px;">Caricamento storico in corso...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Theme initialization
+        const savedTheme = localStorage.getItem('nextcare-theme') || 'light';
+        applyTheme(savedTheme);
+
+        function applyTheme(theme) {
+            const lightIcon = document.getElementById('theme-icon-light');
+            const darkIcon = document.getElementById('theme-icon-dark');
+            
+            if (theme === 'dark') {
+                document.body.classList.add('dark-theme');
+                if (lightIcon) lightIcon.style.display = 'block';
+                if (darkIcon) darkIcon.style.display = 'none';
+            } else {
+                document.body.classList.remove('dark-theme');
+                if (lightIcon) lightIcon.style.display = 'none';
+                if (darkIcon) darkIcon.style.display = 'block';
+            }
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.body.classList.contains('dark-theme') ? 'dark' : 'light';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('nextcare-theme', newTheme);
+            applyTheme(newTheme);
+        }
+
+        // Set default activation date to today
+        document.getElementById('lic-data-attivazione').value = new Date().toISOString().split('T')[0];
+
+        // Retrieve saved password from session to avoid prompt on reload
+        const savedPass = sessionStorage.getItem('lic_pwd');
+        if (savedPass === 'RobLeti2024') {
+            document.getElementById('password-gate').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+            document.getElementById('dashboard').style.opacity = '1';
+            loadHistory();
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const password = document.getElementById('gate-password').value;
+            if (password === 'RobLeti2024') {
+                sessionStorage.setItem('lic_pwd', password);
+                document.getElementById('password-gate').style.opacity = '0';
+                setTimeout(() => {
+                    document.getElementById('password-gate').style.display = 'none';
+                    document.getElementById('dashboard').style.display = 'block';
+                    setTimeout(() => {
+                        document.getElementById('dashboard').style.opacity = '1';
+                    }, 50);
+                    loadHistory();
+                }, 300);
+            } else {
+                alert('Password Errore: Accesso negato.');
+                document.getElementById('gate-password').value = '';
+                document.getElementById('gate-password').focus();
+            }
+        }
+
+        function handleLogout() {
+            sessionStorage.removeItem('lic_pwd');
+            window.location.reload();
+        }
+
+
+
+        function generateLicense(e) {
+            e.preventDefault();
+            const password = sessionStorage.getItem('lic_pwd');
+            const cliente = document.getElementById('lic-cliente').value;
+            const data_attivazione = document.getElementById('lic-data-attivazione').value;
+            const durata_mesi = parseInt(document.getElementById('lic-durata').value);
+            const pacchetto = document.getElementById('lic-pacchetto').value;
+
+            fetch('/api/admin/generate-license', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    password: password,
+                    cliente: cliente,
+                    data_attivazione: data_attivazione,
+                    durata_mesi: durata_mesi,
+                    pacchetto: pacchetto
+                })
+            })
+            .then(res => res.json())
+            .then(res => {
+                if (res && res.success) {
+                    // Populate Distinta UI
+                    document.getElementById('placeholder-distinta').style.display = 'none';
+                    const dist = document.getElementById('distinta');
+                    dist.style.display = 'block';
+                    
+                    document.getElementById('dist-cliente').innerText = res.data.cliente;
+                    
+                    // Format dates for receipt display (DD/MM/YYYY)
+                    const formatD = (str) => str.split('-').reverse().join('/');
+                    document.getElementById('dist-attivazione').innerText = formatD(res.data.data_attivazione);
+                    document.getElementById('dist-scadenza').innerText = formatD(res.data.data_scadenza);
+                    document.getElementById('dist-durata').innerText = res.data.durata_mesi + ' Mesi';
+                    
+                    // Display package limits
+                    const pkg = res.data.pacchetto || 'Enterprise';
+                    const limitsText = pkg === 'Starter' ? 'Starter (Max 10 medici, 20 utenti, 500 ref/m)' :
+                                       pkg === 'Professional' ? 'Professional (Max 20 medici, 40 utenti, 1500 ref/m)' :
+                                       'Enterprise (Medici, utenti, ref illimitati)';
+                    document.getElementById('dist-pacchetto').innerText = limitsText;
+                    
+                    document.getElementById('dist-serial').innerText = res.data.serial_number;
+                    document.getElementById('dist-actions').style.display = 'flex';
+                    
+                    // Reset inputs
+                    document.getElementById('lic-cliente').value = '';
+                    
+                    // Reload table
+                    loadHistory();
+                } else {
+                    alert('Errore generazione: ' + (res.error || 'Errore sconosciuto'));
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Errore di connessione durante la generazione della licenza.');
+            });
+        }
+
+        function loadHistory() {
+            const password = sessionStorage.getItem('lic_pwd');
+            fetch('/api/admin/list-licenses', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ password: password })
+            })
+            .then(res => res.json())
+            .then(res => {
+                const tbody = document.getElementById('history-tbody');
+                if (res && res.success && res.data) {
+                    if (res.data.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--text-secondary);">Nessuna licenza generata a database.</td></tr>`;
+                        return;
+                    }
+                    
+                    tbody.innerHTML = res.data.map(l => {
+                        const formatD = (str) => str ? str.split('-').reverse().join('/') : '-';
+                        
+                        let packageType = 'Enterprise';
+                        try {
+                            const parsed = JSON.parse(l.moduli);
+                            if (parsed && parsed.package) {
+                                packageType = parsed.package;
+                            }
+                        } catch(e) {}
+
+                        return `
+                            <tr>
+                                <td style="font-weight: 600;">${l.cliente}</td>
+                                <td><span class="badge" style="background: rgba(37, 99, 235, 0.08); color: var(--primary); padding: 4px 8px; border-radius: 4px; font-weight: 600; font-size: 0.8rem;">${packageType}</span></td>
+                                <td style="font-family: 'Source Code Pro', monospace; font-size: 0.85rem; color: var(--primary);">${l.serial_number}</td>
+                                <td>${formatD(l.data_attivazione)}</td>
+                                <td>${formatD(l.data_scadenza)}</td>
+                                <td>${l.durata_mesi} Mesi</td>
+                                <td><span class="badge-table badge-${l.stato}">${l.stato}</span></td>
+                                <td>
+                                    <button class="btn" style="padding: 6px 12px; font-size: 0.75rem; width: auto; text-transform: none; font-weight: 500;" onclick="loadLicenseToPreview(${JSON.stringify(l).replace(/"/g, '&quot;')})">Visualizza</button>
+                                </td>
+                            </tr>
+                        `;
+                    }).join('');
+                } else {
+                    tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--danger);">Impossibile caricare lo storico: ${res.error || 'Errore'}</td></tr>`;
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                document.getElementById('history-tbody').innerHTML = `<tr><td colspan="8" style="text-align: center; color: var(--danger);">Errore di connessione al database.</td></tr>`;
+            });
+        }
+
+        function loadLicenseToPreview(l) {
+            document.getElementById('placeholder-distinta').style.display = 'none';
+            const dist = document.getElementById('distinta');
+            dist.style.display = 'block';
+            
+            document.getElementById('dist-cliente').innerText = l.cliente;
+            
+            const formatD = (str) => str.split('-').reverse().join('/');
+            document.getElementById('dist-attivazione').innerText = formatD(l.data_attivazione);
+            document.getElementById('dist-scadenza').innerText = formatD(l.data_scadenza);
+            document.getElementById('dist-durata').innerText = l.durata_mesi + ' Mesi';
+            
+            let pkg = 'Enterprise';
+            try {
+                const parsed = JSON.parse(l.moduli);
+                if (parsed && parsed.package) {
+                    pkg = parsed.package;
+                }
+            } catch(e) {}
+            const limitsText = pkg === 'Starter' ? 'Starter (Max 10 medici, 20 utenti, 500 ref/m)' :
+                               pkg === 'Professional' ? 'Professional (Max 20 medici, 40 utenti, 1500 ref/m)' :
+                               'Enterprise (Medici, utenti, ref illimitati)';
+            document.getElementById('dist-pacchetto').innerText = limitsText;
+            
+            document.getElementById('dist-serial').innerText = l.serial_number;
+            document.getElementById('dist-actions').style.display = 'flex';
+        }
+
+        function copySerial() {
+            const serial = document.getElementById('dist-serial').innerText;
+            navigator.clipboard.writeText(serial).then(() => {
+                alert('Codice seriale copiato negli appunti con successo!');
+            }).catch(err => {
+                console.error('Copia fallita', err);
+            });
+        }
+    </script>
+</body>
+</html>

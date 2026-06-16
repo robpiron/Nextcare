@@ -1,0 +1,592 @@
+================================================================================
+  NEXTCARE — SPECIFICHE TECNICHE: ARCHITETTURA ENTERPRISE
+  Documento per il Team di Sviluppo
+  Versione 1.1 — Giugno 2026
+  Confidenziale — Uso Interno
+================================================================================
+
+INDICE
+------
+  1. ARCHITETTURA A 3 LIVELLI
+  2. MULTI-TENANT
+  3. MULTI-SEDE
+  4. PUNTI PRELIEVO SATELLITE
+  5. CUP CENTRALIZZATO — RICERCA MULTI-SEDE
+  6. PORTALI WEB (Pazienti, MMG, Aziende, Fondi)
+  7. RBAC — RUOLI E PERMESSI GRANULARI
+  8. BUSINESS INTELLIGENCE DI GRUPPO
+  9. DEPLOY — SAAS / ON-PREMISE / HYBRID
+
+
+================================================================================
+  1. ARCHITETTURA A 3 LIVELLI
+================================================================================
+
+NextCare implementa un modello gerarchico a 3 livelli che replica fedelmente
+la struttura organizzativa di qualsiasi rete sanitaria — dal singolo
+ambulatorio al gruppo ospedaliero multi-regionale.
+Ogni livello ha la propria autonomia operativa ma contribuisce al reporting
+consolidato del livello superiore.
+
+LIVELLO 0 — GRUPPO (Console centrale)
+--------------------------------------
+  Funzioni:
+    - Dashboard consolidata inter-sede (KPI in tempo reale)
+    - Configurazione globale: nomenclatore, listini master, medici
+    - Reportistica aggregata su tutte le sedi
+    - Fatturazione centralizzata e prima nota di gruppo
+    - Gestione utenti globale + propagazione regole ai livelli inferiori
+    - ERP & SDI: fatture elettroniche, prima nota, ciclo attivo
+    - Business Intelligence: KPI comparativi, trend, alerting, export board
+
+  Relazione con livelli inferiori:
+    → Propaga configurazioni verso le sedi
+    → Raccoglie KPI e dati aggregati dalle sedi
+    → Può imporre regole vincolanti a tutte le sedi figlie
+    → Può sovrascrivere configurazioni locali in modo centralizzato
+
+  ↕ REPLICA CONFIGURAZIONI · RACCOLTA KPI
+
+LIVELLO 1 — SEDI OPERATIVE
+----------------------------
+  Ogni sede è un'unità autonoma con:
+    - Agenda visite e CUP locale (sincronizzato con CUP centralizzato)
+    - Propri medici, specializzazioni e orari
+    - Analizzatori LIS collegati
+    - Sistema DICOM/PACS locale o condiviso
+    - Contabilità locale + reporting verso gruppo
+    - Gestione cassa e pagamenti
+
+  Tipi di sede previsti:
+    - Clinica principale (hub)
+    - Poliambulatorio
+    - Laboratorio analisi
+    - Centro diagnostico (RX, TAC, Eco, RM)
+    - Sede aziendale (medicina del lavoro)
+
+  Aggiunta nuova sede: attivazione < 24h, configurazione guidata.
+
+  ↕ CAMPIONI TRACCIATI · REFERTI · DATI CLINICI
+
+LIVELLO 2 — SATELLITE
+-----------------------
+  Tipi di nodo satellite:
+    - Punto prelievo (farmacia, ambulatorio convenzionato, sede aziendale)
+    - Postazione CUP remota (prenotazioni per laboratorio o sede principale)
+    - Terminale aziendale (medicina del lavoro, sorveglianza sanitaria)
+
+  Requisiti tecnici nodo satellite:
+    - Solo browser (tablet, PC, thin client) — nessuna installazione locale
+    - Connessione internet (HTTPS) — nessuna VPN complessa richiesta
+    - Stampante etichette barcode (Zebra/Brother/Dymo — TCP porta 9100)
+    - Attivazione nuovo nodo: < 15 minuti
+
+  ↕ PRELIEVI · PRENOTAZIONI · STATO CAMPIONI
+
+
+================================================================================
+  2. MULTI-TENANT
+================================================================================
+
+ISOLAMENTO DEI DATI
+--------------------
+  - Ogni cliente (tenant) ha DATABASE FISICAMENTE SEPARATO:
+      · Schema isolation (default per volumi standard)
+      · Database fisicamente separato (opzione high-security)
+  - Nessuna query cross-tenant possibile a livello architetturale
+    (non è una policy — è un vincolo di design)
+  - In caso di audit GDPR: isolamento dimostrabile con report tecnico
+
+CONFIGURAZIONI INDIPENDENTI PER TENANT
+----------------------------------------
+  Ogni tenant configura autonomamente:
+    - Nomenclatore prestazioni (con override sul master nazionale)
+    - Listini prezzi (privato, SSN, fondi, aziendale)
+    - Medici e specializzazioni
+    - Template referti (logo, intestazione, layout)
+    - Notifiche (SMS/email — provider e testi)
+    - Integrazioni con analizzatori e PACS
+    - RBAC: ruoli e permessi
+    - Portali web (brand, colori, dominio custom)
+
+AGGIORNAMENTI CENTRALIZZATI
+-----------------------------
+  - Il provider aggiorna il sistema UNA sola volta
+  - Tutti i tenant ricevono nuovo codice simultaneamente
+  - Zero downtime: deploy rolling
+  - Nomenclatore 2025: distribuzione automatica alla data di vigenza
+
+MODELLO RESELLER
+-----------------
+  - Studi software, associazioni, gruppi sanitari possono rivendere NextCare
+  - Console reseller: visibilità su tutti i tenant gestiti
+  - Pricing multi-tenant: sconti volume progressivi
+  - Onboarding nuovo tenant: guidato, < 4 ore
+
+
+================================================================================
+  3. MULTI-SEDE
+================================================================================
+
+GESTIONE MEDICI ITINERANTI
+---------------------------
+  - Medico registrato una volta → opera su più sedi con unico login
+  - Agenda unificata: il medico vede tutti i propri appuntamenti
+    indipendentemente dalla sede
+  - Anti-double-booking inter-sede: il sistema verifica disponibilità
+    in tempo reale su TUTTI i calendari prima di confermare
+  - La segreteria di ogni sede vede solo gli slot aperti per quella sede
+
+LISTINI DIFFERENZIATI PER SEDE
+--------------------------------
+  - Stessa prestazione può avere prezzi diversi per sede:
+      Es. Visita cardiologica: €80 sede principale / €60 punto periferico
+  - Listini gestibili centralmente senza duplicare le anagrafiche
+  - Tipi listino per sede: privato / SSN / fondi sanitari / aziendale
+
+ANALIZZATORI E PACS PER SEDE
+------------------------------
+  - Ogni sede connette i propri analizzatori LIS in modo indipendente
+  - LIS inter-sede: campione prelevato in Sede B → analizzato in Sede A
+    con tracciabilità completa del percorso (7 stati campione)
+  - PACS condivisibile tra sedi oppure locale per sede
+
+REPORTING CONSOLIDATO
+---------------------
+  - Dashboard gruppo: ricavi, prestazioni, occupazione medici, tempi refertazione
+  - KPI confrontabili tra sedi (grafici a barre comparativi)
+  - Drill-down: il responsabile di sede vede solo la propria sede
+  - Export PDF/Excel per il board
+
+
+================================================================================
+  4. PUNTI PRELIEVO SATELLITE
+================================================================================
+
+ARCHITETTURA
+------------
+  Il punto prelievo satellite è una stazione leggera browser-based che si
+  connette via internet al laboratorio principale (Livello 1).
+  Non richiede IT on-site, VPN complessa o installazioni software.
+
+FUNZIONALITÀ
+------------
+  a) Accettazione paziente
+       - Ricerca paziente per CF / tessera sanitaria / nome
+       - Inserimento nuovo paziente con anagrafica base
+       - Selezione esami da eseguire (lista prestazioni configurabile per punto)
+       - Conferma prenotazione CUP se il paziente ha già un appuntamento
+         (il sistema mostra la prenotazione attiva dalla sede principale)
+
+  b) Stampa etichette barcode
+       - Generazione automatica etichette per ogni provetta richiesta
+       - Barcode campione: Code 128 o GS1-128
+       - Dati codificati nell'etichetta:
+           · ID paziente (CF o ID interno NextCare)
+           · Data e ora prelievo (YYYY-MM-DD HH:MM)
+           · Codice esame (nomenclatore)
+           · ID punto prelievo
+           · ID operatore
+           · Numero progressivo campione
+       - Compatibilità stampanti: Zebra (ZPL/EPL), Brother, Dymo
+         → Invio ZPL via TCP raw porta 9100
+
+  c) Tracciamento campione (7 stati)
+       1. PRELIEVO      — campione registrato al punto satellite
+       2. TRASPORTO     — campione in viaggio verso il lab (scan barcode corriere)
+       3. RICEVUTO LAB  — campione arrivato al laboratorio (scan barcode operatore lab)
+       4. IN ANALISI    — campione su analizzatore
+       5. REFERTATO     — risultati disponibili, in attesa firma
+       6. FIRMATO       — biologo/medico ha firmato il referto
+       7. CONSEGNATO    — referto disponibile al paziente (portale/SMS/email)
+       Ogni cambio stato: scansione barcode → timestamp + operatore registrati
+
+  d) Gestione non conformità
+       Alert automatico al punto prelievo e al paziente se:
+         - Campione emolizzato
+         - Volume insufficiente
+         - Provetta errata
+         - Campione scambiato (barcode non corrisponde)
+
+  e) CUP integrato al punto prelievo
+       Il punto satellite può prenotare direttamente sulla agenda della sede
+       principale o di qualsiasi altra sede — vedi sezione 5.
+
+REQUISITI TECNICI MINIMI NODO SATELLITE
+-----------------------------------------
+  Hardware:   Tablet (iOS/Android/Windows) o PC con browser moderno
+              RAM: 2 GB, CPU: qualsiasi, Schermo: minimo 10"
+  Stampante:  Zebra ZT / ZD / GK series (consigliata) o Brother QL
+  Connessione: internet HTTPS (4G/5G accettato per backup)
+  Browser:    Chrome 100+, Firefox 100+, Edge 100+, Safari 15+
+  VPN:        NON richiesta (tutto HTTPS end-to-end)
+
+
+================================================================================
+  5. CUP CENTRALIZZATO — RICERCA MULTI-SEDE
+================================================================================
+
+DESCRIZIONE FUNZIONALE
+-----------------------
+  Il CUP (Centro Unico di Prenotazione) di NextCare è centralizzato:
+  quando l'operatore (o il paziente dal portale) inserisce un esame da
+  prenotare, il sistema cerca automaticamente la disponibilità su TUTTE
+  le sedi abilitate, non solo sulla sede corrente.
+
+  L'obiettivo è ridurre i tempi di attesa del paziente offrendo
+  alternative di sede in base a:
+    - Disponibilità di agenda (slot liberi)
+    - Prossimità geografica (facoltativo: ordinamento per distanza)
+    - Preferenza del paziente (sede preferita memorizzabile)
+    - Tipo di accesso (privato / SSN / fondo sanitario / urgenza)
+
+FLUSSO TECNICO — RICERCA MULTI-SEDE
+-------------------------------------
+
+  STEP 1 — Inserimento esame
+    L'operatore (o paziente) digita / seleziona la prestazione:
+      - Ricerca per nome (es. "ecografia addome")
+      - Ricerca per codice nomenclatore (es. 88.76.1)
+      - Ricerca per specializzazione medica
+    Il sistema valida che la prestazione esista nel nomenclatore attivo.
+
+  STEP 2 — Ricerca disponibilità multi-sede
+    Query sul calendario di TUTTE le sedi che erogano quella prestazione:
+
+    INPUT della query:
+      - Codice prestazione (ID nomenclatore)
+      - Data "non prima di" (default: oggi o prima data disponibile)
+      - Data "non dopo di" (opzionale — finestra massima di ricerca)
+      - Tipo accesso: privato / SSN / urgenza / fondo sanitario
+      - Sede preferita (se il paziente ha una preferenza memorizzata)
+      - Raggio geografico (opzionale, se attivato GPS/indirizzo)
+
+    OUTPUT — risultati ordinati di default per:
+      1. Prima data disponibile (prima disponibilità in assoluto)
+      2. Sede (se il paziente ha una sede preferita → quella viene prima)
+      3. Fasce orarie (mattina / pomeriggio / sabato)
+
+    Esempio di risultati restituiti al front-end:
+      ┌─────────────────────┬──────────┬───────┬──────────┬────────────────┐
+      │ Sede                │ Data     │ Ora   │ Medico   │ Tipo           │
+      ├─────────────────────┼──────────┼───────┼──────────┼────────────────┤
+      │ Sede A — Clinica    │ 16/06/26 │ 09:30 │ Dr. Boni │ Privato        │
+      │ Sede B — Poliamb.   │ 16/06/26 │ 11:00 │ Dr. Rossi│ Privato / SSN  │
+      │ Sede A — Clinica    │ 17/06/26 │ 08:00 │ Dr. Boni │ Privato        │
+      │ Sede C — Lab        │ 18/06/26 │ 14:30 │ (nessuno)│ Solo prelievo  │
+      │ Punto prelievo via X│ 19/06/26 │ 08:00 │ —        │ Solo prelievo  │
+      └─────────────────────┴──────────┴───────┴──────────┴────────────────┘
+
+  STEP 3 — Selezione e conferma
+    L'operatore (o il paziente) seleziona lo slot preferito.
+    Il sistema:
+      a) Blocca lo slot (lock temporaneo 3 minuti per evitare doppia prenotazione)
+      b) Mostra riepilogo: paziente, prestazione, sede, data, ora, medico, prezzo
+      c) L'operatore conferma → prenotazione definitiva registrata
+      d) Il lock si rilascia automaticamente se non confermato entro 3 minuti
+
+  STEP 4 — Conferma automatica
+    Al momento della conferma il sistema invia automaticamente:
+      → SMS al paziente: "Prenotazione confermata — [Prestazione] — [Data] [Ora]
+                          — [Sede] — [Indirizzo]"
+      → Email al paziente: email di conferma con allegato ICS (calendario)
+                           e istruzioni preparazione all'esame
+      → (Opzionale) Notifica push se il paziente usa l'app / portale
+    I testi SMS/email sono configurabili per tenant e per tipo prestazione.
+
+  STEP 5 — Reminder automatici
+    - 48h prima: reminder SMS/email con possibilità di disdire
+    - 24h prima: reminder finale con istruzioni (digiuno, ecc.)
+    - In caso di disdetta: slot torna disponibile automaticamente in agenda
+
+GESTIONE OVERBOOKING
+---------------------
+  - Slot bloccato temporaneamente (lock 3 min) all'inizio del processo
+  - Se due operatori selezionano lo stesso slot simultaneamente:
+      → Il primo che conferma ottiene lo slot
+      → Il secondo riceve avviso "Slot non più disponibile — nuova ricerca"
+  - Lista d'attesa: configurabile per sede e prestazione
+    Se un paziente disdice → il primo in lista d'attesa viene avvisato via SMS
+
+URGENZE E PRIORITÀ
+-------------------
+  - Slot "urgenza": agenda separata (non visibile nella ricerca standard)
+    Attivabile solo da profilo Medico o Amministratore
+  - Classe di priorità SSN: U (urgente 24h), B (breve 72h), D (differita 30gg),
+    P (programmabile 60gg) — se la struttura è convenzionata SSN
+  - Slot urgenza: disponibili H24 anche al di fuori degli orari standard
+
+CONFIGURAZIONE PER SEDE (quali sedi includere nella ricerca)
+------------------------------------------------------------
+  - Il sistema cerca di default in TUTTE le sedi dello stesso tenant
+  - L'Amministratore può escludere sedi dalla ricerca centralizzata
+    (es. sede privata non vuole ricevere prenotazioni SSN)
+  - Il paziente può filtrare per:
+      · Sede specifica (se preferisce una sede)
+      · Distanza (se geolocalizzazione attiva)
+      · Fascia oraria (mattina / pomeriggio / sabato)
+      · Solo con disponibilità entro N giorni
+
+RICERCA DAL PUNTO PRELIEVO SATELLITE
+--------------------------------------
+  Il punto prelievo satellite ha accesso al CUP centralizzato:
+    - L'operatore del punto prelievo inserisce l'esame richiesto dal paziente
+    - Il sistema mostra disponibilità su tutte le sedi (stesso flusso)
+    - La prenotazione viene registrata sulla sede selezionata
+    - Il paziente riceve conferma via SMS/email
+  Utilità: il paziente fa il prelievo e prenota la visita nello stesso momento,
+  senza dover chiamare il centralino della sede principale.
+
+RICERCA DAL PORTALE PAZIENTI
+------------------------------
+  I pazienti autenticati (SPID o credenziali) possono:
+    - Cercare autonomamente disponibilità multi-sede
+    - Prenotare, modificare o disdire appuntamenti
+    - Vedere i propri appuntamenti passati e futuri
+    - Pagare online (se integrato gateway pagamenti)
+  La ricerca nel portale pazienti segue lo stesso flusso degli step 1-5
+  ma con interfaccia semplificata (no medico, no tipo accesso — solo sede e data).
+
+STRUTTURA DATI — ENTITÀ PRINCIPALI (suggerimento schema)
+---------------------------------------------------------
+  Nomenclatore (prestazione)
+    id, codice, nome, descrizione, specializzazione, durata_minuti,
+    istruzioni_preparazione, attivo (bool), sedi_abilitate (array FK)
+
+  Agenda
+    id, sede_id, medico_id (nullable per prelievi), data, ora_inizio,
+    ora_fine, prestazione_id (nullable = slot generico), stato
+    [libero | bloccato_temp | prenotato | sospeso | urgenza],
+    tipo_accesso [privato | SSN | fondo | urgenza]
+
+  Prenotazione
+    id, paziente_id, agenda_id (FK slot), prestazione_id, sede_id,
+    data_ora_prenotazione, canale [operatore | portale | punto_prelievo | api],
+    stato [confermata | disdetta | eseguita | no_show],
+    notifiche_inviate (array: [sms_conferma, email_conferma, sms_reminder_48h,
+                               sms_reminder_24h])
+
+  Lock temporaneo slot (tabella/cache)
+    agenda_id, locked_by (session_id), locked_at, expires_at (+3 min)
+    → cleanup automatico ogni minuto per lock scaduti
+
+  Lista d'attesa
+    id, paziente_id, prestazione_id, sede_preferita (nullable),
+    fascia_oraria [mattina|pomeriggio|sabato|indifferente],
+    data_iscrizione, notificato (bool)
+
+API ENDPOINT SUGGERITI
+-----------------------
+  GET  /api/cup/disponibilita
+       Params: prestazione_id, data_da, data_a (opz), tipo_accesso,
+               sede_id (opz), lat/lon (opz), raggio_km (opz)
+       Response: array slot disponibili ordinati per data
+
+  POST /api/cup/lock
+       Body: agenda_id, session_id
+       Response: lock_id, expires_at
+       Nota: lock dura 3 minuti, poi auto-release
+
+  POST /api/cup/prenota
+       Body: lock_id, paziente_id, note (opz)
+       Response: prenotazione_id, dettaglio, trigger notifiche
+
+  DELETE /api/cup/prenota/{id}
+       Disdetta prenotazione → slot ritorna libero → notifica lista attesa
+
+  GET  /api/cup/prenotazioni/{paziente_id}
+       Response: storico prenotazioni del paziente (passate + future)
+
+  POST /api/cup/lista-attesa
+       Body: paziente_id, prestazione_id, preferenze
+       Response: posizione in lista
+
+
+================================================================================
+  6. PORTALI WEB (Pazienti, MMG, Aziende, Fondi)
+================================================================================
+
+CARATTERISTICHE COMUNI
+-----------------------
+  - White-label: appaiono con il brand della struttura
+  - Responsive: mobile-first (iOS / Android / desktop)
+  - HTTPS obbligatorio (TLS 1.3)
+  - SSO tra portali dello stesso tenant
+
+PORTALE PAZIENTI
+-----------------
+  Autenticazione: email + password OPPURE SPID (SAML 2.0 / OIDC)
+  Funzionalità:
+    - Prenotazione esami con ricerca multi-sede (CUP centralizzato)
+    - Modifica / disdetta appuntamento
+    - Visualizzazione e download referti firmati (PDF/A)
+    - Notifiche SMS/email (referto pronto, reminder appuntamento)
+    - Aggiornamento anagrafiche e consensi GDPR
+    - Storico accessi e prestazioni
+
+PORTALE MEDICI DI BASE (MMG)
+-----------------------------
+  Autenticazione: SPID o credenziali struttura
+  Funzionalità:
+    - Accesso referti paziente per CF/tessera sanitaria
+    - Notifica push/email quando referto è disponibile e firmato
+    - Richiesta prestazione direttamente sul CUP (prenotazione per paziente)
+    - Integrazione HL7 FHIR R4 con cartella clinica MMG
+      FHIR endpoint: GET [base]/DiagnosticReport?patient=CF-PAZIENTE
+      Notifica webhook: POST verso URL MMG (payload JSON: referto pronto)
+
+PORTALE AZIENDALE (Medicina del Lavoro — D.Lgs. 81/08)
+-------------------------------------------------------
+  Autenticazione: credenziali azienda (HR admin)
+  Segregazione: ogni azienda vede SOLO i propri dipendenti
+  Funzionalità:
+    - Prenotazione visite periodiche per i dipendenti (via CUP centralizzato)
+    - Visualizzazione referti con firma del medico competente
+    - Gestione cartelle sanitarie di rischio
+    - Download certificati di idoneità (idoneo / con prescrizioni / inidoneo)
+    - Documentazione D.Lgs. 81/08
+
+PORTALE FONDI SANITARI & ASSICURAZIONI
+----------------------------------------
+  Accesso: API REST/SOAP o portale dedicato per operatore fondo
+  Funzionalità:
+    - Verifica eleggibilità paziente in tempo reale
+    - Preautorizzazione automatica
+    - Invio documentazione rimborso
+    - Riconciliazione pagamenti e scadenziari
+
+
+================================================================================
+  7. RBAC — RUOLI E PERMESSI GRANULARI
+================================================================================
+
+ARCHITETTURA
+------------
+  6 profili predefiniti + ruoli custom (permessi a livello di singola funzione)
+  Audit log immutabile: chi ha fatto cosa, quando, da quale IP (GDPR art. 30)
+
+RUOLI PREDEFINITI
+-----------------
+  AMMINISTRATORE
+    Accesso: tutto (configurazioni, utenti, reporting finanziario, RBAC)
+    Figure:  titolare, direttore sanitario
+
+  MEDICO
+    Accesso: refertazione, agenda propria, cartelle cliniche propri pazienti
+    Limiti:  non vede dati finanziari, contabilità, cassa
+
+  LABORATORISTA (BIOLOGO / TECNICO)
+    Accesso: LIS completo (campioni, analisi, validazione, refertazione)
+    Limiti:  non vede agenda visite, fatturazione
+
+  ACCETTAZIONE (SEGRETARIA / FRONT-DESK)
+    Accesso: CUP, prenotazioni multi-sede, accettazione, cassa
+    Limiti:  non vede referti clinici completi, dati laboratorio
+
+  CONTABILITÀ
+    Accesso: fatturazione, pagamenti, corrispettivi, prima nota
+    Limiti:  non vede dati clinici
+
+  MAGAZZINO
+    Accesso: reagenti, consumabili, ordini fornitori, cold chain
+    Limiti:  non vede dati clinici, fatturazione
+
+  RUOLO CUSTOM
+    Combinazione libera di permessi per modulo/funzione
+    Configurabile dall'Amministratore
+
+AUDIT LOG
+---------
+  Campi registrati: utente, timestamp UTC, IP sorgente, azione,
+  entità (ID + tipo), valore prima, valore dopo.
+  Sola lettura anche per Admin. Retention: 10 anni (default).
+  Export CSV per ispezioni Garante Privacy.
+
+
+================================================================================
+  8. BUSINESS INTELLIGENCE DI GRUPPO
+================================================================================
+
+KPI PRINCIPALI MONITORATI
+--------------------------
+  - Ricavi per sede / medico / prestazione (giornaliero, mensile, annuo)
+  - Numero prestazioni erogate + trend
+  - Occupazione agenda per sede e per medico (%)
+  - Tempi di refertazione LIS (ore campione → firma referto)
+  - Referti emessi vs. in attesa firma
+  - Ticket medio per tipo prestazione
+  - Incasso cassa per sede
+  - Prenotazioni CUP: nuove, disdette, no-show (tasso disdetta)
+  - Distribuzione prenotazioni per canale (operatore / portale / punto prelievo)
+
+FUNZIONALITÀ
+------------
+  - Dashboard interattive (grafici linee, barre, torta, heatmap, tabelle)
+  - Query in linguaggio naturale italiano (AI NLP):
+    Es: "Quante ecografie nella sede B nel Q1?" → grafico automatico
+  - Drill-down per sede, medico, prestazione, periodo
+  - Confronto inter-sede (side by side)
+  - Alerting su soglie configurabili (SMS / email / notifica in-app)
+    Es: "tempo refertazione LIS > 4 ore", "cassa < €500", "no-show > 20%"
+  - Report schedulati: PDF/Excel → invio email automatico (settimanale/mensile)
+  - Previsioni AI: occupazione agenda (4 settimane), ricavi (trimestre),
+    consumo reagenti (per ordini magazzino)
+
+TECNOLOGIE SUGGERITE
+---------------------
+  - Motore BI: Metabase / Apache Superset (open source) oppure
+               Power BI Embedded (consigliato per istanze Azure)
+  - AI NLP: Azure OpenAI o OpenAI API con prompt engineering su schema DB
+
+
+================================================================================
+  9. DEPLOY — SAAS / ON-PREMISE / HYBRID
+================================================================================
+
+MODALITÀ SAAS (Cloud — consigliata)
+-------------------------------------
+  Cloud provider:   Microsoft Azure (preferito) o Amazon AWS
+  Database:         Azure SQL Managed Instance o PostgreSQL
+  Storage:          Azure Blob Storage (DICOM, referti PDF)
+  SLA:              99.9% uptime garantito
+  Backup:           automatico (daily + point-in-time restore 30 gg)
+  Aggiornamenti:    automatici, rolling deploy, zero downtime
+  Compliance:       datacenter EU, NIS2 inclusa
+  FHIR Server:      Azure Health Data Services
+  ⚠️ ATTENZIONE:   Azure API for FHIR → RETIREMENT 30/09/2026
+                    Usare Azure Health Data Services FHIR service
+
+MODALITÀ ON-PREMISE
+--------------------
+  Server minimo (fino a 5 sedi):
+    CPU: 8 core | RAM: 32 GB | Storage: RAID 10 SSD
+    OS: Windows Server 2022 o Ubuntu 22.04 LTS
+    DB: SQL Server 2022 o PostgreSQL 16
+  Backup: a carico struttura (Veeam + NAS offsite consigliato)
+  Aggiornamenti: manuali o assistiti da NextCare
+  VPN: necessaria per nodi satellite e portali esterni
+
+MODALITÀ HYBRID
+---------------
+  Dati clinici: on-premise | Portali web: cloud | BI: cloud
+  Storage DICOM: hot locale + cold cloud (Azure Blob)
+  SLA: 99.9% per la componente cloud
+
+TABELLA RIEPILOGATIVA
+---------------------
+  Caratteristica          | SaaS Cloud   | On-Premise    | Hybrid
+  ----------------------- |------------- |-------------- |---------------
+  Hardware richiesto      | Nessuno      | Sì            | Parziale
+  Aggiornamenti           | Automatici   | Manuali       | Auto (cloud)
+  Backup                  | Incluso      | A carico      | Misto
+  Dati clinici in sede    | No (EU DC)   | Sì            | Sì
+  Portali esterni         | Immediato    | NAT/VPN       | Immediato
+  SLA disponibilità       | 99.9%        | Hardware-dep. | 99.9% (cloud)
+  NIS2 compliance         | Inclusa      | A carico      | Parziale
+
+
+================================================================================
+  END OF DOCUMENT
+  NextCare — Healthcare Operating System
+  nextcare.tech | pironrob@gmail.com
+================================================================================

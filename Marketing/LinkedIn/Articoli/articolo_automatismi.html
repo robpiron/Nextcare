@@ -1,0 +1,288 @@
+<!DOCTYPE html><html lang="it"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NextCare — 15 automatismi che eliminano il lavoro manuale in sanità</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"><style>
+:root{--p:#2563eb;--pl:#eff6ff;--g:linear-gradient(135deg,#2563eb,#3b82f6);
+  --s:#10b981;--sl:#ecfdf5;--w:#f59e0b;--wl:#fffbeb;--d:#ef4444;--dl:#fef2f2;
+  --pu:#8b5cf6;--pul:#f5f3ff;--t:#14b8a6;--tl:#f0fdfa;--cy:#06b6d4;--cyl:#ecfeff;
+  --or:#f97316;--orl:#fff7ed;
+  --bg:#f4f6fa;--sf:#fff;--t1:#1e293b;--t2:#64748b;--t3:#94a3b8;--br:#e2e8f0;
+  --fh:'Outfit','Inter',sans-serif;--fb:'Inter',sans-serif;--fc:'JetBrains Mono',monospace;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--fb);background:var(--bg);color:var(--t1);line-height:1.8}
+h1,h2,h3,h4{font-family:var(--fh);font-weight:700}
+@media print{
+  .np{display:none!important}
+  body,header{background:#fff}
+  .hero,.cta-block{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .mock-screen,.code-block{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+
+/* ─ HEADER ─ */
+header{background:var(--sf);border-bottom:1px solid var(--br);padding:0 40px;
+  position:sticky;top:0;z-index:200;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.hdr{max-width:820px;margin:0 auto;height:64px;display:flex;align-items:center;justify-content:space-between}
+.nc-logo{display:flex;align-items:center;gap:10px}
+.nc-icon{width:38px;height:38px;background:var(--g);border-radius:10px;color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--fh);font-weight:800;font-size:1.1rem;
+  box-shadow:0 4px 12px rgba(37,99,235,.28);flex-shrink:0}
+.nc-name{font-family:var(--fh);font-weight:800;font-size:1.05rem;letter-spacing:-.3px}
+.nc-sub{font-size:.65rem;color:var(--t2);letter-spacing:.8px;text-transform:uppercase}
+.print-btn{background:var(--g);color:#fff;border:none;border-radius:8px;
+  padding:8px 18px;font-family:var(--fh);font-weight:700;font-size:.82rem;cursor:pointer}
+.print-btn:hover{opacity:.88}
+
+/* ─ HERO ─ */
+.hero{padding:56px 40px 60px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.hero-inner{max-width:820px;margin:0 auto}
+.art-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.15);
+  border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:5px 14px;
+  font-size:.75rem;font-weight:700;color:rgba(255,255,255,.9);margin-bottom:18px}
+.hero h1{font-size:clamp(1.8rem,4vw,2.55rem);font-weight:900;color:#fff;
+  letter-spacing:-1px;line-height:1.12;margin-bottom:14px}
+.hero h1 em{font-style:normal;background:linear-gradient(135deg,#93c5fd,#c4b5fd);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-meta{display:flex;align-items:center;gap:14px;margin-top:18px;flex-wrap:wrap}
+.av{width:36px;height:36px;background:rgba(255,255,255,.18);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--fh);font-weight:800;font-size:.78rem;color:#fff;border:2px solid rgba(255,255,255,.3)}
+.mt{font-size:.78rem;color:rgba(255,255,255,.75)}
+.mt strong{color:#fff;font-weight:600}
+.rt{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.12);
+  border-radius:12px;padding:4px 10px;font-size:.72rem;color:rgba(255,255,255,.8);font-weight:600}
+
+/* ─ BODY ─ */
+.wrap{max-width:820px;margin:0 auto;padding:48px 40px 80px}
+.body p{font-size:1rem;color:var(--t2);line-height:1.9;margin-bottom:18px}
+.body p strong{color:var(--t1);font-weight:700}
+.body h2{font-size:1.4rem;font-weight:800;color:var(--t1);
+  margin:42px 0 12px;padding-top:28px;border-top:2px solid var(--br);letter-spacing:-.3px}
+.body h3{font-size:1.05rem;font-weight:700;color:var(--t1);margin:22px 0 8px}
+.body ul{padding-left:0;margin-bottom:18px;display:flex;flex-direction:column;gap:8px}
+.body li{list-style:none;display:flex;gap:10px;align-items:flex-start;
+  font-size:.94rem;color:var(--t2);line-height:1.65}
+.body li::before{content:'✓';color:var(--s);font-weight:800;flex-shrink:0;margin-top:3px}
+.body em{font-style:italic;color:var(--t3)}
+.hr{border:none;border-top:2px solid var(--br);margin:36px 0}
+
+/* ─ CALLOUT ─ */
+.callout{border-radius:14px;padding:20px 24px;margin:22px 0;border:1px solid}
+.callout-blue{background:linear-gradient(135deg,var(--pl),#f0f9ff);border-color:#bfdbfe}
+.callout-blue p{color:var(--p);margin:0;font-weight:600}
+.callout-green{background:var(--sl);border-color:#a7f3d0}
+.callout-green p{color:#065f46;margin:0;font-weight:600}
+.callout-orange{background:var(--orl);border-color:#fed7aa}
+.callout-orange p{color:#9a3412;margin:0;font-weight:600}
+
+/* ─ MOCK SCREEN ─ */
+.mock-screen{background:var(--sf);border:1px solid var(--br);border-radius:14px;
+  overflow:hidden;margin:20px 0;box-shadow:0 4px 20px rgba(37,99,235,.08)}
+.ms-topbar{background:#f8fafc;border-bottom:1px solid var(--br);padding:9px 16px;
+  display:flex;align-items:center;gap:8px}
+.ms-dot{width:8px;height:8px;border-radius:50%}
+.ms-title{font-size:.72rem;font-weight:600;color:var(--t2);flex:1;text-align:center}
+.ms-badge{font-size:.62rem;font-weight:700;padding:2px 8px;border-radius:8px}
+.ms-body{padding:14px 18px;display:flex;flex-direction:column;gap:8px}
+.ms-row{display:flex;align-items:center;gap:10px;padding:8px 12px;
+  background:var(--bg);border-radius:8px;border:1px solid var(--br)}
+.ms-dot2{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.ms-lbl{font-size:.75rem;color:var(--t2);flex:1}
+.ms-val{font-size:.8rem;font-weight:700;color:var(--t1)}
+.ms-badge2{display:inline-block;padding:2px 8px;border-radius:8px;font-size:.63rem;font-weight:700}
+
+/* ─ FLOW DIAGRAM ─ */
+.flow{display:flex;flex-direction:column;gap:0;margin:20px 0}
+.flow-step{display:flex;align-items:flex-start;gap:16px;padding:14px 0;position:relative}
+.flow-step:not(:last-child)::after{content:'';position:absolute;left:18px;top:46px;
+  bottom:-14px;width:2px;background:var(--br)}
+.flow-num{width:38px;height:38px;background:var(--g);border-radius:50%;color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--fh);font-weight:800;font-size:.88rem;flex-shrink:0;
+  box-shadow:0 4px 12px rgba(37,99,235,.25)}
+.flow-content{flex:1;padding-top:4px}
+.flow-title{font-family:var(--fh);font-weight:700;font-size:.95rem;color:var(--t1);margin-bottom:4px}
+.flow-desc{font-size:.82rem;color:var(--t2);line-height:1.6}
+.flow-chip{display:inline-flex;align-items:center;gap:4px;background:var(--pl);
+  color:var(--p);border:1px solid #bfdbfe;border-radius:8px;
+  padding:2px 8px;font-size:.65rem;font-weight:700;margin-top:4px}
+
+/* ─ ARCH GRID ─ */
+.arch-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0}
+.arch-card{background:var(--sf);border:1px solid var(--br);border-radius:12px;padding:16px;text-align:center}
+.arch-icon{font-size:1.6rem;margin-bottom:8px}
+.arch-title{font-family:var(--fh);font-weight:700;font-size:.9rem;color:var(--t1);margin-bottom:4px}
+.arch-desc{font-size:.72rem;color:var(--t2);line-height:1.5}
+
+/* ─ CODE BLOCK ─ */
+.code-block{background:#0f172a;border-radius:12px;padding:18px 20px;margin:18px 0;
+  font-family:var(--fc);font-size:.78rem;line-height:1.75;color:#e2e8f0;overflow-x:auto}
+.code-block .kw{color:#93c5fd}.code-block .fn{color:#c4b5fd}.code-block .str{color:#86efac}
+.code-block .cm{color:#64748b;font-style:italic}.code-block .num{color:#fcd34d}
+
+/* ─ FEATURE TABLE ─ */
+.ftable{width:100%;border-collapse:collapse;border-radius:12px;overflow:hidden;
+  border:1px solid var(--br);margin:18px 0;font-size:.85rem}
+.ftable thead tr{background:var(--t1);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.ftable th{padding:11px 14px;text-align:left;font-weight:700;color:#fff;font-family:var(--fh)}
+.ftable td{padding:9px 14px;border-bottom:1px solid #f1f5f9;color:var(--t2);vertical-align:middle}
+.ftable tr:last-child td{border-bottom:none}
+.ftable td:first-child{font-weight:600;color:var(--t1)}
+.badge-yes{background:var(--sl);color:var(--s);border-radius:8px;padding:2px 9px;font-weight:700;font-size:.72rem}
+.badge-no{background:var(--dl);color:var(--d);border-radius:8px;padding:2px 9px;font-weight:700;font-size:.72rem}
+.badge-info{background:var(--pl);color:var(--p);border-radius:8px;padding:2px 9px;font-weight:700;font-size:.72rem}
+
+/* ─ TECH STACK VISUAL ─ */
+.stack-visual{display:grid;grid-template-columns:1fr;gap:6px;margin:16px 0}
+.stack-layer{border-radius:10px;padding:12px 16px;border:1px solid var(--br);
+  display:flex;align-items:center;gap:12px}
+.stack-label{font-family:var(--fh);font-weight:700;font-size:.88rem;color:var(--t1);min-width:130px}
+.stack-pills{display:flex;flex-wrap:wrap;gap:5px}
+.stack-pill{display:inline-flex;padding:3px 10px;border-radius:8px;
+  font-size:.68rem;font-weight:700;border:1px solid}
+
+/* ─ CTA ─ */
+.cta-block{background:var(--g);border-radius:16px;padding:40px 32px;text-align:center;
+  margin-top:48px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.cta-block h3{font-size:1.4rem;font-weight:900;color:#fff;margin-bottom:10px}
+.cta-block p{color:rgba(255,255,255,.82);font-size:.92rem;margin-bottom:0}
+.cta-url{font-family:var(--fh);font-size:1.15rem;font-weight:800;color:#bfdbfe;
+  display:block;margin-top:12px}
+.cta-nc{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:18px}
+.cta-nc-icon{width:48px;height:48px;background:rgba(255,255,255,.18);border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--fh);font-weight:800;font-size:1.2rem;color:#fff;
+  border:1px solid rgba(255,255,255,.25)}
+
+/* ─ FOOTER ─ */
+footer{background:var(--sf);border-top:1px solid var(--br);padding:20px 40px}
+.ftr{max-width:820px;margin:0 auto;display:flex;align-items:center;
+  justify-content:space-between;flex-wrap:wrap;gap:10px}
+.ft{font-size:.75rem;color:var(--t3)}
+
+@media(max-width:680px){
+  .arch-grid{grid-template-columns:1fr 1fr}
+  .wrap{padding:32px 20px 48px}
+  .hero{padding:40px 20px 44px}
+}
+</style></head><body>
+<header>
+  <div class="hdr">
+    <div class="nc-logo">
+      <div class="nc-icon">NC</div>
+      <div><div class="nc-name">NextCare</div><div class="nc-sub">nextcare.tech</div></div>
+    </div>
+    <button class="print-btn np" onclick="window.print()">🖨️ Stampa / PDF</button>
+  </div>
+</header>
+<div class="hero" style="background:linear-gradient(150deg,#065f46 0%,#059669 50%,#10b981 100%)">
+  <div class="hero-inner">
+    <div class="art-tag">⚙️ Articolo Tecnico · nextcare.tech</div>
+    <h1>15 automatismi che eliminano il<br><em>lavoro manuale in sanità</em></h1>
+    <p style="color:rgba(255,255,255,.78);font-size:1rem;margin-top:6px;margin-bottom:0">Dall'assegnazione del barcode alla liquidazione dei compensi: ogni operazione che NextCare esegue da sola</p>
+    <div class="hero-meta">
+      <div class="av">NC</div>
+      <div class="mt"><strong>NextCare Team</strong> · nextcare.tech</div>
+      <span class="rt">⏱ 8 min lettura</span>
+      <span class="mt">Healthcare · Tech · AI</span>
+    </div>
+  </div>
+</div>
+<div class="wrap"><div class="body">
+
+<h2>Il costo nascosto del lavoro manuale in sanità</h2>
+<p>In una struttura sanitaria media, il personale dedica ogni giorno ore a operazioni ripetitive e meccaniche: assegnare barcode ai campioni, calcolare prezzi per listino, cercare slot liberi nell'agenda, generare note di credito, aggiornare il fascicolo sanitario, calcolare i compensi dei medici.</p>
+<p>Queste operazioni non producono valore sanitario. Sono operazioni di sistema che un software moderno dovrebbe eseguire automaticamente. In NextCare lo fanno.</p>
+<div class="callout callout-blue"><p>💡 Abbiamo mappato ogni operazione ripetitiva nel workflow sanitario e l'abbiamo automatizzata. Il risultato: il personale si occupa di pazienti, non di software.</p></div>
+
+<h2>1. Barcode univoco per ogni campione LIS</h2>
+<div class="flow">
+  <div class="flow-step"><div class="flow-num">1</div><div class="flow-content"><div class="flow-title">Accettazione campione</div><div class="flow-desc">Il receptionist seleziona il paziente e le prestazioni LIS richieste</div></div></div>
+  <div class="flow-step"><div class="flow-num">2</div><div class="flow-content"><div class="flow-title">Barcode generato automaticamente</div><div class="flow-desc">Il sistema calcola <code>getNextBarcode(tubeSuffix)</code> — suffisso configurato per tipo di provetta (3 cifre numeriche)</div><div class="flow-chip">AUTO</div></div></div>
+  <div class="flow-step"><div class="flow-num">3</div><div class="flow-content"><div class="flow-title">Campione registrato con ID univoco</div><div class="flow-desc">Il barcode è associato al paziente, alla sessione e agli esami richiesti. Nessuna assegnazione manuale.</div></div></div>
+</div>
+
+<h2>2. Classe di dose RIS rilevata automaticamente</h2>
+<p>Per ogni prestazione di diagnostica per immagini (RIS), NextCare esegue <code>guessDoseClassIdByName(serviceName)</code>: analizza il nome della prestazione e assegna automaticamente la classe di dose stimata secondo D.Lgs. 101/2020.</p>
+
+<div class="mock-screen">
+  <div class="ms-topbar"><div class="ms-dot"></div><span class="ms-title">Auto-rilevamento classe dose · nuova prestazione RIS</span><span class="ms-badge" style="background:#ecfeff;color:#06b6d4">AI</span></div>
+  <div class="ms-body">
+    <div class="ms-row"><span class="ms-lbl">Prestazione inserita</span><span class="ms-val">"TC Torace con e senza MdC"</span></div>
+    <div class="ms-row"><div class="ms-dot2" style="background:#10b981"></div><span class="ms-lbl">Classe dose rilevata automaticamente</span><span class="ms-badge2" style="background:#fffbeb;color:#f59e0b">Classe III — Dose media</span></div>
+    <div class="ms-row" style="background:var(--pl)"><span class="ms-lbl" style="color:var(--p)">💡 Il campo si auto-compila al salvataggio · modificabile se necessario</span></div>
+  </div>
+</div>
+
+<h2>3. Nomenclatore CUR 2024 importato in un click</h2>
+<p>All'avvio, "Importa Seed NextCare" carica automaticamente centinaia di prestazioni reali: codici nomenclatore CUR 2024, branche mediche assegnate, classi dose RIS già configurate. Nessun inserimento manuale.</p>
+
+<h2>4. Tipi prelievo associati massivamente agli esami</h2>
+<p>Definisci i tipi di prelievo (Venoso, Microbiologico, Urine, Tampone). Con "Associa Massivamente" il sistema collega ogni tipo a tutti gli esami LIS compatibili — centinaia di associazioni in 1 click.</p>
+
+<h2>5. Slot disponibili ricercati automaticamente</h2>
+<p>Nel CUP Wizard, dopo aver selezionato le prestazioni e il paziente, il sistema scansiona automaticamente i prossimi 14 giorni per tutti i medici abilitati e presenta gli slot liberi — senza che l'operatore apra nessuna agenda.</p>
+
+<h2>6. Email di conferma prenotazione automatica</h2>
+<p>Al completamento della prenotazione CUP: email generata dal template configurato, personalizzata con nome paziente, prestazione, data/ora e medico. Inviata automaticamente senza intervento della segreteria.</p>
+
+<div class="mock-screen">
+  <div class="ms-topbar"><div class="ms-dot" style="background:#10b981"></div><span class="ms-title">Template email — Conferma prenotazione</span><span class="ms-badge" style="background:#ecfdf5;color:#10b981">Auto-invio</span></div>
+  <div style="padding:14px 18px;font-size:.78rem;color:var(--t2);line-height:1.8;background:#fafafa;font-family:var(--fb)">
+    <p>Gentile <strong>Mario Rossi</strong>,<br>
+    la confermiamo la prenotazione per <strong>Visita Cardiologica</strong> con il <strong>Dr. Bianchi</strong>.<br>
+    📅 Data: <strong>Mercoledì 18 Giugno 2026 · ore 10:00</strong><br>
+    🏥 Si prega di presentarsi 10 minuti prima dell'inizio dello slot.</p>
+  </div>
+</div>
+
+<h2>7. Validazione LIS — flag AI sui valori anomali</h2>
+<p>Quando l'analizzatore restituisce i risultati, il sistema confronta ogni valore con i range di riferimento configurati. I valori fuori range vengono flaggati automaticamente in rosso nella vista di validazione del biologo.</p>
+
+<h2>8. Trasmissione FSE 2.0 post-firma</h2>
+<p>Non appena il medico appone la firma digitale su un referto, il sistema avvia automaticamente la trasmissione al Fascicolo Sanitario Elettronico 2.0. Nessuna esportazione manuale. Nessun invio separato.</p>
+
+<h2>9. Notifica paziente post-referto</h2>
+<p>Dopo la firma e la trasmissione FSE, viene generata automaticamente una email al paziente: "Il suo referto è disponibile nel FSE". Il testo del template è configurabile per tipo di referto.</p>
+
+<h2>10. Calcolo prezzi automatico per listino</h2>
+<p>Quando all'accettazione cambi il listino selezionato (es. da "Privato" a "Convenzionato Unisalute"), tutti i prezzi degli esami nella seduta si aggiornano automaticamente. Nessun recalcolo manuale.</p>
+
+<h2>11. Nota di credito automatica allo storno</h2>
+<p>Quando stornate una fattura, il sistema genera automaticamente la Nota di Credito numerata, aggiorna la prima nota contabile e registra l'evento nell'audit log. Un'operazione di sistema, non contabile.</p>
+
+<h2>12. Compensi medici calcolati automaticamente</h2>
+<p>Le regole di compenso (percentuale, fisso, per evento trigger) vengono applicate automaticamente a tutte le prestazioni del mese. Con un click "Genera Liquidazione" il prospetto è pronto per tutti i medici.</p>
+
+<h2>13. Profit center aggiornato in tempo reale</h2>
+<p>Ogni fattura emessa, ogni incasso registrato, ogni storno aggiornano automaticamente il profit center della branca corrispondente. La BI AI vede i dati in tempo reale senza nessun processo di elaborazione batch.</p>
+
+<h2>14. Autocomplete paziente in ogni form</h2>
+<p><code>initPatientAutocomplete()</code> è attivo in tutti i form che richiedono un paziente: CUP, LIS, RIS, Ammissioni. Digiti le prime lettere → il sistema suggerisce i pazienti corrispondenti dall'anagrafica → selezioni → tutti i campi (CF, data nascita, GDPR) si compilano automaticamente.</p>
+
+<h2>15. Agenda operativa con sub-tab per turno</h2>
+<p>I turni degli operatori nel modulo HRIS si riflettono automaticamente sulle agende operative. Un medico che non è in turno non appare come disponibile nel CUP Wizard. Zero gestione manuale delle disponibilità.</p>
+
+<div class="callout callout-green"><p>✅ Questi 15 automatismi non sono "funzioni premium". Sono inclusi in ogni tier NextCare dal primo giorno di attivazione.</p></div>
+
+<div class="cta-block">
+  <div class="cta-nc"><div class="cta-nc-icon">NC</div>
+    <div style="text-align:left"><div style="font-family:var(--fh);font-size:1.1rem;font-weight:800;color:#fff">NextCare</div>
+    <div style="font-size:.7rem;color:rgba(255,255,255,.65)">Healthcare Operating System</div></div>
+  </div>
+  <h3>Vuoi vedere NextCare in azione?</h3>
+  <p>Demo di 30 minuti su dati reali della tua struttura. Nessun impegno.</p>
+  <span class="cta-url">nextcare.tech → Demo Gratuita</span>
+</div>
+</div></div>
+<footer class="np">
+  <div class="ftr">
+    <div class="nc-logo" style="gap:8px">
+      <div class="nc-icon" style="width:26px;height:26px;border-radius:6px;font-size:.7rem">NC</div>
+      <span style="font-family:var(--fh);font-weight:700;font-size:.9rem">NextCare</span>
+    </div>
+    <span class="ft">Healthcare Operating System · nextcare.tech · Giugno 2026</span>
+    <span class="ft">"Where Digital Meets Care"</span>
+  </div>
+</footer>
+</body></html>
